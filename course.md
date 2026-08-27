@@ -9,9 +9,9 @@ location: 제12공학관 326호
 credits: 3
 summary: 실제 데이터를 다루는 전 과정 — 수집·정제·모델링·평가·해석 — 을 프로젝트 중심으로 익힌다.
 weeks:
-  - { n: 1, topic: "Course Overview & Tooling" }
-  - { n: 2, topic: "Exploratory Data Analysis" }
-  - { n: 3, topic: "Feature Engineering" }
+  - { n: 1, topic: "Course Overview & Tooling", discussion: 1 }
+  - { n: 2, topic: "Exploratory Data Analysis", discussion: 2 }
+  - { n: 3, topic: "Feature Engineering", discussion: 3 }
 ---
 
 ## Goals
