@@ -4,28 +4,52 @@ titleEn: Applied Data Science
 term: 2026 Fall
 semester: "2026-02"
 instructor: 오재훈
-schedule: 화/목 10:30–11:45
-location: 제12공학관 326호
+schedule: 금 09:00–12:00 (데이터사이언스학과) · 금 19:00–22:00 (산업데이터사이언스융합학과)
+location: 제12공학관 201호
 credits: 3
-summary: 실제 데이터를 다루는 전 과정 — 수집·정제·모델링·평가·해석 — 을 프로젝트 중심으로 익힌다.
+summary: 팀이 16주 동안 데이터사이언스 연구의 전 과정을 수행하는 캡스톤 디자인 과목.
 weeks:
-  - { n: 1, topic: "Course Overview & Tooling", discussion: 1 }
-  - { n: 2, topic: "Exploratory Data Analysis", discussion: 2 }
-  - { n: 3, topic: "Feature Engineering", discussion: 3 }
+  - { n: 1, topic: "Introduction", discussion: 1 }
+  - { n: 2, topic: "Team Formation, Collaboration Workflow, Problem Framing", discussion: 2 }
+  - { n: 3, topic: "Topic Feasibility Review", discussion: 3 }
+  - { n: 4, topic: "Milestone 1 — Proposal Presentation (Quiz 1)", discussion: 4 }
+  - { n: 5, topic: "Data Collection Methodology, Data Ethics", discussion: 5 }
+  - { n: 6, topic: "Data Preprocessing", discussion: 6 }
+  - { n: 7, topic: "Exploratory Data Analysis (EDA)", discussion: 7 }
+  - { n: 8, topic: "Milestone 2 — Mid-term Presentation (Quiz 2)", discussion: 8 }
+  - { n: 9, topic: "Modeling Methodology 1", discussion: 9 }
+  - { n: 10, topic: "Modeling Methodology 2", discussion: 10 }
+  - { n: 11, topic: "Modeling Methodology 3", discussion: 11 }
+  - { n: 12, topic: "Evaluation Methodology", discussion: 12 }
+  - { n: 13, topic: "Result Interpretation (Quiz 3)", discussion: 13 }
+  - { n: 14, topic: "Demo", discussion: 14 }
+  - { n: 15, topic: "Final Feedback", discussion: 15 }
+  - { n: 16, topic: "Milestone 3 — Final Presentation and Report", discussion: 16 }
 ---
+
+## Course Description
+
+본 강의는 일반적으로 석사과정 마지막 학기 학생을 대상으로 한다. 팀이 16주 동안
+데이터사이언스 연구의 전 과정 — 주제 선정 → 데이터 수집·전처리 → 모델링 → 분석 —
+을 수행하는 캡스톤 디자인 과목이다. 수업시간은 방법론 강의, 피드백, 마일스톤
+발표로 운영한다.
+
+같은 과목을 두 분반으로 운영한다 — 데이터사이언스학과(금 09:00–12:00),
+산업데이터사이언스융합학과(금 19:00–22:00). 내용은 동일하다.
 
 ## Goals
 
-데이터사이언스 워크플로 전반을 손으로 경험한다. 정형·비정형 데이터를 정제하고,
-적절한 모델을 선택·학습·평가하며, 결과를 비전문가에게 설명하는 능력을 기른다.
+- 데이터사이언스 연구의 전 과정(주제 선정, 데이터 수집·전처리, 모델링, 분석)을
+  팀 프로젝트로 수행한다.
+- 마일스톤 기반 프로젝트 관리와 협업을 통해 연구 결과를 효과적으로 전달한다.
 
 ## Prerequisites
 
-- 프로그래밍 기초(Python)
-- 기초 통계
+- 데이터사이언스 수학
+- 프로그래밍 (Python 등)
 
 ## Grading
 
-- 주간 실습 30%
-- 팀 프로젝트 40%
-- 개별 리포트 30%
+- 퀴즈 40%
+- 최종 산출물 (발표 + 보고서) 40%
+- 참여도 20%
