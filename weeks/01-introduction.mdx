@@ -279,7 +279,8 @@ DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞
 아무리 잘해도 잘못 고른 질문, 신호가 없는 데이터는 구제되지 않는다.
 
 <Callout type="intuition">
-Carlini 는 좋은 연구의 첫째 기술로 **"문제를 고르는 안목(taste)"** 을 꼽는다.<Cite n={1} />
+Carlini<Sidenote>Nicholas Carlini — 머신러닝 보안·프라이버시 연구자(적대적 예제, LLM 학습데이터 추출 공격 등으로 유명). UC Berkeley 박사 후 Google Brain/DeepMind(2018–2024)를 거쳐 現 Anthropic. IEEE S&P·USENIX Security·ICML·EuroCrypt 에서 best paper award 다수. 여기 인용은 그의 에세이 <em>How to win a best paper award</em>(2026).</Sidenote> 는
+좋은 연구의 첫째 기술로 **"문제를 고르는 안목(taste)"** 을 꼽는다.<Cite n={1} />
 Hamming 의 질문 — "당신 분야에서 가장 중요한 문제가 뭔가, 그런데 왜 그걸 안 하고
 있나?" — 을 프로젝트 주제에 던져 보라. "보고서 한 편이 되는 최소 기여가 뭔가"를
 묻는 것과는 결과가 크게 다르다.
@@ -335,6 +336,14 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 **무엇이 새로운지 한 문장으로** 말할 수 있어야 한다.
 </Callout>
 
+**글쓰기 — Carlini 의 원칙.**<Cite n={1} />
+
+- **아이디어 하나.** 논문은 정확히 한 가지를 말한다. 배경·방법·실험이 모두 그 하나로 수렴한다.
+- **독자를 정해 쓴다.** "6개월 전의 나" 처럼 구체적인 한 사람을 정하고 그를 설득한다.
+- **서론은 이야기다.** 독자가 지금 믿는 것에서 출발해, 우리 결과가 말이 되는 세계로 데려온다.
+- **결론은 "그래서 무엇을 배웠나".** 한 일의 과거형 요약이 아니라 성찰(§2.6 과 같은 원칙).
+- **구체적 숫자로.** "개선했다"가 아니라 "X를 Y%p 개선".
+
 ## 7. 좋은 캡스톤 주제의 조건
 
 - **범위가 학기 안에 닫힌다.** 13주 · 팀 역량 · 가용 자원(compute, 라벨링 시간) 안에서
@@ -373,7 +382,7 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 - 데이터 경로(§3)와 기여 한 문장이 없으면 아직 주제가 아니다.
 
 <References items={[
-  { id: 1, text: "Carlini, N. (2026). How to win a best paper award (or, an opinionated take on how to do important research). https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html — 문제 선택(taste), 안 되는 것 빨리 죽이기·de-risk, 결론은 'so what'에 답하기." },
+  { id: 1, text: "Carlini, N. (2026). How to win a best paper award (or, an opinionated take on how to do important research). https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html — 아이디어(문제 선택 taste, Hamming), 수행(안 되는 것 빨리 죽이기·de-risk), 글쓰기(아이디어 하나·독자 설정·서론=이야기·결론은 so what), 투고 이후(운). 저자는 前 Google Brain/DeepMind, 現 Anthropic 의 ML 보안 연구자." },
   { id: 2, text: "Chapman, P. et al. (2000). CRISP-DM 1.0: Step-by-step data mining guide. SPSS. — Business/Data Understanding → Data Preparation → Modeling → Evaluation → Deployment 의 반복적 6단계. 요약: Wirth, R. & Hipp, J. (2000), Proc. PADD." },
   { id: 3, text: "Zinkevich, M. (2017 이후 갱신). Rules of Machine Learning: Best Practices for ML Engineering. Google. — Rule #1(ML 없이 먼저), 단순 baseline 대비 개선을 측정하라." },
   { id: 4, text: "Kaufman, S., Rosset, S., Perlich, C., & Stitelman, O. (2012). Leakage in Data Mining: Formulation, Detection, and Avoidance. ACM TKDD 6(4). — target leakage 의 정의와 회피." },
