@@ -43,40 +43,58 @@ order: 0
 
 ## 2. 전 과정 (full process)
 
-데이터사이언스 프로젝트는 대체로 여섯 단계를 거친다(산업 표준인 CRISP-DM 의
-프레이밍<Cite n={2} />). **핵심은 이게 한 방향 컨베이어벨트가 아니라는 것** — 뒤
-단계에서 배운 것으로 앞 단계를 자주 되돌린다.
+데이터사이언스 프로젝트는 대체로 여섯 단계를 거친다. 이 학기 각 주차가 그 단계들에
+대응한다. 먼저 그 지도를 그리고(§2.0), 단계별로 무엇을 하고 어디서 어긋나는지 본다(§2.1~2.6).
 
-<svg viewBox="0 0 480 300" role="img" aria-label="데이터 분석 파이프라인 6단계 순환도. 문제 정의, 데이터 이해, 데이터 준비, 모델링, 평가, 결과 전달이 원형으로 연결되고, 인접 단계 사이를 양방향으로 오간다." xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, sans-serif">
-  <circle cx="240" cy="150" r="92" fill="none" stroke="#94a3b8" stroke-dasharray="4 4"/>
-  <text x="240" y="145" text-anchor="middle" font-size="11" fill="#64748b">반복</text>
-  <text x="240" y="160" text-anchor="middle" font-size="11" fill="#64748b">(선형 아님)</text>
-  <g font-size="12" fill="#0f172a">
-    <rect x="185" y="18" width="110" height="34" rx="4" fill="#f8fafc" stroke="#e2e8f0"/><text x="240" y="39" text-anchor="middle">1. 문제 정의</text>
-    <rect x="360" y="70" width="110" height="34" rx="4" fill="#f8fafc" stroke="#e2e8f0"/><text x="415" y="91" text-anchor="middle">2. 데이터 이해</text>
-    <rect x="360" y="196" width="110" height="34" rx="4" fill="#f8fafc" stroke="#e2e8f0"/><text x="415" y="217" text-anchor="middle">3. 데이터 준비</text>
-    <rect x="185" y="248" width="110" height="34" rx="4" fill="#f8fafc" stroke="#e2e8f0"/><text x="240" y="269" text-anchor="middle">4. 모델링</text>
-    <rect x="10" y="196" width="110" height="34" rx="4" fill="#f8fafc" stroke="#e2e8f0"/><text x="65" y="217" text-anchor="middle">5. 평가</text>
-    <rect x="10" y="70" width="110" height="34" rx="4" fill="#f8fafc" stroke="#e2e8f0"/><text x="65" y="91" text-anchor="middle">6. 결과 전달</text>
-  </g>
-  <g stroke="#0f172a" fill="none" stroke-width="1.5">
-    <path d="M296 33 C 340 40, 365 55, 388 70"/>
-    <path d="M415 104 L 415 196"/>
-    <path d="M388 230 C 350 250, 320 258, 296 264"/>
-    <path d="M185 265 C 150 258, 120 250, 92 230"/>
-    <path d="M65 196 L 65 104"/>
-    <path d="M92 70 C 120 50, 150 40, 184 33"/>
-  </g>
-  <g stroke="#94a3b8" fill="none" stroke-width="1" stroke-dasharray="3 2">
-    <path d="M360 88 C 320 70, 300 55, 288 40"/>
-    <path d="M360 214 C 340 232, 320 244, 300 254"/>
-    <path d="M120 214 C 150 236, 175 248, 190 254"/>
-  </g>
-</svg>
+### 2.0 CRISP-DM — 공통 언어
 
-이 학기에 여러분이 실제로 밟는 순서는 이렇다. 각 단계에서 **무엇을 하는가 · 실현
-가능한가 · 의미 있는 결론으로 이어지는가 · 흔한 실패**를 함께 본다. 세부 방법은 해당
-주차에서, 여기서는 지도를 그린다.
+**CRISP-DM**(Cross-Industry Standard Process for Data Mining)<Cite n={2} /> 은 2000년에
+정리된 데이터마이닝 프로세스 모델이다. 오래된 문서지만, 데이터사이언스 프로젝트의
+진행 방식을 말할 때 여전히 가장 널리 쓰이는 공용어다.
+
+<Figure
+  src="https://upload.wikimedia.org/wikipedia/commons/b/b9/CRISP-DM_Process_Diagram.png"
+  alt="CRISP-DM 프로세스 다이어그램 — 6개 국면이 원형으로 배치되고, Business Understanding 과 Data Understanding 사이, 그리고 Deployment 에서 Business Understanding 으로 되돌아가는 화살표가 있다."
+  caption="CRISP-DM 6국면과 피드백 루프. 바깥 원은 프로젝트가 끝나도 다시 도는 순환을, 안쪽 화살표는 국면 사이를 오가는 반복을 나타낸다."
+  source="“CRISP-DM Process Diagram” by Kenneth Jensen, 2012, CC BY-SA 3.0 (Wikimedia Commons)" />
+
+**6국면.**
+
+1. **Business Understanding** (문제 정의) — 무엇을, 왜, 성공 기준은.
+2. **Data Understanding** (데이터 이해) — 어떤 데이터가 있고, 그 안에 답할 신호가 있나.
+3. **Data Preparation** (데이터 준비) — 정제·변환·분리. 시간의 대부분.
+4. **Modeling** (모델링) — 방법 선택·학습·튜닝.
+5. **Evaluation** (평가) — 결과가 믿을 만하고, 애초의 목표에 답하는가.
+6. **Deployment** (결과 전달) — 쓸 수 있는 형태로 넘긴다. 이 수업에서는 발표·보고서.
+
+**왜 이걸 쓰나.**
+
+- **공통 어휘.** 팀이 "우리는 지금 Data Understanding 에서 막혔다"고 말할 수 있다.
+- **직선이 아니라 순환.** 다이어그램의 화살표가 핵심이다 — Business ↔ Data 사이를
+  오가고, Evaluation 에서 문제 정의로 돌아가고, 프로젝트가 끝나도 바깥 원을 다시 돈다.
+  **뒤 단계에서 배운 것으로 앞 단계를 고치는 게 정상**이다.
+- **문제 정의가 1번.** 데이터·모델보다 먼저, 동등한 비중으로.
+
+**한계.** 2000년 프레임이고 공식 개정이 없었다. **평가의 엄밀성과 결과 전달이 얇다** —
+정확히 학생 프로젝트가 실패하는 지점(§3). 그래서 이 노트는 각 국면에 **실현가능성·검증
+질문**을 얹어 보강한다.
+
+<Callout type="example">
+**한 프로젝트를 6국면에 꿰어 보자** — "전기차 충전소별 다음 주 시간대 전력 수요 예측".
+
+1. **문제 정의** — 예측 대상: 충전소별·시간대별 kW. 성공: 오차(MAPE)가 기준선보다
+   유의하게 낮음. 이 답으로 배전 계획 담당이 용량을 미리 조정한다.
+2. **데이터 이해** — 충전 이력, 날씨, 요일·공휴일, 충전소 위치. 이력이 충분한 기간
+   쌓였나? 신규 충전소는 데이터가 거의 없다.
+3. **데이터 준비** — 이력을 시간대별로 집계, 결측 시간대 처리, train = 과거 / test =
+   최근 몇 주(시간 순서 유지). *여기서 신규 충전소 이력이 2주뿐임을 발견 → 1번으로
+   돌아가 "6개월 이상 운영 충전소"로 범위를 좁힘.*
+4. **모델링** — 기준선: "지난주 같은 요일·시간". 그 위에 시계열/회귀 모델. 기준선을
+   얼마나 이기나?
+5. **평가** — MAPE 가 기준선 대비 유의하게 낮은가? 특정 계절·지역에만 좋은 건 아닌가?
+6. **결과 전달** — "6개월 이상 운영 충전소의 D-7 시간대 수요를 MAPE X%로 예측. 신규
+   충전소는 제외." 담당자가 무엇을 하면 되는지까지.
+</Callout>
 
 ### 2.1 문제 정의 — 2·3주차
 
