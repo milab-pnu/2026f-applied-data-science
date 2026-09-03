@@ -20,14 +20,17 @@ order: 0
 
 **교재.** 이 관점을 책 한 권으로 풀어낸 것이 이 수업의 주교재 — Bin Yu & Rebecca
 Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
-[vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 데이터사이언스 생애주기(DSLC)의
-모든 단계에서 결과가 **예측가능·계산가능·안정적**(PCS)인지 점검한다는 이 책의 뼈대가
-아래 §2 와 그대로 겹친다 — 파이프라인 각 단계에 대응하는 장을 해당 주차에 함께 읽는다.
+[vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 데이터사이언스
+생애주기(data science life cycle, DSLC)의 모든 단계에서 결과가
+**예측가능·계산가능·안정적**(predictability·computability·stability, PCS)인지
+점검한다는 이 책의 뼈대가 아래 §2 와 그대로 겹친다 — 파이프라인 각 단계에 대응하는
+장을 해당 주차에 함께 읽는다.
 
 ## 1. 목표 — 논문지 원고와 학술대회 발표
 
-무엇을 만들어야 하는지 감을 잡기 위해, 다른 학교의 같은 성격 수업을 보자. 서울여자대학교
-데이터사이언스학과의 **캡스톤디자인 2**(2025-2학기)는 이 수업과 거의 동일하다 — 학생
+무엇을 만들어야 하는지 감을 잡기 위해, 다른 학교의 같은 성격 수업을 보자.
+서울여자대학교(SWU) 데이터사이언스학과의 **캡스톤디자인 2**(2025-2학기)는 이 수업과
+거의 동일하다 — 학생
 팀이 주제 선정부터 데이터 수집·전처리·모델링·분석까지 연구 한 사이클을 수행한다. 한
 학기에 **6개 팀 전원이 국내 학술대회에 논문을 제출**했고, 그중 **4개 팀이 수상**했다.[^swu]
 
@@ -42,8 +45,8 @@ Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 
 **우리 목표는 두 단계다.**
 
-- **1차 목표** — 학기말 산출물이 **KCI 등재 논문지에 투고할 수 있는 수준의 원고**가
-  되는 것. "돌려 봤습니다"가 아니라 명확한 문제 · 확보한 데이터 · 정당한 방법 ·
+- **1차 목표** — 학기말 산출물이 **KCI(Korea Citation Index, 한국학술지인용색인) 등재
+  논문지에 투고할 수 있는 수준의 원고**가 되는 것. "돌려 봤습니다"가 아니라 명확한 문제 · 확보한 데이터 · 정당한 방법 ·
   baseline 대비 검증된 결과 · 정직한 한계를 갖춘 원고.
 - **2차 목표(현실적 최소선)** — 국내 **학술대회에 발표**하는 것. SWU 팀들이 도달한
   지점이 여기다. 학술대회 발표는 그 자체로 유효한 성과이면서, 논문지 원고로 확장하는
@@ -54,11 +57,11 @@ Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 
 ### 목표로 삼을 만한 KCI 등재 논문지
 
-DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞는 국문 KCI 등재 논문지들.[^kcijournals]
+데이터사이언스 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞는 국문 KCI 등재 논문지들.[^kcijournals]
 
 | 논문지 (약칭) | 발행 학회 | KCI | 분야 |
 |---|---|---|---|
-| 한국컴퓨터정보학회논문지 (JKSCI) | 한국컴퓨터정보학회 | 등재 | CS 전반 — AI·데이터·시스템·정보보안·IT서비스·콘텐츠. 응용 ML·구현형 논문 다수 |
+| 한국컴퓨터정보학회논문지 (JKSCI) | 한국컴퓨터정보학회 | 등재 | CS(computer science) 전반 — AI(artificial intelligence)·데이터·시스템·정보보안·IT(information technology)서비스·콘텐츠. 응용 ML(machine learning)·구현형 논문 다수 |
 | 한국정보기술학회논문지 (Journal of KIIT, JKIIT) | 한국정보기술학회 | 등재 | IT 전반(공학일반+CS). 응용 예측·딥러닝 논문 다수, 월간·게재량 많음 |
 | 한국산업정보학회논문지 (JKIISR) | 한국산업정보학회 | 등재 | 산업정보시스템 — 산업·현장 데이터 활용, 응용 IT, 사례연구 |
 | 한국지능시스템학회논문지 (JKIIS) | 한국지능시스템학회 | 등재 | 지능시스템 — fuzzy·신경망·패턴인식·머신러닝·계산지능·지능제어. 전기공학 카테고리 |
@@ -109,11 +112,10 @@ DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞
 정확히 학생 프로젝트가 실패하는 지점(§4). 그래서 이 노트는 각 국면에 **실현가능성·검증
 질문**을 얹어 보강한다.
 
-이 보강을 그대로 프레임으로 만든 것이 교재의 **DSLC**(data science life cycle)다.
-CRISP-DM 과 단계 구성은 거의 같지만 강조가 다르다 — 한가운데 **비판적 사고**를 놓고,
-다섯째 단계를 아예 "**결과를 의심하기**(scrutinization of results)"로 이름 붙인다. 그리고
-모든 단계에서 결과가 **예측가능·계산가능·안정적**(PCS: predictability·computability·
-stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공통 어휘로
+이 보강을 그대로 프레임으로 만든 것이 교재의 **DSLC**다. CRISP-DM 과 단계 구성은 거의
+같지만 강조가 다르다 — 한가운데 **비판적 사고**를 놓고, 다섯째 단계를 아예 "**결과를
+의심하기**(scrutinization of results)"로 이름 붙인다. 그리고 모든 단계에서 결과가
+**예측가능·계산가능·안정적**(PCS)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공통 어휘로
 쓰되, 각 단계에서 무엇을 의심해야 하는지는 DSLC·PCS 로 챙긴다.
 
 <Figure
@@ -125,8 +127,9 @@ stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공�
 <Callout type="example">
 **한 프로젝트를 6국면에 꿰어 보자** — "전기차 충전소별 다음 주 시간대 전력 수요 예측".
 
-1. **문제 정의** — 예측 대상: 충전소별·시간대별 kW. 성공: 오차(MAPE)가 기준선보다
-   유의하게 낮음. 이 답으로 배전 계획 담당이 용량을 미리 조정한다.
+1. **문제 정의** — 예측 대상: 충전소별·시간대별 kW. 성공: 오차(mean absolute
+   percentage error, MAPE)가 기준선보다 유의하게 낮음. 이 답으로 배전 계획 담당이
+   용량을 미리 조정한다.
 2. **데이터 이해** — 충전 이력, 날씨, 요일·공휴일, 충전소 위치. 이력이 충분한 기간
    쌓였나? 신규 충전소는 데이터가 거의 없다.
 3. **데이터 준비** — 이력을 시간대별로 집계, 결측 시간대 처리, train = 과거 / test =
@@ -154,7 +157,7 @@ stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공�
 
 <Callout type="warning">
 가장 비싼 실수는 여기서 난다. 잘못 고른 질문은 나중에 아무리 정교한 모델링으로도
-못 구한다. 3주차 "topic feasibility review" 와 4주차 M1 이 이걸 거르는 관문이다.
+못 구한다. 3주차 "topic feasibility review" 와 4주차 M1(Milestone 1) 이 이걸 거르는 관문이다.
 </Callout>
 
 ### 2.2 데이터 이해 — 5·7주차
@@ -165,7 +168,7 @@ stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공�
 
 **실현가능성 체크.**
 
-- 데이터가 **존재하고 접근 가능**한가? (공개 데이터인가, API 한도는, 크롤링이
+- 데이터가 **존재하고 접근 가능**한가? (공개 데이터인가, API(application programming interface) 한도는, 크롤링이
   약관·법·연구윤리에 맞는가 — 5주차 data ethics. 데이터 소스는 §3)
 - **양이 충분**한가? 관심 있는 사건이 드물면(불균형) 실제로 학습·검증할 표본이 적다.
 - 표본이 **모집단을 대표**하는가? 특정 채널·기간만 모이면 결론이 거기 갇힌다(§4-④).
@@ -199,7 +202,7 @@ stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공�
 - **baseline** 이 있는가? "정확도 85%"는 그 자체로 아무 의미가 없다 — 항상 다수
   클래스로 찍기, 간단한 규칙, 선형 모델 대비 **얼마나** 나은지가 정보다.[^zinkevich]
 - 평가 지표가 **실제 목표와 정합**하는가? (불균형 데이터에서 accuracy, 순위 문제에서
-  RMSE 처럼 어긋난 지표를 최적화하고 있지 않은가)
+  RMSE(root mean squared error) 처럼 어긋난 지표를 최적화하고 있지 않은가)
 - 하이퍼파라미터 탐색을 **validation set** 에서 했는가, test set 은 마지막에 딱 한 번
   건드렸는가(간접 과적합).
 - 모델이 복잡할수록 얻는 이득이 **추가 복잡도를 정당화**하는가?
@@ -248,7 +251,7 @@ stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공�
 
 - **공공데이터포털** (data.go.kr) — 정부·지자체·공공기관의 개방 데이터·API. 교통,
   에너지, 환경, 복지, 상권 등.
-- **AI Hub** (aihub.or.kr) — NIA 가 구축한 한국어 중심 AI 학습용 데이터셋(음성, 비전,
+- **AI Hub** (aihub.or.kr) — NIA(한국지능정보사회진흥원) 가 구축한 한국어 중심 AI 학습용 데이터셋(음성, 비전,
   자연어, 헬스케어 등). 라벨이 붙어 있어 지도학습에 바로 쓰기 좋다.
 - **KOSIS 국가통계포털** (kosis.kr) — 통계청 및 각 부처의 정형 통계.
 - **서울 열린데이터 광장** (data.seoul.go.kr), 각 지자체 데이터 포털 — 지역 단위 실측·행정 데이터.
@@ -267,7 +270,7 @@ stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공�
 된다. 가능하면 **명시적으로 개방된 데이터**를 우선한다.
 </Callout>
 
-**데이터 경로 점검 (M1 전까지)**: 출처 URL, 대략의 규모(행·열·기간), 접근 방법(다운로드
+**데이터 경로 점검 (M1 전까지)**: 출처 URL(uniform resource locator), 대략의 규모(행·열·기간), 접근 방법(다운로드
 / API / 신청), 라이선스, 그리고 "이 데이터에 우리 질문의 신호가 있다고 믿는 근거"를
 한 장으로 정리한다.
 
@@ -306,7 +309,7 @@ stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공�
 아무리 잘해도 잘못 고른 질문, 신호가 없는 데이터는 구제되지 않는다.
 
 <Callout type="intuition">
-Nicholas Carlini<Sidenote>머신러닝 보안·프라이버시 연구자(적대적 예제, LLM 학습데이터 추출 공격 등으로 유명). UC Berkeley 박사 후 Google Brain/DeepMind(2018–2024)를 거쳐 現 Anthropic. IEEE S&P·USENIX Security·ICML·EuroCrypt 에서 best paper award 다수. 여기 인용은 그의 에세이 [*How to win a best paper award*](https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html) (2026).</Sidenote> 는
+Nicholas Carlini<Sidenote>머신러닝 보안·프라이버시 연구자(적대적 예제, LLM(large language model) 학습데이터 추출 공격 등으로 유명). UC Berkeley 박사 후 Google Brain/DeepMind(2018–2024)를 거쳐 現 Anthropic. IEEE S&P·USENIX Security·ICML·EuroCrypt 에서 best paper award 다수. 여기 인용은 그의 에세이 [*How to win a best paper award*](https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html) (2026).</Sidenote> 는
 좋은 연구의 첫째 기술로 **"문제를 고르는 안목(taste)"** 을 꼽는다.[^carlini]
 Hamming 의 질문 — "당신 분야에서 가장 중요한 문제가 뭔가, 그런데 왜 그걸 안 하고
 있나?" — 을 프로젝트 주제에 던져 보라. "보고서 한 편이 되는 최소 기여가 뭔가"를
@@ -320,7 +323,7 @@ Hamming 의 질문 — "당신 분야에서 가장 중요한 문제가 뭔가, �
 | 시점 | 마일스톤 | 이 관문이 거르는 것 |
 |---|---|---|
 | 4주차 | **M1 — 제안 발표** (+ 퀴즈 1) | 질문이 답 가능한가, 데이터 확보 경로가 있는가, 범위가 현실적인가 |
-| 8주차 | **M2 — 중간 발표** (+ 퀴즈 2) | 데이터·EDA 로 "이 방향이 결론을 낼 수 있는가"가 보이는가. 필요하면 **피벗** |
+| 8주차 | **M2 — 중간 발표** (+ 퀴즈 2) | 데이터·EDA(exploratory data analysis) 로 "이 방향이 결론을 낼 수 있는가"가 보이는가. 필요하면 **피벗** |
 | 16주차 | **M3 — 최종 발표·보고서** | 결론이 믿을 만하고 쓸모 있는가 (§1 의 1차 목표) |
 
 <Callout type="intuition">
@@ -351,7 +354,7 @@ Carlini 의 실행 원칙[^carlini]: **안 되는 프로젝트는 빨리 죽여�
 
 **선행연구 조사.** "이미 알려진 답"(§4-②)을 피하고 기여를 자리매김하려면 필수다.
 
-- 검색: **KCI**(kci.go.kr)·**DBpia**(dbpia.co.kr)·**RISS**(riss.kr)로 국내 논문,
+- 검색: **KCI**(kci.go.kr)·**DBpia**(dbpia.co.kr)·**RISS**(학술연구정보서비스, riss.kr)로 국내 논문,
   **Google Scholar**·**arXiv**·**Semantic Scholar**·**Papers with Code**로 해외.
 - 방법: 우리 질문에 가장 가까운 선행연구 3~5편을 찾아, 각각 "무엇을 했나 / 무엇이
   아쉬운가"를 한 줄로 적는다. 그 아쉬움을 우리가 메운다 — 그게 기여다.
@@ -382,7 +385,7 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 - **이미 알려진 답이 아니다.** 최소한의 선행 조사(§6)로 확인.
 - **기여를 한 문장으로 말할 수 있다.**
 
-§1 의 주제들(야구 승패 예측, EV 충전소 수요 예측 등)이 이 조건을 어떻게 만족하는지
+§1 의 주제들(야구 승패 예측, EV(electric vehicle) 충전소 수요 예측 등)이 이 조건을 어떻게 만족하는지
 생각해 보라.
 
 ## 8. 학기 운영
