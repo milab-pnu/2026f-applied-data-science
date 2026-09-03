@@ -49,8 +49,18 @@ weeks:
 
 - **주교재**: Bin Yu & Rebecca L. Barter, *Veridical Data Science: The Practice of
   Responsible Data Analysis and Decision Making*, MIT Press, 2024. 전문 무료 공개:
-  https://vdsbook.com
-- 주차별 방법론은 위 교재의 해당 장과 각 주제의 1차 문헌(주차 노트에 명시)을 함께 읽는다.
+  [vdsbook.com](https://vdsbook.com) (CC BY-NC-ND, © MIT Press).
+- 주차 노트는 이 책을 요약하지 않는다. **책 해당 장을 직접 읽고**, 노트는 그 방법론을
+  우리 캡스톤 프로젝트에 어떻게 적용하는지를 다룬다.
+- 주차별 함께 읽기 (해당 장 + 각 주제의 1차 문헌은 주차 노트에 명시):
+
+  | 주차 | vdsbook 장 |
+  |---|---|
+  | 1 — Introduction | [1장 Introduction to Veridical DS](https://vdsbook.com/01-veridical_ds.html), [2장 The Data Science Life Cycle](https://vdsbook.com/02-dslc.html) |
+  | 6 — Data Preprocessing | [3장 Setting Up Your DS Project](https://vdsbook.com/03-code_reproducibility.html), [4장 Data Preparation](https://vdsbook.com/04-data_cleaning.html) |
+  | 7 — EDA | [5장 Exploratory Data Analysis](https://vdsbook.com/05-data_viz.html) |
+  | 9–11 — Modeling | [8장 Intro to Prediction](https://vdsbook.com/08-prediction_intro.html), [9–11장 Least Squares·Logistic](https://vdsbook.com/09-ls.html), [12장 Random Forest](https://vdsbook.com/12-rf.html); 구조 탐색은 [6장 PCA](https://vdsbook.com/06-pca.html)·[7장 Clustering](https://vdsbook.com/07-cluster.html) |
+  | 12–13 — Evaluation·Interpretation | [13장 Producing the Final Prediction Results](https://vdsbook.com/13-final_ml.html), [14장 Conclusion](https://vdsbook.com/14-conclusion.html) |
 
 ## Grading
 
