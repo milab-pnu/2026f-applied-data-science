@@ -19,7 +19,7 @@ order: 0
 </Callout>
 
 **교재.** 이 관점을 책 한 권으로 풀어낸 것이 이 수업의 주교재 — Bin Yu & Rebecca
-Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
+L. Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 [vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 데이터사이언스
 생애주기(data science life cycle, DSLC)의 모든 단계에서 결과가
 **예측가능·계산가능·안정적**(predictability·computability·stability, PCS)인지
@@ -27,8 +27,8 @@ Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 장을 해당 주차에 함께 읽는다(주차별 대응은 `course.md`).
 
 **이번 주 함께 읽기**: vdsbook
-[1장 — An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds.html),
-[2장 — The Data Science Life Cycle](https://vdsbook.com/02-dslc.html).
+[1장 An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds.html),
+[2장 The Data Science Life Cycle](https://vdsbook.com/02-dslc.html).
 
 ## 1. 목표 — 논문지 원고와 학술대회 발표
 
@@ -126,7 +126,7 @@ Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
   src="https://vdsbook.com/Figures-External/intro/data_science_life_cycle.png"
   alt="DSLC 다이어그램 — 6단계가 원형으로 배치되고 중앙에 '비판적 사고(critical thinking)'. 1 도메인 문제·데이터 수집, 2 데이터 정제·전처리·EDA, 3 데이터 구조 탐색(선택), 4 예측·추론 분석(선택), 5 결과 의심(scrutinization), 6 결과 해석·전달 및 도메인 지식 갱신."
   caption="Veridical data science 의 DSLC. CRISP-DM 과 6단계 구성은 비슷하나 중앙에 '비판적 사고'가 있고 5단계가 '결과를 의심하기'다. 3·4단계는 선택."
-  source="Yu & Barter, Veridical Data Science (© MIT Press, 2024). vdsbook.com. 원본 그림 · 수정 없음 · CC BY-NC-ND (creativecommons.org/licenses/by-nc-nd/4.0/)" />
+  source="Yu & Barter, Veridical Data Science (© MIT Press, 2024). vdsbook.com. 원본 그림 · 수정 없음 · CC BY-NC-ND" />
 
 <Callout type="example">
 **한 프로젝트를 6국면에 꿰어 보자** — "전기차 충전소별 다음 주 시간대 전력 수요 예측".
@@ -313,7 +313,7 @@ Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 아무리 잘해도 잘못 고른 질문, 신호가 없는 데이터는 구제되지 않는다.
 
 <Callout type="intuition">
-Nicholas Carlini<Sidenote>머신러닝 보안·프라이버시 연구자(적대적 예제, LLM(large language model) 학습데이터 추출 공격 등으로 유명). UC Berkeley 박사 후 Google Brain/DeepMind(2018–2024)를 거쳐 現 Anthropic. IEEE S&P·USENIX Security·ICML·EuroCrypt 에서 best paper award 다수. 여기 인용은 그의 에세이 [*How to win a best paper award*](https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html) (2026).</Sidenote> 는
+Nicholas Carlini<Sidenote>머신러닝 보안·프라이버시 연구자(적대적 예제, LLM(large language model) 학습데이터 추출 공격 등으로 유명). UC Berkeley 박사 후 Google Brain/DeepMind(2018–2024)를 거쳐 現 Anthropic. IEEE S&P·USENIX Security·ICML·EuroCrypt 에서 best paper award 다수.</Sidenote> 는
 좋은 연구의 첫째 기술로 **"문제를 고르는 안목(taste)"** 을 꼽는다.[^carlini]
 Hamming 의 질문 — "당신 분야에서 가장 중요한 문제가 뭔가, 그런데 왜 그걸 안 하고
 있나?" — 을 프로젝트 주제에 던져 보라. "보고서 한 편이 되는 최소 기여가 뭔가"를
@@ -434,4 +434,4 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 
 [^ioannidis]: Ioannidis, J. P. A. (2005). Why most published research findings are false. *PLoS Medicine*, 2(8), e124. — 낮은 사전확률·다중 검정·유연한 분석이 거짓 양성을 낳는 구조.
 
-[^carlini]: Carlini, N. (2026). [How to win a best paper award (or, an opinionated take on how to do important research)](https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html). — 문제 선택(taste, Hamming), 수행(빨리 죽이기·de-risk), 글쓰기(아이디어 하나·독자 설정·서론=이야기·결론=so what). 저자는 前 Google Brain/DeepMind, 現 Anthropic.
+[^carlini]: Carlini, N. (2026). [How to win a best paper award (or, an opinionated take on how to do important research)](https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html). — 연구 방법론에 관한 저자의 의견 에세이. 문제 선택(taste, Hamming), 수행(빨리 죽이기·de-risk), 글쓰기(아이디어 하나·독자 설정·서론=이야기·결론=so what).
