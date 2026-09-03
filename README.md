@@ -3,6 +3,7 @@
 부산대학교 MI Lab 강의 콘텐츠 저장소.
 
 - `course.md` — 강의 첫 페이지(개요·목표·시간·강의 계획). frontmatter + 본문(마크다운, 수식 `$…$` 가능).
+- `weeks/*.mdx` — 주차별 강의 노트. frontmatter(`title`·`week`·`order`) + 본문(MDX — 마크다운 + `<Figure>`·`<Callout>`·`<Sidenote>` 등 컴포넌트, 수식, 각주 `[^키]`).
 - 수정 후 `git push` 하면 `.github/workflows/notify.yml` 이 메인 사이트 재배포를 트리거 → 1~2분 뒤 반영.
 - 사이트: https://milab-pnu.github.io/lecture/2026f-applied-data-science
 
