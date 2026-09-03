@@ -18,6 +18,12 @@ order: 0
 만든다.** 코드가 돌고 모델이 학습되는 것은 성공의 조건이 아니라 최소한의 전제다.
 </Callout>
 
+**교재.** 이 관점을 책 한 권으로 풀어낸 것이 이 수업의 주교재 — Bin Yu & Rebecca
+Barter, *Veridical Data Science*(MIT Press, 2024)다.<Cite n={10} /> 전문이
+[vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 데이터사이언스 생애주기(DSLC)의
+모든 단계에서 결과가 **예측가능·계산가능·안정적**(PCS)인지 점검한다는 이 책의 뼈대가
+아래 §2 와 그대로 겹친다 — 파이프라인 각 단계에 대응하는 장을 해당 주차에 함께 읽는다.
+
 ## 1. 목표 — 논문지 원고와 학술대회 발표
 
 무엇을 만들어야 하는지 감을 잡기 위해, 다른 학교의 같은 성격 수업을 보자. 서울여자대학교
@@ -101,12 +107,20 @@ DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞
 
 **한계.** 2000년 프레임이고 공식 개정이 없었다. **평가의 엄밀성과 결과 전달이 얇다** —
 정확히 학생 프로젝트가 실패하는 지점(§4). 그래서 이 노트는 각 국면에 **실현가능성·검증
-질문**을 얹어 보강한다. 같은 문제의식 — 모든 단계에서 결과가 믿을 만한지 따진다 — 을
-현대적으로 체계화한 것이 이 수업의 교재(§8)인 *Veridical Data Science*<Sidenote>Yu &
-Barter, *Veridical Data Science*(MIT Press, 2024). "veridical" = 진실에 부합하는. 데이터사이언스
-생애주기(DSLC)의 모든 단계에서 결과가 **예측가능(P)·계산가능(C)·안정적(S)** 인지 스트레스
-테스트한다. 전문 무료 공개: vdsbook.com</Sidenote> 의 **PCS**(predictability·computability·
-stability) 원칙이다.<Cite n={10} />
+질문**을 얹어 보강한다.
+
+이 보강을 그대로 프레임으로 만든 것이 교재의 **DSLC**(data science life cycle)다.
+CRISP-DM 과 단계 구성은 거의 같지만 강조가 다르다 — 한가운데 **비판적 사고**를 놓고,
+다섯째 단계를 아예 "**결과를 의심하기**(scrutinization of results)"로 이름 붙인다. 그리고
+모든 단계에서 결과가 **예측가능·계산가능·안정적**(PCS: predictability·computability·
+stability)인지 stress test 한다.<Cite n={10} /> 이번 학기에는 CRISP-DM 을 공통 어휘로
+쓰되, 각 단계에서 무엇을 의심해야 하는지는 DSLC·PCS 로 챙긴다.
+
+<Figure
+  src="https://vdsbook.com/Figures-External/intro/data_science_life_cycle.png"
+  alt="DSLC 다이어그램 — 6단계가 원형으로 배치되고 중앙에 '비판적 사고(critical thinking)'. 1 도메인 문제·데이터 수집, 2 데이터 정제·전처리·EDA, 3 데이터 구조 탐색(선택), 4 예측·추론 분석(선택), 5 결과 의심(scrutinization), 6 결과 해석·전달 및 도메인 지식 갱신."
+  caption="Veridical data science 의 DSLC. CRISP-DM 과 6단계 구성은 비슷하나 중앙에 '비판적 사고'가 있고 5단계가 '결과를 의심하기'다. 3·4단계는 선택."
+  source="Yu & Barter, Veridical Data Science (MIT Press, 2024), vdsbook.com — CC BY-NC-ND 4.0" />
 
 <Callout type="example">
 **한 프로젝트를 6국면에 꿰어 보자** — "전기차 충전소별 다음 주 시간대 전력 수요 예측".
@@ -136,7 +150,7 @@ stability) 원칙이다.<Cite n={10} />
 - 이 질문은 **데이터로 답할 수 있는 종류**인가? (인과 질문인데 관측 데이터뿐이라면 답이 제한된다)
 - 답이 나오면 **누군가 다르게 행동**하는가? 아니면 §4-①.
 - 이미 알려진 답이 아닌가? 선행 조사(§6)로 확인. 아니면 §4-②.
-- 13주 안에 팀 역량으로 감당할 **범위**인가?
+- 남은 학기(약 13주) 안에 팀 역량으로 감당할 **범위**인가?
 
 <Callout type="warning">
 가장 비싼 실수는 여기서 난다. 잘못 고른 질문은 나중에 아무리 정교한 모델링으로도
@@ -307,7 +321,7 @@ Hamming 의 질문 — "당신 분야에서 가장 중요한 문제가 뭔가, �
 |---|---|---|
 | 4주차 | **M1 — 제안 발표** (+ 퀴즈 1) | 질문이 답 가능한가, 데이터 확보 경로가 있는가, 범위가 현실적인가 |
 | 8주차 | **M2 — 중간 발표** (+ 퀴즈 2) | 데이터·EDA 로 "이 방향이 결론을 낼 수 있는가"가 보이는가. 필요하면 **피벗** |
-| 16주차 | **M3 — 최종 발표·보고서** | 결론이 믿을 만하고 쓸모 있는가 (§1 수준) |
+| 16주차 | **M3 — 최종 발표·보고서** | 결론이 믿을 만하고 쓸모 있는가 (§1 의 1차 목표) |
 
 <Callout type="intuition">
 Carlini 의 실행 원칙<Cite n={1} />: **안 되는 프로젝트는 빨리 죽여라**, 그리고
@@ -359,8 +373,8 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 
 ## 7. 좋은 캡스톤 주제의 조건
 
-- **범위가 학기 안에 닫힌다.** 13주 · 팀 역량 · 가용 자원(compute, 라벨링 시간) 안에서
-  끝낼 수 있게 좁혀진다. 못 좁히면 좋은 주제가 아니다.
+- **범위가 학기 안에 닫힌다.** 남은 약 13주 · 팀 역량 · 가용 자원(compute, 라벨링 시간)
+  안에서 끝낼 수 있게 좁혀진다. 못 좁히면 좋은 주제가 아니다.
 - **데이터 경로가 이미 보인다.** "어디선가 구할 수 있을 것"이 아니라, 출처·수집 방법·
   대략의 규모를 지금 말할 수 있다(§3).
 - **결과가 어느 쪽이든 할 말이 있다.** 가설이 맞아도, 틀려도, 애매해도 보고할 내용이
@@ -373,10 +387,6 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 
 ## 8. 학기 운영
 
-- **교재.** Yu & Barter, *Veridical Data Science* (MIT Press, 2024).<Cite n={10} /> 전문이
-  [vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 이 수업의 관점 — "돌아가는
-  파이프라인"이 아니라 "믿을 수 있는 결론" — 과 같은 뼈대(DSLC + PCS)를 장별로 상세히
-  다룬다. 파이프라인 각 단계(§2)에 대응하는 장을 해당 주차에 함께 읽는다.
 - **팀 구성 · 협업.** 2주차에 팀을 짜고 협업 워크플로(버전관리, 이슈 트래커, 역할 분담)를
   정한다. 개별 기여가 보이도록 기록한다.
 - **주차 흐름.** 2–3주 문제 정의 → 4주 M1 → 5–7주 데이터 수집·정제·EDA → 8주 M2 →
@@ -409,5 +419,5 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
   { id: 7, text: "Ioannidis, J. P. A. (2005). Why Most Published Research Findings Are False. PLoS Medicine 2(8), e124. — 낮은 사전확률·다중 검정·유연한 분석이 거짓 양성을 낳는 구조." },
   { id: 8, text: "서울여자대학교 데이터사이언스학과 (2025). 「데이터사이언스캡스톤디자인2」 성과 (박민서 교수, 2025-2학기) — 6개 팀 전원 국내 학술대회 논문 제출, 4개 팀 수상(2025 한국정보기술학회 추계종합학술대회 동상 2, 한국산업정보학회 추계학술대회 우수논문상 1, 공군사관학교 미래 항공우주 학술대회 장려상 1). https://ds.swu.ac.kr/board/view?bd_id=community04_01&wr_id=160" },
   { id: 9, text: "논문지의 KCI 등급·분야·발행 정보는 한국학술지인용색인(kci.go.kr) 및 각 학회 홈페이지 기준 (2026년 조회). JKSCI = 한국컴퓨터정보학회논문지 (Journal of the Korea Society of Computer and Information); JKIIT = 한국정보기술학회논문지 (Journal of KIIT); JKIISR = 한국산업정보학회논문지 (Journal of the Korea Industrial Information Systems Research); JKIIS = 한국지능시스템학회논문지 (Journal of the Korean Institute of Intelligent Systems); JOK = 정보과학회논문지 (Journal of KIISE), 한국정보과학회, 우수등재." },
-  { id: 10, text: "Yu, Bin, & Barter, Rebecca L. (2024). Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making. MIT Press. ISBN 9780262049191. 온라인 무료 공개판 https://vdsbook.com (CC BY-NC-ND). — 데이터사이언스 생애주기(DSLC)의 모든 단계에서 PCS(predictability·computability·stability)로 결과의 신뢰성을 stress test. 이 수업 교재." },
+  { id: 10, text: "Yu, Bin, & Barter, Rebecca L. (2024). Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making. MIT Press. ISBN 9780262049191. 온라인 무료 공개판 https://vdsbook.com (CC BY-NC-ND). — 데이터사이언스 생애주기(DSLC)의 모든 단계에서 PCS(predictability·computability·stability)로 결과의 신뢰성을 stress test. 이 수업 주교재." },
 ]} />

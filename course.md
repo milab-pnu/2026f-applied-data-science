@@ -45,6 +45,13 @@ weeks:
 - 데이터사이언스 수학
 - 프로그래밍 (Python 등)
 
+## Textbook
+
+- **주교재**: Bin Yu & Rebecca L. Barter, *Veridical Data Science: The Practice of
+  Responsible Data Analysis and Decision Making*, MIT Press, 2024. 전문 무료 공개:
+  https://vdsbook.com
+- 주차별 방법론은 위 교재의 해당 장과 각 주제의 1차 문헌(주차 노트에 명시)을 함께 읽는다.
+
 ## Grading
 
 - 퀴즈 40%
