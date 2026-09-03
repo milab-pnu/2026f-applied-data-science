@@ -93,13 +93,19 @@ DSLC 는 아래 §2 의 파이프라인과 겹친다.
 정리된 데이터마이닝 프로세스 모델이다. 오래된 문서지만, 데이터사이언스 프로젝트의
 진행 방식을 말할 때 여전히 널리 쓰이는 공용어다.
 
+CRISP-DM 은 **계층적 프로세스 모델**이다 — 프로젝트를 추상도에 따라 네 층으로 나눠
+본다. 위에서부터 **단계(phase)** → **일반 과제(generic task)** → **세부 과제(specialized
+task)** → **프로세스 인스턴스(process instance)** 순이고, 아래로 갈수록 "일반적으로 무엇을
+하나"에서 "이 프로젝트에서 실제로 무엇을 했나"로 구체화된다. 이 노트가 쓰는 것은 맨 위층인
+**단계**뿐이며, 그 단계가 아래 여섯 개로 이뤄진 절차다.
+
 <Figure
   src="https://upload.wikimedia.org/wikipedia/commons/b/b9/CRISP-DM_Process_Diagram.png"
-  alt="CRISP-DM 프로세스 다이어그램 — 6개 국면이 원형으로 배치되고, Business Understanding 과 Data Understanding 사이, 그리고 Deployment 에서 Business Understanding 으로 되돌아가는 화살표가 있다."
-  caption="CRISP-DM 6국면과 피드백 루프. 바깥 원은 프로젝트가 끝나도 다시 도는 순환을, 안쪽 화살표는 국면 사이를 오가는 반복을 나타낸다."
+  alt="CRISP-DM 프로세스 다이어그램 — 6개 단계가 원형으로 배치되고, Business Understanding 과 Data Understanding 사이, 그리고 Deployment 에서 Business Understanding 으로 되돌아가는 화살표가 있다."
+  caption="CRISP-DM 6단계와 피드백 루프. 바깥 원은 프로젝트가 끝나도 다시 도는 순환을, 안쪽 화살표는 단계 사이를 오가는 반복을 나타낸다."
   source="Kenneth Jensen, “CRISP-DM Process Diagram” (2012). Wikimedia Commons — CC BY-SA 3.0, 수정 없음" />
 
-**6국면.**
+**6단계.**
 
 1. **Business Understanding** (문제 정의) — 무엇을, 왜, 성공 기준은.
 2. **Data Understanding** (데이터 이해) — 어떤 데이터가 있고, 그 안에 답할 신호가 있나.
@@ -117,7 +123,7 @@ DSLC 는 아래 §2 의 파이프라인과 겹친다.
 - **문제 정의가 1번.** 데이터·모델보다 먼저, 동등한 비중으로.
 
 **한계.** 2000년 프레임이고 공식 개정이 없었다. **평가의 엄밀성과 결과 전달이 얇다** —
-정확히 학생 프로젝트가 실패하는 지점(§4). 그래서 이 노트는 각 국면에 **실현가능성·검증
+정확히 학생 프로젝트가 실패하는 지점(§4). 그래서 이 노트는 각 단계에 **실현가능성·검증
 질문**을 얹어 보강한다.
 
 교재 소개에서 말한 **DSLC** 가 바로 이 보강을 프레임으로 만든 것이다. CRISP-DM 과 단계
@@ -142,7 +148,7 @@ DSLC 는 아래 §2 의 파이프라인과 겹친다.
 framing)** 에서 vdsbook 1–2장과 함께 이어서 다룬다.
 
 <Callout type="example">
-**한 프로젝트를 6국면에 꿰어 보자** — "전기차 충전소별 다음 주 시간대 전력 수요 예측".
+**한 프로젝트를 6단계에 꿰어 보자** — "전기차 충전소별 다음 주 시간대 전력 수요 예측".
 
 1. **문제 정의** — 예측 대상: 충전소별·시간대별 kW. 성공: 오차(mean absolute
    percentage error, MAPE)가 기준선보다 유의하게 낮음. 이 답으로 배전 계획 담당이
@@ -411,7 +417,7 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 
 [^kcijournals]: KCI 등재 논문지 정보 — [한국학술지인용색인](https://www.kci.go.kr) 및 각 학회 홈페이지, 2026년 조회. JKSCI = 한국컴퓨터정보학회논문지 (Journal of the Korea Society of Computer and Information); JKIIT = 한국정보기술학회논문지 (Journal of KIIT); JKIISR = 한국산업정보학회논문지 (Journal of the Korea Industrial Information Systems Research); JKIIS = 한국지능시스템학회논문지 (Journal of the Korean Institute of Intelligent Systems); JOK = 정보과학회논문지 (Journal of KIISE, 우수등재).
 
-[^crispdm]: Chapman, P., et al. (2000). *CRISP-DM 1.0: Step-by-step data mining guide*. SPSS. — 데이터마이닝 프로세스 6단계(Business/Data Understanding → Data Preparation → Modeling → Evaluation → Deployment)의 반복 모델. 원문의 참조 모델은 추상도에 따라 4층으로 짜여 있다 — 국면(phase, 6개) → 일반 과제(generic task) → 세부 과제(specialized task) → 프로세스 인스턴스(process instance). 이 노트에서 쓰는 "6단계"는 맨 위층인 국면만 가리키며, 아래 세 층(구체적 작업 목록)은 다루지 않는다. 요약: Wirth & Hipp (2000), Proc. PADD.
+[^crispdm]: Chapman, P., et al. (2000). *CRISP-DM 1.0: Step-by-step data mining guide*. SPSS. — 데이터마이닝 프로세스 6단계(Business/Data Understanding → Data Preparation → Modeling → Evaluation → Deployment)의 반복 모델. 계층적 프로세스 모델이며(§2.0), 이 노트는 맨 위층인 단계(phase)만 쓴다. 요약: Wirth & Hipp (2000), Proc. PADD.
 
 [^leakage]: Kaufman, S., Rosset, S., Perlich, C., & Stitelman, O. (2012). Leakage in data mining: Formulation, detection, and avoidance. *ACM Transactions on Knowledge Discovery from Data*, 6(4), Article 15. — target leakage 의 정의와 회피.
 
