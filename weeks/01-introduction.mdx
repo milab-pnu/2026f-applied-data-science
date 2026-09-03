@@ -13,21 +13,31 @@ order: 0
 지도**를 갖고 있어야 어느 지점에서 무엇을 결정하는지, 그리고 프로젝트가 어디서
 어긋나는지 알 수 있다.
 
-<Callout type="note">
-이 수업의 한 문장: **"돌아가는 파이프라인"이 아니라 "믿을 수 있고 쓸모 있는 결론"을
-만든다.** 코드가 돌고 모델이 학습되는 것은 그 자체가 목표가 아니라 출발점이다.
-</Callout>
+**교재.** 이 수업의 주교재는 Bin Yu & Rebecca L. Barter, *Veridical Data
+Science*(MIT Press, 2024)다.[^vds] 전문이 [vdsbook.com](https://vdsbook.com) 에 무료
+공개돼 있다.
 
-**교재.** 이 관점을 책 한 권으로 풀어낸 것이 이 수업의 주교재 — Bin Yu & Rebecca
-L. Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
-[vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 데이터사이언스
-생애주기(data science life cycle, DSLC)의 모든 단계에서 결과가 **PCS**(predictability
-·computability·stability)를 만족하는지 점검한다는 이 책의 뼈대가 아래 §2 와 그대로
-겹친다(PCS 는 §2.0 에서 정의). 파이프라인 각 단계에 대응하는 장을 그 주차에 함께
-읽는다 — 해당 주차 노트에서 안내한다.
+**데이터사이언스는 통합적인 일이다.** 데이터를 다루는 계산 능력, 거기서 결론을 끌어내는
+통계·수학, 그리고 그 문제가 놓인 맥락을 아는 **도메인 지식** — 셋이 다 있어야 한다.
+한 프로젝트 안에서 코드를 짜고, 분석을 설계하고, 무엇을 믿을지 판단하고, 결과를 남에게
+설명하는 일이 계속 오간다. 방법(알고리즘)을 고르는 것은 그중 일부일 뿐이다.
 
-**이번 주 함께 읽기**: vdsbook [Preface](https://vdsbook.com/) — 책의 관점과 구성.
-1–2장(veridical data science, DSLC)은 2주차에 읽는다.
+**주교재의 각도는 "veridical"** — 참되다·현실과 부합한다는 뜻으로, **결과가 현실과
+어긋나지 않게 하는 것**을 말한다. 데이터는 현실을 있는 그대로가 아니라 특정 방식으로
+걸러 담고, 우리가 세운 모델에는 눈에 안 띄는 가정이 들어 있다. 그래서 어떤 결론이든
+**현실 · 데이터 · 모델** 셋이 서로 맞물리는지를 직접 확인해야 한다는 것이 이 책의
+출발점이다. 코드가 돌고 모델이 학습되는 것은 그 확인의 시작일 뿐이다. 확인하는 도구가
+**PCS** 프레임(§2.0 에서 정의), 밟는 절차가 **데이터사이언스 생애주기**(data science
+life cycle, DSLC)이며, DSLC 는 아래 §2 의 파이프라인과 겹친다.
+
+**이 책이 다루는 것과 아닌 것.** 3부 구성이다 — 프레임워크·DSLC·계산 실무 / 데이터
+준비·탐색·기술 / 예측. R·Python 어느 쪽으로도 따라갈 수 있고, 책의 사례를 자기 도메인
+것으로 바꿔 읽기를 권한다. 반대로 **코딩, 수리통계 이론, 전통적 통계 추론(가설검정·신뢰
+구간), 윤리·공정성·프라이버시는 다루지 않는다** — 저자들은 전통적 추론을 뺀 것을 스스로
+아쉬운 누락이라고 적는다. 이 수업도 크게 다르지 않다: 코딩은 선수과목으로 전제하고,
+윤리·법은 5주차에서 짧게 짚는다.
+
+**이번 주 함께 읽기**: vdsbook [Preface](https://vdsbook.com/)
 
 ## 1. 목표 — 논문지 원고와 학술대회 발표
 
@@ -111,10 +121,10 @@ L. Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 정확히 학생 프로젝트가 실패하는 지점(§4). 그래서 이 노트는 각 국면에 **실현가능성·검증
 질문**을 얹어 보강한다.
 
-이 보강을 그대로 프레임으로 만든 것이 교재의 **DSLC**다. CRISP-DM 과 단계 구성은 거의
-같지만 강조가 다르다 — 한가운데 **비판적 사고**를 놓고, 다섯째 단계를 아예 "**결과를
-의심하기**(scrutinization of results)"로 이름 붙인다. 그리고 모든 단계에서 결과가
-**PCS**(predictability·computability·stability)를 만족하는지 stress test 한다.[^vds]
+교재 소개에서 말한 **DSLC** 가 바로 이 보강을 프레임으로 만든 것이다. CRISP-DM 과 단계
+구성은 거의 같지만 강조가 다르다 — 한가운데 **비판적 사고**를 놓고, 다섯째 단계를 아예
+"**결과를 의심하기**(scrutinization of results)"로 이름 붙인다. 그리고 모든 단계에서
+결과가 **PCS** 를 만족하는지 stress test 한다(아래).[^vds]
 
 <Figure
   src="https://vdsbook.com/Figures-External/intro/data_science_life_cycle.png"
@@ -126,7 +136,7 @@ L. Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 
 - **예측가능성(predictability)** — 결과가 새 데이터·다른 조건에서도 유지되는가. 샘플 밖에서 확인한다.
 - **계산가능성(computability)** — 분석을 실제로 재현·검증할 수 있는가. 코드·데이터·난수 seed·환경이 남아 있는가.
-- **안정성(stability)** — 데이터 표본, 전처리 선택, 모델을 합리적인 범위에서 바꿔도 결론이 크게 흔들리지 않는가.
+- **안정성(stability)** — 데이터를 다르게 모으거나 전처리·모델 선택을 합리적으로 바꿔도 결론이 크게 달라지지 않는가.
 
 이번 학기에는 CRISP-DM 을 공통 어휘로 쓰되, 각 단계에서 무엇을 의심해야 하는지는 DSLC
 와 이 세 렌즈로 챙긴다. PCS 를 문제 설정에 실제로 적용하는 방법은 **2주차(problem
@@ -378,8 +388,7 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 
 ## 7. 학기 운영
 
-- **팀 구성 · 협업.** 2주차에 팀을 짜고 협업 워크플로(버전관리, 이슈 트래커, 역할 분담)를
-  정한다. 개별 기여가 보이도록 기록한다.
+- **팀 구성 · 협업.** 2주차에 팀을 짜고 협업 워크플로를 정한다 — 상세는 2주차 노트.
 - **평가.** 퀴즈 40% (방법론 이해) · 최종 산출물(발표 + 보고서) 40% · 참여도 20%.
   비율은 인원·자원에 따라 조정될 수 있다.
 - **연구윤리 · 안전.** 1주차에 표절·부정행위 예방 교육과 실험·실습 안전교육을 실시한다.
@@ -397,7 +406,7 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 - 그래서 이 수업은 문제 정의·데이터 실현가능성을 **M1·M2 마일스톤과 kill criteria** 로
   일찍 점검한다 — 데이터 경로(§3)와 한 문장 기여가 아직 없다면 주제를 더 좁히거나 바꾼다.
 
-[^vds]: Yu, B., & Barter, R. L. (2024). *Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making*. MIT Press. 무료 온라인판 [vdsbook.com](https://vdsbook.com) (CC BY-NC-ND). — 이 수업 주교재. DSLC(데이터사이언스 생애주기)와 PCS(predictability·computability·stability) 프레임.
+[^vds]: Yu, B., & Barter, R. L. (2024). *Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making*. MIT Press. 무료 온라인판 [vdsbook.com](https://vdsbook.com) (CC BY-NC-ND). — 이 수업 주교재. [Preface](https://vdsbook.com/): 데이터사이언스·veridical data science 정의, 책 구성, 다루지 않는 것. DSLC(데이터사이언스 생애주기)와 PCS(predictability·computability·stability) 프레임은 1–2장.
 
 [^swu]: 서울여자대학교 데이터사이언스학과 (2025. 12.). [「데이터사이언스캡스톤디자인2」 수업 성과](https://ds.swu.ac.kr/board/view?bd_id=community04_01&wr_id=160) (박민서 교수, 2025-2학기). — 6개 팀 전원 국내 학술대회 논문 제출, 4개 팀 수상(한국정보기술학회 추계종합학술대회 동상 2, 한국산업정보학회 추계학술대회 우수논문상 1, 공군사관학교 미래 항공우주 학술대회 장려상 1).
 
