@@ -18,8 +18,8 @@ Science*(MIT Press, 2024)다.[^vds] 전문이 [vdsbook.com](https://vdsbook.com)
 공개돼 있다. 세 가지만 먼저 짚는다.
 
 **데이터사이언스란 무엇인가?** 데이터로 현실의 질문에 답하는 일이다. 여기엔 세 가지가
-모두 든다 — 데이터를 다루는 계산 능력, 거기서 결론을 끌어내는 통계·수학, 문제가 놓인
-맥락을 아는 **도메인 지식**. 한 프로젝트 안에서 코드를 짜고, 분석을 설계하고, 결과를
+통합되어 있다 — 데이터를 다루는 컴퓨팅 능력, 거기서 결론을 끌어내는 통계·수학, 문제가 놓인
+맥락을 아는 도메인 지식. 한 프로젝트 안에서 코드를 짜고, 분석을 설계하고, 결과를
 어디까지 믿을지 판단하고, 그것을 남에게 설명하는 일이 계속 오간다. 알고리즘을 고르는
 것은 그중 하나일 뿐이다.
 
@@ -31,11 +31,10 @@ Science*(MIT Press, 2024)다.[^vds] 전문이 [vdsbook.com](https://vdsbook.com)
 점검이 이뤄지는 전체 절차가 **데이터사이언스 생애주기**(data science life cycle, DSLC)다.
 DSLC 는 아래 §2 의 파이프라인과 겹친다.
 
-**이 책은 무엇을 가르치나?** 크게 세 부분이다 — 1부 프레임워크·DSLC·계산 실무, 2부
-데이터 준비·탐색·기술, 3부 예측. R 이든 Python 이든 따라갈 수 있고, 책의 사례는 각자 자기
-분야의 것으로 바꿔 읽으면 된다. 반대로 코딩, 수리통계 이론, 전통적 통계 추론(가설검정·
-신뢰구간), 윤리·공정성·프라이버시는 다루지 않는다. 이 수업의 범위도 비슷하다 — 코딩은
-선수과목으로 전제하고, 윤리·법은 5주차에서 짧게 짚는다.
+**이 책은 무엇을 가르치나?** 크게 세 부분이다 — 1부 veridical DS 소개, 2부
+데이터 준비·탐색·기술, 3부 예측. 책의 사례는 각자 자기 분야의 것으로 바꿔 읽으면 된다.
+반대로 코딩, 수리통계 이론, 전통적 통계 추론(가설검정·신뢰구간),
+윤리·공정성·프라이버시는 다루지 않는다. 이 수업의 범위도 비슷하다.
 
 **이번 주 함께 읽기**: vdsbook [Preface](https://vdsbook.com/)
 
@@ -412,7 +411,7 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 
 [^kcijournals]: KCI 등재 논문지 정보 — [한국학술지인용색인](https://www.kci.go.kr) 및 각 학회 홈페이지, 2026년 조회. JKSCI = 한국컴퓨터정보학회논문지 (Journal of the Korea Society of Computer and Information); JKIIT = 한국정보기술학회논문지 (Journal of KIIT); JKIISR = 한국산업정보학회논문지 (Journal of the Korea Industrial Information Systems Research); JKIIS = 한국지능시스템학회논문지 (Journal of the Korean Institute of Intelligent Systems); JOK = 정보과학회논문지 (Journal of KIISE, 우수등재).
 
-[^crispdm]: Chapman, P., et al. (2000). *CRISP-DM 1.0: Step-by-step data mining guide*. SPSS. — 데이터마이닝 프로세스 6단계(Business/Data Understanding → Data Preparation → Modeling → Evaluation → Deployment)의 반복 모델. 요약: Wirth & Hipp (2000), Proc. PADD.
+[^crispdm]: Chapman, P., et al. (2000). *CRISP-DM 1.0: Step-by-step data mining guide*. SPSS. — 데이터마이닝 프로세스 6단계(Business/Data Understanding → Data Preparation → Modeling → Evaluation → Deployment)의 반복 모델. 원문의 참조 모델은 추상도에 따라 4층으로 짜여 있다 — 국면(phase, 6개) → 일반 과제(generic task) → 세부 과제(specialized task) → 프로세스 인스턴스(process instance). 이 노트에서 쓰는 "6단계"는 맨 위층인 국면만 가리키며, 아래 세 층(구체적 작업 목록)은 다루지 않는다. 요약: Wirth & Hipp (2000), Proc. PADD.
 
 [^leakage]: Kaufman, S., Rosset, S., Perlich, C., & Stitelman, O. (2012). Leakage in data mining: Formulation, detection, and avoidance. *ACM Transactions on Knowledge Discovery from Data*, 6(4), Article 15. — target leakage 의 정의와 회피.
 
