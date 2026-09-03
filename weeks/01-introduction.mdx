@@ -21,10 +21,10 @@ order: 0
 **교재.** 이 관점을 책 한 권으로 풀어낸 것이 이 수업의 주교재 — Bin Yu & Rebecca
 L. Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 [vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 데이터사이언스
-생애주기(data science life cycle, DSLC)의 모든 단계에서 결과가
-**예측가능·계산가능·안정적**(predictability·computability·stability, PCS)인지
-점검한다는 이 책의 뼈대가 아래 §2 와 그대로 겹친다. 파이프라인 각 단계에 대응하는
-장을 그 주차에 함께 읽는다 — 해당 주차 노트에서 안내한다.
+생애주기(data science life cycle, DSLC)의 모든 단계에서 결과가 **PCS**(predictability
+·computability·stability)를 만족하는지 점검한다는 이 책의 뼈대가 아래 §2 와 그대로
+겹친다(PCS 는 §2.0 에서 정의). 파이프라인 각 단계에 대응하는 장을 그 주차에 함께
+읽는다 — 해당 주차 노트에서 안내한다.
 
 **이번 주 함께 읽기**: vdsbook
 [1장 An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds.html),
@@ -115,14 +115,23 @@ L. Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 이 보강을 그대로 프레임으로 만든 것이 교재의 **DSLC**다. CRISP-DM 과 단계 구성은 거의
 같지만 강조가 다르다 — 한가운데 **비판적 사고**를 놓고, 다섯째 단계를 아예 "**결과를
 의심하기**(scrutinization of results)"로 이름 붙인다. 그리고 모든 단계에서 결과가
-**예측가능·계산가능·안정적**(PCS)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공통 어휘로
-쓰되, 각 단계에서 무엇을 의심해야 하는지는 DSLC·PCS 로 챙긴다.
+**PCS**(predictability·computability·stability)를 만족하는지 stress test 한다.[^vds]
 
 <Figure
   src="https://vdsbook.com/Figures-External/intro/data_science_life_cycle.png"
   alt="DSLC 다이어그램 — 6단계가 원형으로 배치되고 중앙에 '비판적 사고(critical thinking)'. 1 도메인 문제·데이터 수집, 2 데이터 정제·전처리·EDA, 3 데이터 구조 탐색(선택), 4 예측·추론 분석(선택), 5 결과 의심(scrutinization), 6 결과 해석·전달 및 도메인 지식 갱신."
   caption="Veridical data science 의 DSLC. CRISP-DM 과 6단계 구성은 비슷하나 중앙에 '비판적 사고'가 있고 5단계가 '결과를 의심하기'다. 3·4단계는 선택."
   source="Yu & Barter, Veridical Data Science (© MIT Press, 2024). vdsbook.com. 원본 그림 · 수정 없음 · CC BY-NC-ND" />
+
+**PCS 세 렌즈.** 어떤 결과든 이 셋을 통과해야 믿는다.
+
+- **예측가능성(predictability)** — 결과가 새 데이터·다른 조건에서도 유지되는가. 샘플 밖에서 확인한다.
+- **계산가능성(computability)** — 분석을 실제로 재현·검증할 수 있는가. 코드·데이터·난수 seed·환경이 남아 있는가.
+- **안정성(stability)** — 데이터 표본, 전처리 선택, 모델을 합리적인 범위에서 바꿔도 결론이 크게 흔들리지 않는가.
+
+이번 학기에는 CRISP-DM 을 공통 어휘로 쓰되, 각 단계에서 무엇을 의심해야 하는지는 DSLC
+와 이 세 렌즈로 챙긴다. PCS 를 문제 설정에 실제로 적용하는 방법은 **2주차(problem
+framing)** 에서 vdsbook 1–2장과 함께 이어서 다룬다.
 
 <Callout type="example">
 **한 프로젝트를 6국면에 꿰어 보자** — "전기차 충전소별 다음 주 시간대 전력 수요 예측".
@@ -220,8 +229,8 @@ L. Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
   **다중 비교**, "garden of forking paths". 사전확률이 낮은 가설을 유연하게 검정하면
   "유의한" 결과의 상당수가 거짓 양성이다.[^forking][^mlpitfalls][^ioannidis]
 - 관측 데이터에서 나온 상관을, 개입 가능한 **인과**처럼 서술하고 있지 않은가(교란 변수)?
-- 결과가 데이터 분할·전처리 선택에 얼마나 **민감**한가(robustness)? ablation 으로
-  "어느 요소가 성능을 만드는가"를 분해했는가?
+- 결과가 데이터 분할·전처리 선택에 얼마나 **민감**한가 — PCS 의 **안정성**(§2.0).
+  ablation 으로 "어느 요소가 성능을 만드는가"를 분해했는가?
 
 ### 2.6 결과 전달 — 14주차 (Demo), 16주차
 
