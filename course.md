@@ -9,22 +9,22 @@ location: 제12공학관 201호
 credits: 3
 summary: 팀이 16주 동안 데이터사이언스 연구의 전 과정을 수행하는 캡스톤 디자인 과목.
 weeks:
-  - { n: 1, topic: "Introduction", discussion: 1 }
-  - { n: 2, topic: "Team Formation, Collaboration Workflow, Problem Framing", discussion: 2 }
-  - { n: 3, topic: "Topic Feasibility Review", discussion: 3 }
-  - { n: 4, topic: "Milestone 1 — Proposal Presentation (Quiz 1)", discussion: 4 }
-  - { n: 5, topic: "Data Collection Methodology, Data Ethics", discussion: 5 }
-  - { n: 6, topic: "Data Preprocessing", discussion: 6 }
-  - { n: 7, topic: "Exploratory Data Analysis (EDA)", discussion: 7 }
-  - { n: 8, topic: "Milestone 2 — Mid-term Presentation (Quiz 2)", discussion: 8 }
-  - { n: 9, topic: "Modeling Methodology 1", discussion: 9 }
-  - { n: 10, topic: "Modeling Methodology 2", discussion: 10 }
-  - { n: 11, topic: "Modeling Methodology 3", discussion: 11 }
-  - { n: 12, topic: "Evaluation Methodology", discussion: 12 }
-  - { n: 13, topic: "Result Interpretation (Quiz 3)", discussion: 13 }
-  - { n: 14, topic: "Demo", discussion: 14 }
-  - { n: 15, topic: "Final Feedback", discussion: 15 }
-  - { n: 16, topic: "Milestone 3 — Final Presentation and Report", discussion: 16 }
+  - { n: 1, topic: "Introduction" }
+  - { n: 2, topic: "Team Formation, Collaboration Workflow, Problem Framing" }
+  - { n: 3, topic: "Topic Feasibility Review" }
+  - { n: 4, topic: "Milestone 1 — Proposal Presentation (Quiz 1)" }
+  - { n: 5, topic: "Data Collection Methodology, Data Ethics" }
+  - { n: 6, topic: "Data Preprocessing" }
+  - { n: 7, topic: "Exploratory Data Analysis (EDA)" }
+  - { n: 8, topic: "Milestone 2 — Mid-term Presentation (Quiz 2)" }
+  - { n: 9, topic: "Modeling Methodology 1" }
+  - { n: 10, topic: "Modeling Methodology 2" }
+  - { n: 11, topic: "Modeling Methodology 3" }
+  - { n: 12, topic: "Evaluation Methodology" }
+  - { n: 13, topic: "Result Interpretation (Quiz 3)" }
+  - { n: 14, topic: "Demo" }
+  - { n: 15, topic: "Final Feedback" }
+  - { n: 16, topic: "Milestone 3 — Final Presentation and Report" }
 ---
 
 ## Course Description
