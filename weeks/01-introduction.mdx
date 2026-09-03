@@ -4,9 +4,9 @@ week: 1
 order: 0
 ---
 
-이 수업은 강의가 아니라 **프로젝트**다. 한 학기 동안 팀이 데이터사이언스 연구를 한
-사이클 — 주제 선정부터 데이터 수집·정제, 모델링, 분석, 전달까지 — **끝까지** 수행한다.
-산출물은 최종 발표와 보고서다.
+이 수업은 강의보다 **프로젝트**가 주가 된다. 한 학기 동안 팀이 데이터사이언스 연구를
+한 사이클 — 주제 선정부터 데이터 수집·정제, 모델링, 분석, 전달까지 — **끝까지**
+수행한다. 산출물은 최종 발표와 보고서다.
 
 1주차 노트의 목적은 학기 전체에서 여러분이 **실제로 밟게 될 전 과정(full process)** 을
 한눈에 보여주는 것이다. 각 단계의 세부 방법은 해당 주차에 배우지만, 그 전에 **전체
@@ -19,7 +19,7 @@ order: 0
 </Callout>
 
 **교재.** 이 관점을 책 한 권으로 풀어낸 것이 이 수업의 주교재 — Bin Yu & Rebecca
-Barter, *Veridical Data Science*(MIT Press, 2024)다.<Cite n={10} /> 전문이
+Barter, *Veridical Data Science*(MIT Press, 2024)다.[^vds] 전문이
 [vdsbook.com](https://vdsbook.com) 에 무료 공개돼 있다. 데이터사이언스 생애주기(DSLC)의
 모든 단계에서 결과가 **예측가능·계산가능·안정적**(PCS)인지 점검한다는 이 책의 뼈대가
 아래 §2 와 그대로 겹친다 — 파이프라인 각 단계에 대응하는 장을 해당 주차에 함께 읽는다.
@@ -29,7 +29,7 @@ Barter, *Veridical Data Science*(MIT Press, 2024)다.<Cite n={10} /> 전문이
 무엇을 만들어야 하는지 감을 잡기 위해, 다른 학교의 같은 성격 수업을 보자. 서울여자대학교
 데이터사이언스학과의 **캡스톤디자인 2**(2025-2학기)는 이 수업과 거의 동일하다 — 학생
 팀이 주제 선정부터 데이터 수집·전처리·모델링·분석까지 연구 한 사이클을 수행한다. 한
-학기에 **6개 팀 전원이 국내 학술대회에 논문을 제출**했고, 그중 **4개 팀이 수상**했다.<Cite n={8} />
+학기에 **6개 팀 전원이 국내 학술대회에 논문을 제출**했고, 그중 **4개 팀이 수상**했다.[^swu]
 
 그 팀들의 주제:
 
@@ -54,7 +54,7 @@ Barter, *Veridical Data Science*(MIT Press, 2024)다.<Cite n={10} /> 전문이
 
 ### 목표로 삼을 만한 KCI 등재 논문지
 
-DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞는 국문 KCI 등재 논문지들.<Cite n={9} />
+DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞는 국문 KCI 등재 논문지들.[^kcijournals]
 
 | 논문지 (약칭) | 발행 학회 | KCI | 분야 |
 |---|---|---|---|
@@ -78,7 +78,7 @@ DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞
 
 ### 2.0 CRISP-DM — 공통 언어
 
-**CRISP-DM**(Cross-Industry Standard Process for Data Mining)<Cite n={2} /> 은 2000년에
+**CRISP-DM**(Cross-Industry Standard Process for Data Mining)[^crispdm] 은 2000년에
 정리된 데이터마이닝 프로세스 모델이다. 오래된 문서지만, 데이터사이언스 프로젝트의
 진행 방식을 말할 때 여전히 가장 널리 쓰이는 공용어다.
 
@@ -113,7 +113,7 @@ DS 캡스톤(실제 데이터 + 방법 + baseline 비교 + 검증) 성격에 맞
 CRISP-DM 과 단계 구성은 거의 같지만 강조가 다르다 — 한가운데 **비판적 사고**를 놓고,
 다섯째 단계를 아예 "**결과를 의심하기**(scrutinization of results)"로 이름 붙인다. 그리고
 모든 단계에서 결과가 **예측가능·계산가능·안정적**(PCS: predictability·computability·
-stability)인지 stress test 한다.<Cite n={10} /> 이번 학기에는 CRISP-DM 을 공통 어휘로
+stability)인지 stress test 한다.[^vds] 이번 학기에는 CRISP-DM 을 공통 어휘로
 쓰되, 각 단계에서 무엇을 의심해야 하는지는 DSLC·PCS 로 챙긴다.
 
 <Figure
@@ -173,7 +173,7 @@ stability)인지 stress test 한다.<Cite n={10} /> 이번 학기에는 CRISP-DM
   target leakage — 학습 성능은 환상적이고 배포하면 무너진다.
 - 라이선스가 **재배포·논문 게재를 허용**하는가? (일부 데이터는 결과 공개에 제약이 있다)
 
-<Sidenote>data leakage 는 학생 프로젝트 "고성능"의 가장 흔한 원인이다. 예: 이탈 예측에 "해지 신청서 제출일"을 피처로 넣기, 시계열을 무작위로 섞어 미래로 과거를 예측하기.<Cite n={4} /></Sidenote>
+<Sidenote>data leakage 는 학생 프로젝트 "고성능"의 가장 흔한 원인이다. 예: 이탈 예측에 "해지 신청서 제출일"을 피처로 넣기, 시계열을 무작위로 섞어 미래로 과거를 예측하기.[^leakage]</Sidenote>
 
 ### 2.3 데이터 준비 — 6주차
 
@@ -197,7 +197,7 @@ stability)인지 stress test 한다.<Cite n={10} /> 이번 학기에는 CRISP-DM
 **실현가능성 체크.**
 
 - **baseline** 이 있는가? "정확도 85%"는 그 자체로 아무 의미가 없다 — 항상 다수
-  클래스로 찍기, 간단한 규칙, 선형 모델 대비 **얼마나** 나은지가 정보다.<Cite n={3} />
+  클래스로 찍기, 간단한 규칙, 선형 모델 대비 **얼마나** 나은지가 정보다.[^zinkevich]
 - 평가 지표가 **실제 목표와 정합**하는가? (불균형 데이터에서 accuracy, 순위 문제에서
   RMSE 처럼 어긋난 지표를 최적화하고 있지 않은가)
 - 하이퍼파라미터 탐색을 **validation set** 에서 했는가, test set 은 마지막에 딱 한 번
@@ -221,7 +221,7 @@ stability)인지 stress test 한다.<Cite n={10} /> 이번 학기에는 CRISP-DM
 - 통계적 유의성 ≠ 실질적 중요성. **효과 크기**를 함께 본다(§4-⑤).
 - 여러 가설·지표·부분집단을 탐색하다 "유의한" 것 하나를 골라 보고하고 있지 않은가 —
   **다중 비교**, "garden of forking paths". 사전확률이 낮은 가설을 유연하게 검정하면
-  "유의한" 결과의 상당수가 거짓 양성이다.<Cite n={5} /><Cite n={6} /><Cite n={7} />
+  "유의한" 결과의 상당수가 거짓 양성이다.[^forking][^mlpitfalls][^ioannidis]
 - 관측 데이터에서 나온 상관을, 개입 가능한 **인과**처럼 서술하고 있지 않은가(교란 변수)?
 - 결과가 데이터 분할·전처리 선택에 얼마나 **민감**한가(robustness)? ablation 으로
   "어느 요소가 성능을 만드는가"를 분해했는가?
@@ -236,7 +236,7 @@ stability)인지 stress test 한다.<Cite n={10} /> 이번 학기에는 CRISP-DM
 - 청중이 이 결과로 **무엇을 하면 되는가**가 분명한가?
 - **한계**를 정직하게 적었는가 — 데이터의 편향, 일반화 범위, 인과 주장 불가 등.
 - 보고서의 결론이 "우리가 한 일의 과거형 요약"이 아니라 **"그래서 무엇을 배웠나"** 에
-  답하는가.<Cite n={1} />
+  답하는가.[^carlini]
 - 표·그림 하나하나가 **읽는 사람의 질문에 답**하는가, 아니면 그냥 있어서 넣었는가?
 
 ## 3. 데이터를 어디서 구하나
@@ -307,7 +307,7 @@ stability)인지 stress test 한다.<Cite n={10} /> 이번 학기에는 CRISP-DM
 
 <Callout type="intuition">
 Nicholas Carlini<Sidenote>머신러닝 보안·프라이버시 연구자(적대적 예제, LLM 학습데이터 추출 공격 등으로 유명). UC Berkeley 박사 후 Google Brain/DeepMind(2018–2024)를 거쳐 現 Anthropic. IEEE S&P·USENIX Security·ICML·EuroCrypt 에서 best paper award 다수. 여기 인용은 그의 에세이 [*How to win a best paper award*](https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html) (2026).</Sidenote> 는
-좋은 연구의 첫째 기술로 **"문제를 고르는 안목(taste)"** 을 꼽는다.<Cite n={1} />
+좋은 연구의 첫째 기술로 **"문제를 고르는 안목(taste)"** 을 꼽는다.[^carlini]
 Hamming 의 질문 — "당신 분야에서 가장 중요한 문제가 뭔가, 그런데 왜 그걸 안 하고
 있나?" — 을 프로젝트 주제에 던져 보라. "보고서 한 편이 되는 최소 기여가 뭔가"를
 묻는 것과는 결과가 크게 다르다.
@@ -324,7 +324,7 @@ Hamming 의 질문 — "당신 분야에서 가장 중요한 문제가 뭔가, �
 | 16주차 | **M3 — 최종 발표·보고서** | 결론이 믿을 만하고 쓸모 있는가 (§1 의 1차 목표) |
 
 <Callout type="intuition">
-Carlini 의 실행 원칙<Cite n={1} />: **안 되는 프로젝트는 빨리 죽여라**, 그리고
+Carlini 의 실행 원칙[^carlini]: **안 되는 프로젝트는 빨리 죽여라**, 그리고
 **가장 그럴듯한 실패 지점을 먼저 검증하라(de-risk)**. 편한 부분(모델 코드)부터 하지
 말고, "데이터에 애초에 신호가 있나" 처럼 프로젝트를 무너뜨릴 수 있는 질문을 먼저 친다.
 그는 끝내는 것의 5배를 시작한다고 한다 — 여러분은 학기 제약상 그럴 수 없으니, **M1 에서
@@ -363,7 +363,7 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
 **무엇이 새로운지 한 문장으로** 말할 수 있어야 한다.
 </Callout>
 
-**글쓰기 — Carlini 의 원칙.**<Cite n={1} />
+**글쓰기 — Carlini 의 원칙.**[^carlini]
 
 - **아이디어 하나.** 논문은 정확히 한 가지를 말한다. 배경·방법·실험이 모두 그 하나로 수렴한다.
 - **독자를 정해 쓴다.** "6개월 전의 나" 처럼 구체적인 한 사람을 정하고 그를 설득한다.
@@ -409,15 +409,22 @@ X%p 개선", "기존 결론이 다른 조건에서 성립하지 않음을 보임
   kill criteria** 로 강제 점검한다.
 - 데이터 경로(§3)와 기여 한 문장이 없으면 아직 주제가 아니다.
 
-<References items={[
-  { id: 1, text: "Carlini, Nicholas (2026. 3.). How to win a best paper award (or, an opinionated take on how to do important research). https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html — 아이디어(문제 선택 taste, Hamming), 수행(안 되는 것 빨리 죽이기·de-risk), 글쓰기(아이디어 하나·독자 설정·서론=이야기·결론은 so what), 투고 이후(운). 저자는 前 Google Brain/DeepMind, 現 Anthropic 의 ML 보안 연구자." },
-  { id: 2, text: "Chapman, P. et al. (2000). CRISP-DM 1.0: Step-by-step data mining guide. SPSS. — Business/Data Understanding → Data Preparation → Modeling → Evaluation → Deployment 의 반복적 6단계. 요약: Wirth, R. & Hipp, J. (2000), Proc. PADD." },
-  { id: 3, text: "Zinkevich, M. (2017 이후 갱신). Rules of Machine Learning: Best Practices for ML Engineering. Google. — Rule #1(ML 없이 먼저), 단순 baseline 대비 개선을 측정하라." },
-  { id: 4, text: "Kaufman, S., Rosset, S., Perlich, C., & Stitelman, O. (2012). Leakage in Data Mining: Formulation, Detection, and Avoidance. ACM TKDD 6(4). — target leakage 의 정의와 회피." },
-  { id: 5, text: "Gelman, A., & Loken, E. (2014). The Statistical Crisis in Science. American Scientist 102(6), 460. — 'garden of forking paths': 연구자 자유도와 사후 선택된 유의성." },
-  { id: 6, text: "Lones, M. A. (2021, rev. 2024). How to avoid machine learning pitfalls: a guide for academic researchers. arXiv:2108.02497. — 모델링 전·구축·평가·비교·보고 단계별 함정." },
-  { id: 7, text: "Ioannidis, J. P. A. (2005). Why Most Published Research Findings Are False. PLoS Medicine 2(8), e124. — 낮은 사전확률·다중 검정·유연한 분석이 거짓 양성을 낳는 구조." },
-  { id: 8, text: "서울여자대학교 데이터사이언스학과 (2025). 「데이터사이언스캡스톤디자인2」 성과 (박민서 교수, 2025-2학기) — 6개 팀 전원 국내 학술대회 논문 제출, 4개 팀 수상(2025 한국정보기술학회 추계종합학술대회 동상 2, 한국산업정보학회 추계학술대회 우수논문상 1, 공군사관학교 미래 항공우주 학술대회 장려상 1). https://ds.swu.ac.kr/board/view?bd_id=community04_01&wr_id=160" },
-  { id: 9, text: "논문지의 KCI 등급·분야·발행 정보는 한국학술지인용색인(kci.go.kr) 및 각 학회 홈페이지 기준 (2026년 조회). JKSCI = 한국컴퓨터정보학회논문지 (Journal of the Korea Society of Computer and Information); JKIIT = 한국정보기술학회논문지 (Journal of KIIT); JKIISR = 한국산업정보학회논문지 (Journal of the Korea Industrial Information Systems Research); JKIIS = 한국지능시스템학회논문지 (Journal of the Korean Institute of Intelligent Systems); JOK = 정보과학회논문지 (Journal of KIISE), 한국정보과학회, 우수등재." },
-  { id: 10, text: "Yu, Bin, & Barter, Rebecca L. (2024). Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making. MIT Press. ISBN 9780262049191. 온라인 무료 공개판 https://vdsbook.com (CC BY-NC-ND). — 데이터사이언스 생애주기(DSLC)의 모든 단계에서 PCS(predictability·computability·stability)로 결과의 신뢰성을 stress test. 이 수업 주교재." },
-]} />
+[^vds]: Yu, B., & Barter, R. L. (2024). *Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making*. MIT Press. 무료 온라인판 [vdsbook.com](https://vdsbook.com) (CC BY-NC-ND 4.0). — 이 수업 주교재. DSLC(데이터사이언스 생애주기)와 PCS(predictability·computability·stability) 프레임.
+
+[^swu]: 서울여자대학교 데이터사이언스학과 (2025. 12.). [「데이터사이언스캡스톤디자인2」 수업 성과](https://ds.swu.ac.kr/board/view?bd_id=community04_01&wr_id=160) (박민서 교수, 2025-2학기). — 6개 팀 전원 국내 학술대회 논문 제출, 4개 팀 수상(한국정보기술학회 추계종합학술대회 동상 2, 한국산업정보학회 추계학술대회 우수논문상 1, 공군사관학교 미래 항공우주 학술대회 장려상 1).
+
+[^kcijournals]: KCI 등재 논문지 정보 — [한국학술지인용색인](https://www.kci.go.kr) 및 각 학회 홈페이지, 2026년 조회. JKSCI = 한국컴퓨터정보학회논문지 (Journal of the Korea Society of Computer and Information); JKIIT = 한국정보기술학회논문지 (Journal of KIIT); JKIISR = 한국산업정보학회논문지 (Journal of the Korea Industrial Information Systems Research); JKIIS = 한국지능시스템학회논문지 (Journal of the Korean Institute of Intelligent Systems); JOK = 정보과학회논문지 (Journal of KIISE, 우수등재).
+
+[^crispdm]: Chapman, P., et al. (2000). *CRISP-DM 1.0: Step-by-step data mining guide*. SPSS. — 데이터마이닝 프로세스 6단계(Business/Data Understanding → Data Preparation → Modeling → Evaluation → Deployment)의 반복 모델. 요약: Wirth & Hipp (2000), Proc. PADD.
+
+[^leakage]: Kaufman, S., Rosset, S., Perlich, C., & Stitelman, O. (2012). Leakage in data mining: Formulation, detection, and avoidance. *ACM Transactions on Knowledge Discovery from Data*, 6(4), Article 15. — target leakage 의 정의와 회피.
+
+[^zinkevich]: Zinkevich, M. (2017, 이후 갱신). [Rules of Machine Learning: Best Practices for ML Engineering](https://developers.google.com/machine-learning/guides/rules-of-ml). Google. — Rule #1(먼저 ML 없이), 단순 baseline 대비 개선을 측정.
+
+[^forking]: Gelman, A., & Loken, E. (2014). The statistical crisis in science. *American Scientist*, 102(6), 460. — 'garden of forking paths': 연구자 자유도와 사후 선택된 유의성.
+
+[^mlpitfalls]: Lones, M. A. (2021, rev. 2024). [How to avoid machine learning pitfalls: A guide for academic researchers](https://arxiv.org/abs/2108.02497). arXiv:2108.02497. — 준비·구축·평가·비교·보고 단계별 함정.
+
+[^ioannidis]: Ioannidis, J. P. A. (2005). Why most published research findings are false. *PLoS Medicine*, 2(8), e124. — 낮은 사전확률·다중 검정·유연한 분석이 거짓 양성을 낳는 구조.
+
+[^carlini]: Carlini, N. (2026). [How to win a best paper award (or, an opinionated take on how to do important research)](https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html). — 문제 선택(taste, Hamming), 수행(빨리 죽이기·de-risk), 글쓰기(아이디어 하나·독자 설정·서론=이야기·결론=so what). 저자는 前 Google Brain/DeepMind, 現 Anthropic.
