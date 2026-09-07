@@ -56,6 +56,11 @@ weeks:
     [arXiv:1901.08152](https://arxiv.org/abs/1901.08152).
   - Rewolinski, Z. T., & Yu, B. (2025). PCS workflow for veridical data science
     in the age of AI. [arXiv:2508.00835](https://arxiv.org/abs/2508.00835).
+- **활용 사례**: 양경주 (2024). *현실적인 데이터 과학의 사례 연구 (Case study on
+  Veridical data science)*. 이학석사 학위논문, 서울대학교 대학원 통계학과
+  (지도교수: 원중호). PCS 프레임워크를 대한민국 제22대 국회의원 선거 자료 분석에
+  적용한 사례 연구.
+  [dCollection](https://dcollection.snu.ac.kr/common/orgView/000000184901).
 - 주차별로 함께 읽을 장(chapter)은 각 주차 노트에서 안내한다.
 
 ## Grading
