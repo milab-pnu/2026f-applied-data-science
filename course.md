@@ -50,6 +50,12 @@ weeks:
 - **주교재**: Bin Yu & Rebecca L. Barter, *Veridical Data Science: The Practice of
   Responsible Data Analysis and Decision Making*, MIT Press, 2024. 전문 무료 공개:
   [vdsbook.com](https://vdsbook.com) (CC BY-NC-ND, © MIT Press).
+- **참고 논문 (PCS 프레임워크 원 논문)**:
+  - Yu, B., & Kumbier, K. (2020). Veridical data science. *Proceedings of the
+    National Academy of Sciences*, 117(8), 3920–3929.
+    [arXiv:1901.08152](https://arxiv.org/abs/1901.08152).
+  - Rewolinski, Z. T., & Yu, B. (2025). PCS workflow for veridical data science
+    in the age of AI. [arXiv:2508.00835](https://arxiv.org/abs/2508.00835).
 - 주차별로 함께 읽을 장(chapter)은 각 주차 노트에서 안내한다.
 
 ## Grading
