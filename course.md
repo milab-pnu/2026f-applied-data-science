@@ -50,7 +50,8 @@ weeks:
 - **주교재**: Bin Yu & Rebecca L. Barter, *Veridical Data Science: The Practice of
   Responsible Data Analysis and Decision Making*, MIT Press, 2024. 전문 무료 공개:
   [vdsbook.com](https://vdsbook.com) (CC BY-NC-ND, © MIT Press).
-- **참고 논문 (PCS 프레임워크 원 논문)**:
+  - 주차별로 함께 읽을 장(chapter)은 각 주차 노트에서 안내한다.
+- **참고 논문**:
   - Yu, B., & Kumbier, K. (2020). Veridical data science. *Proceedings of the
     National Academy of Sciences*, 117(8), 3920–3929.
     [arXiv:1901.08152](https://arxiv.org/abs/1901.08152).
@@ -61,7 +62,6 @@ weeks:
   (지도교수: 원중호). PCS 프레임워크를 대한민국 제22대 국회의원 선거 자료 분석에
   적용한 사례 연구.
   [dCollection](https://dcollection.snu.ac.kr/common/orgView/000000184901).
-- 주차별로 함께 읽을 장(chapter)은 각 주차 노트에서 안내한다.
 
 ## Grading
 
