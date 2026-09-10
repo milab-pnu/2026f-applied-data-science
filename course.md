@@ -50,7 +50,7 @@ weeks:
 - **주교재**: Bin Yu & Rebecca L. Barter, *Veridical Data Science: The Practice of
   Responsible Data Analysis and Decision Making*, MIT Press, 2024. 전문 무료 공개:
   [vdsbook.com](https://vdsbook.com) (CC BY-NC-ND, © MIT Press).
-  - 주차별로 함께 읽을 장(chapter)은 각 주차 노트에서 안내한다.
+  - 주차별 지정 읽기는 아래 표와 각 주차 노트에서 안내한다.
 - **참고 논문**:
   - Yu, B., & Kumbier, K. (2020). Veridical data science. *Proceedings of the
     National Academy of Sciences*, 117(8), 3920–3929.
@@ -62,6 +62,13 @@ weeks:
   (지도교수: 원중호). PCS 프레임워크를 대한민국 제22대 국회의원 선거 자료 분석에
   적용한 사례 연구.
   [dCollection](https://dcollection.snu.ac.kr/common/orgView/000000184901).
+
+### 주차별 지정 읽기
+
+| 주차 | 지정 자료 | 프로젝트 연결 |
+|---|---|---|
+| 2 | [Preface](https://vdsbook.com/), [Chapter 1](https://vdsbook.com/01-veridical_ds), [Chapter 2](https://vdsbook.com/02-dslc) | 팀 협업 약속, 문제 정의, PCS에 따른 검증 계획 |
+| 3 | [Chapter 3](https://vdsbook.com/03-code_reproducibility), 양경주 (2024) [현실적인 데이터 과학의 사례 연구](https://dcollection.snu.ac.kr/common/orgView/000000184901) | 재현 가능한 프로젝트 구성, 사례 비평, 주제 실현가능성 검토 |
 
 ## Grading
 
