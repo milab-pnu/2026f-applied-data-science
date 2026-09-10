@@ -147,12 +147,12 @@ Feature가 많고 서로 강하게 관련되면 LS coefficient가 큰 magnitude�
 
 $$
 \widehat b^{ridge}
-=\arg\min_b\left\{\sum_i(y_i-b_0-x_i^\top b)^2+lambda\sum_{j=1}^{p}b_j^2\right\}
+=\arg\min_b\left\{\sum_i(y_i-b_0-x_i^\top b)^2+\lambda\sum_{j=1}^{p}b_j^2\right\}
 $$
 
 $$
 \widehat b^{lasso}
-=\arg\min_b\left\{\sum_i(y_i-b_0-x_i^\top b)^2+lambda\sum_{j=1}^{p}|b_j|\right\}
+=\arg\min_b\left\{\sum_i(y_i-b_0-x_i^\top b)^2+\lambda\sum_{j=1}^{p}|b_j|\right\}
 $$
 
 보통 intercept는 penalty에서 제외한다. $\lambda=0$이면 LS로 돌아가고, $\lambda$가

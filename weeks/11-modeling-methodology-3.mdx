@@ -125,8 +125,8 @@ G=1-p^2-(1-p)^2=2p(1-p)
 $$
 
 이다. 10개 중 positive 5개면 $G=0.5$, 모두 같은 class면 0이다. Parent 10개를
-왼쪽 4개·오른쪽 6개로 나눴고 impurity가 각각 0과 $4/9$라면 weighted impurity는
-$4/10\times0+6/10\times4/9\approx0.267$이다. 감소량은 $0.5-0.267=0.233$이다.
+왼쪽에 positive 4개, 오른쪽에 positive 1개·negative 5개로 나누면 impurity는 각각 0과 $5/18$이다. Weighted impurity는
+$4/10\times0+6/10\times5/18=1/6\approx0.167$이다. 감소량은 $0.5-1/6=1/3\approx0.333$이다.
 
 깊은 tree는 training 자료의 작은 구역까지 맞출 수 있어 variance가 커진다. max depth,
 minimum leaf size, pruning 등 hyperparameter는 validation에서 고른다. Tree rule은 읽기
