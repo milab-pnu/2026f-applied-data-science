@@ -15,15 +15,6 @@ order: 0
 [Chapter 1 — An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds),
 [Chapter 2 — The Data Science Life Cycle](https://vdsbook.com/02-dslc),
 [Chapter 3 — Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility).
-각 장 전체를 읽되 다음 질문에 대한 답을 찾아 표시한다.
-
-| 읽을 부분 | 읽으며 생각할 질문 |
-|---|---|
-| Preface | 컴퓨팅·통계·도메인 지식이 우리 팀에 각각 어디서 필요한가? |
-| Chapter 1, 특히 §1.1–1.3 | 데이터를 믿는 근거와 분석 결과를 믿는 근거는 어떻게 다른가? |
-| Chapter 2, §2.1–2.7 | 관측 단위, 준비·분석·평가·전달은 어떻게 연결되는가? |
-| Chapter 3, §3.1–3.4 | 다른 팀원이 같은 자료로 분석을 다시 실행하려면 무엇이 필요한가? |
-
 <Callout type="note">
 이 노트의 식당 자료와 수치는 개념을 설명하기 위한 가상 예시다.
 </Callout>
@@ -35,7 +26,6 @@ order: 0
 신뢰할 근거를 다룬다. 전통적인 추론 이론과 윤리·공정성·프라이버시의 체계적인 교육은
 범위 밖이다.[^preface] 따라서 PCS 평가를 통과했다고 데이터 사용 권한이나 윤리 문제까지
 해결된 것으로 보지 않는다. 이 과목에서는 데이터 윤리를 별도 주차에서 다룬다.
-
 
 Preface는 데이터사이언스를 컴퓨팅, 통계·수학, 도메인 지식이 만나는 일로 소개한다.
 이 수업에서는 이를 팀의 작업을 배분하는 기준으로 사용한다.[^preface]
@@ -221,7 +211,7 @@ Computability는 명확하고 효율적이며 확장·재현 가능한 계산을
 
 ### 3.3 Stability: 무엇을 바꾸어도 어떤 결론이 남아야 하는가
 
-섭동(perturbation)은 실제로 가능했을 다른 자료나 분석 선택을 만들어 비교하는 것이다.
+perturbation은 실제로 가능했을 다른 자료나 분석 선택을 만들어 비교하는 것이다.
 교재는 자료 수집, 정제·전처리 판단, 알고리즘 선택에서 생기는 불확실성을 구분한다.[^vds1]
 식당 팀이라면 관측 날짜의 구성, 결측 처리 규칙, 예측 방법을 각각 바꿔 볼 수 있다.
 날짜를 바꿀 때는 하루 안의 연속된 기록을 함께 다루는 등 수집 구조를 고려한다.
@@ -467,7 +457,6 @@ predictability도 확인한다. 우리 캡스톤에서는 우선 동료가 핵�
 
 ## 6. 수업 활동: 문제 정의와 실행 경로
 
-
 3주차에는 표본 구조와 첫 실행 결과, 아직 막힌 항목을 가져온다. 자료가 확보되지 않았다면
 확보한 것처럼 가정하지 말고 접근 상태를 가져온다.
 
@@ -489,30 +478,10 @@ predictability도 확인한다. 우리 캡스톤에서는 우선 동료가 핵�
 “평가 자료는 적용 대상을 대표하는가?”, “불확실한 전제가 틀리면 무엇을 바꿀 것인가?”를
 묻는다. 답이 막히는 부분이 다음 주 feasibility review의 첫 작업이다.
 
-### 이해 확인
+[^preface]: Yu, B., & Barter, R. L. (2024). [Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making](https://vdsbook.com/). *MIT Press*.
+[^vds1]: Yu, B., & Barter, R. L. (2024). [An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds). *Veridical Data Science*, MIT Press.
+[^vds2]: Yu, B., & Barter, R. L. (2024). [The Data Science Life Cycle](https://vdsbook.com/02-dslc). *Veridical Data Science*, MIT Press.
 
-1. 모델 점수는 높지만 입력에 구간 종료 뒤 정보가 섞여 있다. 무엇을 수정해야 하는가?
-2. 같은 코드를 세 번 실행해 같은 수치를 얻었다. 어떤 근거를 얻었고, 무엇은 아직 모르는가?
-3. 데이터가 주문 1건에서 식당·하루 단위로 바뀌면 질문과 검증은 어떻게 바뀌는가?
-4. 동일한 코드의 재실행과 동료의 독립 구현은 각각 어떤 문제를 발견할 수 있는가?
-
-<Details summary="토론 후 확인할 해설">
-
-1. 예측 시점에 사용할 수 있는 입력을 다시 정하고 그 조건으로 재평가해야 한다.
-   점수에 임의의 감점을 주는 것으로 해결되지 않는다.
-2. 같은 환경에서의 계산 재현성에 대한 근거다. 미래 성능과 타당한 대안에서의 안정성은
-   별도 검사가 필요하다.
-3. 개인 주문의 대기 시간 대신 일별 요약값을 다룬다. 하루의 정보가 언제 완성되는지,
-   일별 자료가 며칠 있는지, 미래 날짜를 평가에 어떻게 남길지 다시 정해야 한다.
-4. 재실행은 환경과 실행 순서의 의존성을, 독립 구현은 원래 코드의 계산 오류나 다른
-   해석을 드러낼 수 있다. 둘 다 같은 원자료가 현실을 대표하는지는 별도로 확인해야 한다.
-
-</Details>
-
-[^preface]: Yu, B., & Barter, R. L. (2024). [Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making](https://vdsbook.com/). *MIT Press*. — Preface, 학제적 성격과 책의 범위, Figure 2. 웹판 접근: 2026-09-10.
-[^vds1]: Yu, B., & Barter, R. L. (2024). [An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds). *Veridical Data Science*, MIT Press. — Chapter 1, §1.1–1.3, 특히 §1.3.1의 평가 자료와 §1.3.2의 타당한 섭동. 웹판 접근: 2026-09-10.
-[^vds2]: Yu, B., & Barter, R. L. (2024). [The Data Science Life Cycle](https://vdsbook.com/02-dslc). *Veridical Data Science*, MIT Press. — Chapter 2, Figure 2.1, §2.1의 관측 단위, §2.2의 질문과 수집, §2.3.4의 data snooping, §2.6–2.7의 평가와 전달. 웹판 접근: 2026-09-10.
-
-[^setup]: Yu, B., & Barter, R. L. (2024). [Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility). *Veridical Data Science*, MIT Press. — Chapter 3, §3.1의 함수·코드 검토, §3.2의 파일 구조와 원자료 보존, §3.3의 재현성, §3.4의 협업. 웹판 접근: 2026-09-10.
-[^workflow]: Barter, R. L. (2019). [A quick guide to developing a reproducible and consistent data science workflow](https://rebeccabarter.com/blog/2019-03-07_reproducible_pipeline). *Rebecca Barter*. — 3월 23일 게시, Project Structure의 원자료·실행 코드·탐색 기록 구분. 해설 자료. 접근: 2026-09-10.
-[^git]: Chacon, S., & Straub, B. [About Version Control](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). *Pro Git*, 2nd edition. — §1.1, 파일 변경 이력과 이전 상태의 추적. Git·GitHub 협업 개념은 주교재 §3.4.1도 참고. 웹판 접근: 2026-09-10.
+[^setup]: Yu, B., & Barter, R. L. (2024). [Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility). *Veridical Data Science*, MIT Press.
+[^workflow]: Barter, R. L. (2019). [A quick guide to developing a reproducible and consistent data science workflow](https://rebeccabarter.com/blog/2019-03-07_reproducible_pipeline). *Rebecca Barter*.
+[^git]: Chacon, S., & Straub, B. [About Version Control](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). *Pro Git*, 2nd edition.
