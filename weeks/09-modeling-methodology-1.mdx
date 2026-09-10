@@ -1,0 +1,243 @@
+---
+title: "구조를 요약하고 예측 문제를 세우기: PCA, clustering, baseline"
+week: 9
+order: 0
+---
+
+모델링은 알고리즘 이름을 고르는 일보다 먼저 **무엇을 보존하고 무엇을 잃어도 되는지**를
+정하는 일이다. 이번 주에는 response가 없는 자료의 구조를 PCA(principal component
+analysis)와 clustering으로 요약하고, response가 있는 예측 문제에서는 현재 자료와
+미래 적용 상황을 연결한다. 두 종류의 학습을 모두 PCS로 점검해 “보기 좋은 구조”와
+“쓸 수 있는 결과”를 구분한다.
+
+**지정 읽기**: Yu & Barter, *Veridical Data Science*의
+[Chapter 6 — Principal Component Analysis](https://vdsbook.com/06-pca),
+[Chapter 7 — Clustering](https://vdsbook.com/07-cluster),
+[Chapter 8 — An Introduction to Prediction Problems](https://vdsbook.com/08-prediction_intro).
+
+<Callout type="note">
+식당 사례와 수치는 독립적으로 만든 가상 예시다. 교재의 nutrition·housing 사례를
+옮기지 않는다.
+</Callout>
+
+## 1. supervised와 unsupervised를 질문으로 구분하기
+
+**Unsupervised learning**은 지정된 response 없이 변수나 관측 사이의 구조를 요약한다.
+PCA는 주로 열의 선형 구조를 적은 축으로 요약하고, clustering은 행을 정한 similarity에
+따라 묶는다. **Supervised learning**은 과거에 관측된 response $y$와 predictor $X$의
+관계를 학습해 미래의 모르는 $y$를 예측한다.[^vds8]
+
+식당 프로젝트에서 다음 질문은 서로 다르다.
+
+| 질문 | 학습 종류 | 결과 |
+|---|---|---|
+| 메뉴 영양 변수의 공통 축은 무엇인가 | unsupervised, PCA | component score와 loading |
+| 운영 패턴이 비슷한 날짜를 묶을 수 있는가 | unsupervised, clustering | cluster membership |
+| 다음 구간 대기 시간은 몇 분인가 | supervised regression | 연속값 prediction |
+| 다음 구간이 15분 이상 지연되는가 | supervised classification | probability와 class |
+
+cluster 번호를 실제 유형의 정답처럼 부르면 안 된다. response가 없으므로 알고리즘이 찾은
+그룹이 도메인상 의미 있는지는 별도 자료와 해석으로 확인한다. 반대로 prediction에서는
+label 정의와 관측 시점이 틀리면 알고리즘 성능이 좋아도 다른 문제를 푼 것이다.
+
+## 2. PCA: 여러 변수를 선형 요약으로 바꾸기
+
+$n$개 관측과 $p$개 numeric variable을 평균 중심화한 행렬을 $X\in\mathbb{R}^{n\times p}$라
+하자. 첫 principal component의 방향 $v_1$은 길이가 1인 벡터 중 projection
+$Xv$의 variance가 가장 큰 방향이다.[^vds6]
+
+$$
+v_1=\arg\max_{\lVert v\rVert_2=1}\operatorname{Var}(Xv)
+$$
+
+관측 $i$의 첫 component score는 $z_{i1}=x_i^\top v_1$이다. $v_1$의 각 원소는
+원변수의 loading이다. 두 번째 방향은 첫 방향과 직교하면서 남은 variance를 가장 많이
+담는다. PCA는 Pearson이 1901년에 선형 공간의 점을 가장 잘 맞추는 관점으로 제시했고,
+이후 Hotelling이 principal components라는 형태로 전개했다.[^pearson]
+
+### 2.1 작은 계산
+
+평균 중심화한 두 변수의 세 관측이 `(-1,-1), (0,0), (1,1)`이라고 하자. 점은
+$x_2=x_1$ 선 위에 있다. 단위 방향 $v_1=(1/\sqrt2,1/\sqrt2)$에 projection하면 score는
+$-\sqrt2,0,\sqrt2$이고, 직교 방향 $v_2=(1/\sqrt2,-1/\sqrt2)$의 score는 모두 0이다.
+첫 축만으로 이 자료의 선형 variation을 잃지 않고 표현한다.
+
+실제 자료에서는 singular value decomposition(SVD)
+
+$$
+X=UDV^\top
+$$
+
+로 방향과 score를 계산할 수 있다. $V$의 열이 principal direction이고 $XV=UD$가
+component score다. singular value $d_j$에 대응하는 explained variance의 비율은
+
+$$
+\frac{d_j^2}{\sum_{k=1}^{\min(n,p)}d_k^2}
+$$
+
+로 계산한다. “첫 두 축이 70%를 설명한다”는 것은 선택한 전처리와 표본에서 총 variance의
+70%가 그 두 선형 방향에 담겼다는 뜻이다. response의 70%를 예측하거나 정보의 70%가
+본질적으로 보존된다는 보장은 아니다.
+
+### 2.2 scaling과 transformation은 모델 일부다
+
+분 단위 대기 시간과 원 단위 매출을 그대로 쓰면 단위가 큰 변수가 variance를 지배할 수
+있다. 서로 다른 단위의 변수를 동등하게 비교하려면 standardization을 검토한다. 그러나
+측정 변동 자체가 중요한 같은 단위 센서라면 표준화가 작은 noise 변수까지 키울 수 있다.
+표준화 여부는 자동 규칙이 아니라 domain judgment다.[^vds6]
+
+오른쪽 꼬리가 강한 변수에 log transform을 적용하면 PCA 방향도 바뀐다. loading의 부호는
+축 전체를 $-1$배해도 같은 축이므로 부호 자체보다 변수들의 상대적 방향과 magnitude를 본다.
+component를 “혼잡도”라고 이름 붙이려면 높은 score의 실제 관측과 loading을 함께 확인한다.
+
+## 3. PCA의 predictability와 stability
+
+PCA에는 정답 label이 없으므로 explained variance만으로 predictability를 평가하기 어렵다.
+다음 근거를 목적에 맞게 고른다.
+
+- **재구성:** 적은 component로 원변수를 얼마나 가깝게 복원하는가.
+- **새 자료:** training에서 정한 center, scale, loading을 새 시점에 적용했을 때 구조가 유지되는가.
+- **downstream:** component를 쓴 visualization·prediction이 원래 목적에 유용한가.
+- **도메인 대조:** 높은·낮은 score의 관측이 알려진 현상과 일치하는가.
+
+PCA를 전체 자료에 fit한 뒤 test prediction에 사용하면 test의 feature distribution이
+component 방향에 들어간다. prediction pipeline에서는 fold별 training에 PCA를 fit한다.
+
+Stability는 관측 날짜, outlier 처리, 표준화, 변수 묶음, component 수를 perturbation하고
+subspace·loading·downstream 결론을 비교한다. 거의 같은 eigenvalue가 있는 두 축은 작은
+변화로 서로 회전할 수 있다. 축 하나의 loading 순위만 고집하기보다 선택한 차원 전체가
+담는 공간과 실제 결론을 본다.
+
+## 4. clustering: similarity를 정하면 그룹이 생긴다
+
+Clustering에는 보편적인 정답 군집이 있는 것이 아니다. 거리, 변수 표현, 알고리즘,
+cluster 수가 “비슷함”의 의미를 정한다.[^vds7] 식당 날짜를 `[점심 주문 수, median wait]`로
+묶는 것과 `[아침·점심·저녁 비율]`로 묶는 것은 다른 질문이다.
+
+Euclidean distance는
+
+$$
+d(x_i,x_j)=\sqrt{\sum_{m=1}^{p}(x_{im}-x_{jm})^2}
+$$
+
+이다. 변수 scale이 거리 기여를 바꾸므로 전처리를 설명한다. category, sparse text,
+time series에는 다른 similarity가 더 맞을 수 있다. distance를 계산할 수 있다는 것과
+도메인상 가까움을 나타낸다는 것은 별개다.
+
+### 4.1 hierarchical clustering
+
+Agglomerative hierarchical clustering은 각 관측을 별도 cluster로 시작해 가장 가까운
+cluster를 차례로 합친다. cluster 사이 거리를 정하는 linkage가 결과를 바꾼다.
+
+| linkage | 두 cluster 사이 거리 | 성질과 주의점 |
+|---|---|---|
+| single | 가장 가까운 두 점 | 길게 이어지는 chaining 가능 |
+| complete | 가장 먼 두 점 | 조밀한 cluster 선호, outlier 영향 |
+| average | 모든 쌍 거리 평균 | 두 극단의 중간적 선택 |
+| Ward | 합친 뒤 within-cluster variation 증가 | Euclidean·분산 구조 가정과 연결 |
+
+Dendrogram의 높이는 합쳐진 거리나 손실을 나타낸다. 가지를 자르는 높이가 cluster 수를
+정하며, 그림의 leaf 순서나 색은 정답의 순서를 뜻하지 않는다.
+
+### 4.2 K-means
+
+K-means는 cluster 중심 $\mu_1,\dots,\mu_K$와 membership $c_i$를 번갈아 갱신해
+within-cluster sum of squares(WCSS)를 줄인다.
+
+$$
+\min_{c_1,\dots,c_n,\mu_1,\dots,\mu_K}
+\sum_{i=1}^{n}\lVert x_i-\mu_{c_i}\rVert_2^2
+$$
+
+각 점을 가장 가까운 중심에 배정하고, 각 cluster의 평균으로 중심을 다시 계산해 반복한다.
+초기 중심에 따라 local solution이 달라질 수 있으므로 여러 initialization을 실행하되,
+반복 횟수를 늘렸다는 사실을 새 자료 검증과 혼동하지 않는다.
+
+K-means는 대략 구형이고 규모가 비슷한 Euclidean cluster에서 잘 맞는 objective를 가진다.
+휘어진 모양, 범주형 변수, 심한 outlier에는 결과가 목적과 맞지 않을 수 있다. 알고리즘이
+항상 $K$개 그룹을 돌려준다는 사실은 현실에 $K$개 유형이 존재한다는 증거가 아니다.
+
+## 5. cluster를 평가하고 이름 붙이기
+
+Silhouette은 관측 $i$의 자기 cluster 내 평균 거리 $a(i)$와 가장 가까운 다른 cluster의
+평균 거리 $b(i)$를 이용한다.[^silhouette]
+
+$$
+s(i)=\frac{b(i)-a(i)}{\max\{a(i),b(i)\}}
+$$
+
+1에 가까우면 현재 distance 아래 자기 cluster에 더 가깝고, 0 근처면 경계에 있으며,
+음수면 다른 cluster에 더 가까운 편이다. 높은 silhouette이 도메인 usefulness를 보증하지
+않는다. 같은 distance 가정을 다시 평가하는 internal metric이기 때문이다.
+
+두 clustering의 pairwise 일치를 Rand index로 비교할 수 있고, 우연 일치를 보정한
+adjusted Rand index도 쓸 수 있다. label 1과 2를 바꿔도 같은 partition임을 반영해야 한다.
+cluster stability는 seed, 표본, 변수, scaling, $K$, 알고리즘을 바꾸고 membership이나
+요약 특성이 유지되는지 본다.
+
+cluster에 이름을 붙일 때에는 각 cluster의 변수 분포와 대표·경계 관측을 확인한다.
+PCA 2차원 그림만 보고 분리되었다고 판단하면 projection에서 사라진 차원을 놓칠 수 있다.
+“고위험 고객”처럼 사람에게 영향을 주는 명칭은 기술적 군집에 규범적 의미를 덧붙이므로
+근거와 사용 위험을 별도로 검토한다.
+
+## 6. prediction problem을 실행 가능한 형태로 만들기
+
+구조 탐색 뒤 supervised prediction으로 갈 때에는 $X$, $y$, prediction time, target time,
+evaluation unit을 명시한다. VDS는 과거·현재의 관계가 미래에도 적용된다는 연결을
+predictability의 핵심으로 다룬다.[^vds8]
+
+> 식당 A의 평일 점심 30분 구간마다 30분 전까지 이용 가능한 정보 $X$로, 구간 종료 후
+> 확정되는 대기 시간 중앙값 $y$를 예측해 이후 2주의 MAE를 지난주 동일 구간 baseline보다 줄인다.
+
+이 문장은 다음을 고정한다.
+
+- 한 prediction의 단위는 `식당 × 날짜 × 구간`이다.
+- 입력의 마감은 구간 시작 30분 전이다.
+- response는 구간 종료 뒤 정의된 중앙값이다.
+- 적용 상황을 흉내 내도록 미래 주간을 남긴다.
+- 복잡한 모델은 baseline과 같은 평가 행에서 비교한다.
+
+feature quantity보다 quality가 먼저다. 예측 시점에 없는 값, 운영 중 얻을 수 없는 센서,
+개인정보 위험이 큰 식별자는 성능이 좋아 보여도 배포 입력이 되기 어렵다. label도 관측
+절차가 바뀌면 과거와 미래의 뜻이 달라질 수 있다.
+
+### 6.1 baseline과 loss
+
+연속 response에는 지난주 같은 구간 값이나 training median, binary response에는 training
+prevalence나 항상 다수 class 같은 간단한 baseline을 둔다. baseline은 약하게 만들기 위한
+허수아비가 아니라 현재의 의사결정 절차를 반영해야 한다.
+
+MAE는 큰 오차를 선형으로, MSE(mean squared error)는 제곱으로 가중한다.
+
+$$
+\operatorname{MAE}=\frac1n\sum_{i=1}^{n}|y_i-\hat y_i|,
+\qquad
+\operatorname{MSE}=\frac1n\sum_{i=1}^{n}(y_i-\hat y_i)^2
+$$
+
+실제 `[8, 12, 20]`, 예측 `[10, 11, 14]`이면 절대오차는 `[2,1,6]`이고
+MAE는 $(2+1+6)/3=3$분이다. 제곱오차는 `[4,1,36]`이므로 MSE는
+$41/3\approx13.67$분$^2$이다. 어느 loss가 운영 피해와 맞는지 모델을 보기 전에 정한다.
+
+## 7. 다음 모델링으로 넘길 설계표
+
+| 항목 | 확정할 내용 |
+|---|---|
+| 질문 종류 | 구조 요약, clustering, regression, classification |
+| 입력 표현 | 변수, scale, transform, 이용 가능 시각 |
+| 출력 | score·cluster·prediction의 단위와 해석 |
+| 비교 | reconstruction, cluster quality, baseline, loss |
+| 분할 | 새 사람·날짜·장소 중 적용을 모사하는 단위 |
+| tuning | validation 또는 fold 안에서 고를 선택 |
+| stability | 데이터·전처리·알고리즘 perturbation과 비교할 결론 |
+| 중단 조건 | 해석 불가, leakage, 자원 초과, baseline 미개선 |
+
+10–11주차에는 이 설계를 고정한 상태에서 여러 supervised algorithm을 비교한다. test를
+열어 알고리즘을 고르지 않으며, PCA나 clustering을 feature로 쓴다면 그것도 training
+fold 안의 pipeline으로 fit한다.
+
+[^vds6]: Yu, B., & Barter, R. L. (2024). [Principal Component Analysis](https://vdsbook.com/06-pca). *Veridical Data Science*, MIT Press.
+[^vds7]: Yu, B., & Barter, R. L. (2024). [Clustering](https://vdsbook.com/07-cluster). *Veridical Data Science*, MIT Press.
+[^vds8]: Yu, B., & Barter, R. L. (2024). [An Introduction to Prediction Problems](https://vdsbook.com/08-prediction_intro). *Veridical Data Science*, MIT Press.
+[^pearson]: Pearson, K. (1901). [On Lines and Planes of Closest Fit to Systems of Points in Space](https://doi.org/10.1080/14786440109462720). *Philosophical Magazine*, 2(11), 559–572.
+[^silhouette]: Rousseeuw, P. J. (1987). [Silhouettes: A graphical aid to the interpretation and validation of cluster analysis](https://doi.org/10.1016/0377-0427%2887%2990125-7). *Journal of Computational and Applied Mathematics*, 20, 53–65.

@@ -1,0 +1,217 @@
+---
+title: "적용 상황을 모사하는 평가: split, metric, PCS selection"
+week: 12
+order: 0
+---
+
+평가는 모델이 만들어진 뒤 점수를 붙이는 단계가 아니다. 적용 대상, 정보의 시간 순서,
+오류의 비용을 먼저 정해 두고 모델 선택 과정 전체가 그 규칙을 지키는지 확인하는
+실험 설계다. 이번 주에는 training·validation·test의 역할을 분리하고, nested selection,
+group·time split, uncertainty, subgroup evaluation을 하나의 PCS 평가표로 연결한다.
+
+**지정 읽기**: Yu & Barter, *Veridical Data Science*의
+[Chapter 13 — Producing the Final Prediction Results](https://vdsbook.com/13-final_ml).
+
+**추가 읽기**:
+[Cross-validation: evaluating estimator performance](https://scikit-learn.org/stable/modules/cross_validation.html).
+
+<Callout type="note">
+식당 평가의 자료·수치는 계산을 위한 가상 예시다. 반복 결과는 실제 모델 실행 결과가 아니다.
+</Callout>
+
+## 1. 평가 질문을 먼저 쓴다
+
+“Accuracy가 얼마인가?”보다 다음 문장이 앞선다.
+
+> 9–10월 식당 A·B 자료로 선택한 30분 전 혼잡 예측 pipeline이, 아직 사용하지 않은
+> 11월의 같은 두 식당에서 지난주 동일 구간 baseline보다 혼잡 누락을 줄이면서 false
+> alarm을 운영 허용 범위 안에 두는가?
+
+이 문장은 population, time, unit, baseline, outcome, cost를 드러낸다. 처음 보는 식당에
+적용하려는 프로젝트라면 식당 전체를 남겨 평가해야 한다. 같은 식당의 미래를 예측하려면
+시간 순서를 보존한다. Random row split은 적용 상황이 실제로 exchangeable row일 때만
+맞는다.[^sklearn-cv]
+
+## 2. training, validation, test의 역할
+
+| 자료 | 사용하는 결정 | 사용하지 말아야 할 결정 |
+|---|---|---|
+| Training | coefficient·tree·imputation·scaling fit | 최종 성능 주장 |
+| Validation | feature, preprocessing, algorithm, hyperparameter, threshold 선택 | 독립 최종 성능 주장 |
+| Test | 고정된 pipeline의 마지막 평가 | 결과를 본 뒤 pipeline 수정 |
+
+VDS는 여러 cleaned/preprocessed data와 algorithm 후보를 validation에서 PCS로 비교하고,
+선택이 끝난 뒤 test로 최종 성능을 확인하도록 제안한다.[^vds13] Test를 열어 feature를
+삭제하거나 threshold를 바꾸면 test도 training process의 일부가 된다. 변경이 필요하면
+이를 개발 자료로 재분류하고 새로운 평가 자료를 확보한다.
+
+### 2.1 cross-validation은 validation을 반복하는 구조다
+
+$K$-fold cross-validation(CV)은 development data를 $K$개 fold로 나눠, 매번 $K-1$개로
+fit하고 남은 하나로 평가한다. 모든 관측은 한 번씩 validation 역할을 한다. 평균 score는
+
+$$
+\overline L_{CV}=\frac1K\sum_{k=1}^{K}L_k
+$$
+
+이다. Fold 5개의 MAE가 `[3.0, 3.6, 2.8, 4.1, 3.5]`분이면 평균은
+$17.0/5=3.4$분이다. Fold가 독립 반복 실험이라고 단정할 수 없고, 표준편차를 단순한
+population confidence interval로 부르면 안 된다.
+
+각 fold 안에서 preprocessing과 feature selection을 다시 fit한다. 전체 development data로
+결측 대체와 scaling을 한 뒤 CV하면 held-out fold 정보가 들어간다. GroupKFold,
+time-series split 등 구조에 맞는 splitter를 사용하고, 같은 사람·날짜의 연관 관측이
+양쪽에 흩어지지 않게 한다.[^sklearn-cv]
+
+### 2.2 nested evaluation이 필요한 때
+
+CV score로 수십 개 pipeline을 고르면 가장 낮은 score에는 validation noise도 포함된다.
+선택 후 같은 CV 평균을 최종 성능처럼 제시하면 optimistic할 수 있다. Outer fold가 전체
+선택 절차를 평가하고 inner fold가 hyperparameter를 고르는 nested CV가 한 대안이다.
+
+```text
+outer training
+  └─ inner split: preprocessing·model·hyperparameter·threshold 선택
+outer validation
+  └─ 선택된 전체 pipeline을 한 번 평가
+```
+
+마지막 independent test가 충분하고 한 번만 사용된다면 nested CV가 항상 필요한 것은
+아니다. 자료가 작아 test 하나의 변동이 큰 상황에서 전체 selection procedure의 반복
+성능을 보려는 목적에 유용하다. 시간 자료에서는 무작위 nested fold보다 시간 순서를
+지키는 outer·inner window가 필요하다.
+
+## 3. split은 적용에서 새로 만날 단위를 따른다
+
+| 적용 질문 | 권장 평가 단위 | 피할 누수 예 |
+|---|---|---|
+| 같은 식당의 다음 달 | 미래 time block | 미래 통계로 scaling·feature 생성 |
+| 처음 보는 식당 | restaurant group | 같은 식당의 인접 구간을 양쪽에 배치 |
+| 처음 보는 사용자 | person group | 같은 사람의 여러 session 분리 |
+| 새 장비·기관 | device·site group | 장비 ID로 기관을 기억 |
+
+여러 목표가 있으면 이중 평가를 할 수 있다. 같은 식당 미래와 새 식당 미래는 난도가
+다른 별도 estimand다. 한 점수로 섞지 않는다. Training과 test의 feature·label 분포가
+달라지는 dataset shift를 요약하고, test에 training support 밖의 값이 얼마나 있는지 본다.
+
+Duplicate와 near-duplicate도 점검한다. 같은 사진의 crop, 같은 문서의 문장, 동일 주문의
+수정 버전이 양쪽에 있으면 model이 일반화보다 기억을 평가받을 수 있다. 분할 전 entity와
+provenance를 이용해 묶는다.
+
+## 4. metric은 의사결정 손실을 근사한다
+
+### 4.1 regression
+
+MAE는 절대오차의 평균, RMSE는 큰 오차를 더 강하게 반영한다. Quantile loss는 과소·과대
+예측의 비용이 다를 때 사용할 수 있다. 평균 하나 외에 median error, upper quantile,
+group·time별 error를 보고한다. Target scale을 log로 학습했으면 평가 metric을 어느
+scale에서 계산했는지 명시한다.
+
+가상 두 모델의 absolute error가 A=`[1,1,1,9]`, B=`[3,3,3,3]`이면 둘 다 MAE 3분이다.
+A의 RMSE는 $\sqrt{(1+1+1+81)/4}=\sqrt{21}\approx4.58$분, B는 3분이다.
+같은 MAE 뒤에 실패 형태가 다르다.
+
+### 4.2 classification
+
+Prevalence, confusion matrix, TPR, TNR, precision, ROC-AUC, PR-AUC, log loss, Brier score
+가 서로 다른 질문에 답한다. Rare positive 문제에서는 ROC curve가 좋은 인상을 줄 때에도
+precision이 낮을 수 있어 precision–recall을 함께 보는 것이 유용하다.[^pr-curve]
+
+Threshold-free ranking metric으로 algorithm을 고르고 실제 decision threshold의 성능을
+생략하면 배포 규칙을 평가하지 않은 것이다. 최종 threshold에서 필요한 인력 수,
+false alarm과 missed case의 수를 절대 건수로도 계산한다.
+
+### 4.3 baseline과 paired comparison
+
+두 모델은 같은 평가 행에서 비교한다. 날짜 누락 때문에 대상이 다르면 score 차이에
+표본 차이가 섞인다. 공통 행의 paired error difference
+
+$$
+d_i=L(y_i,\hat y_i^{new})-L(y_i,\hat y_i^{base})
+$$
+
+를 계산하면 $d_i<0$이 새 모델의 개선이다. 날짜처럼 독립 단위가 묶여 있으면 행별 차이보다
+날짜별 평균 차이를 요약하고 bootstrap도 날짜 block을 재표집한다.
+
+## 5. 불확실성을 숫자 하나로 숨기지 않기
+
+Test score는 유한한 평가 자료에서 얻은 값이다. Bootstrap이나 반복된 독립 time window로
+변동을 요약할 수 있지만 재표집 단위가 자료 생성 구조와 맞아야 한다. 인접 30분 행을
+독립 bootstrap하면 실제 날짜 간 변동을 과소평가할 수 있다.
+
+가상 test 날짜별 baseline 대비 MAE 차이가 `[-0.8,-0.5,0.1,-0.4]`분이면 평균 차이는
+$(-1.6)/4=-0.4$분이다. 네 날짜 중 한 날은 새 모델이 나빴다. 날짜가 4개뿐이라는 제한과
+각 날짜의 차이를 그대로 제시한다. 관측한 범위를 큰 population의 정밀한 보장처럼 말하지 않는다.
+
+Model comparison을 많이 할수록 validation의 우연한 승자를 고를 기회가 늘어난다.
+후보 수와 선택 절차를 공개하고, domain상 중복되거나 실행 불가능한 후보를 사전에 줄인다.
+Test 하나로 이 모든 선택을 다시 최적화하지 않는다.
+
+## 6. subgroup, fairness, abstention
+
+전체 점수가 좋아도 중요한 집단에서 실패할 수 있다. Subgroup metric에는 반드시 분모,
+outcome prevalence, uncertainty를 함께 둔다. EDA 뒤 성능이 나쁜 집단을 발견했다면
+그 결과는 진단으로 보고 다음 독립 자료에서 확인한다. 작은 집단의 noisy estimate를
+숨기거나 과도하게 단정하지 않는다.
+
+모델이 training support에서 멀거나 confidence가 낮을 때 prediction을 보류하고 사람에게
+넘기는 abstention 정책도 평가 대상이다. 보류 후 남은 사례의 성능만 좋아졌다고 보고하면
+보류된 비율과 그 부담이 사라진다. Coverage–performance trade-off, 처리 가능한 검토량,
+보류가 특정 집단에 몰리는지 함께 본다.
+
+공정성 metric 사이에는 맥락에 따라 trade-off가 있을 수 있다. Metric 하나를 보편적인
+공정성 정의로 고르지 말고, decision과 오류의 실제 결과, 법률·기관 기준, 당사자 의견을
+검토한다. 데이터 윤리 평가는 5주차에서 세운 위험·편익과 연결한다.
+
+## 7. PCS model selection
+
+후보는 단일 algorithm만이 아니라 `수집 범위 × cleaning × preprocessing × feature ×
+algorithm × hyperparameter × threshold`의 pipeline이다. VDS는 predictability와 stability를
+함께 보고 단일 fit을 선택하거나, 타당한 fit의 prediction을 ensemble하거나,
+calibrated prediction perturbation interval을 구성하는 접근을 설명한다.[^vds13]
+
+### 7.1 단일 fit
+
+Validation predictability가 충분하고 타당한 perturbation에서 성능·결정이 안정적인
+pipeline을 고른다. 최고 소수점 점수만으로 고르지 않고 자원, 해석 가능성, 운영 제약을
+사전에 정한 동률 해소 기준으로 사용한다.
+
+### 7.2 PCS ensemble
+
+여러 타당한 fit의 연속 prediction 평균이나 binary probability 평균을 쓸 수 있다.
+
+$$
+\hat y_{ens}(x)=\frac1M\sum_{m=1}^{M}\hat y_m(x)
+$$
+
+Ensemble은 fit 간 variation을 줄일 수 있지만, 모든 fit이 같은 leakage나 measurement bias를
+공유하면 이를 고치지 못한다. Ensemble에 포함할 후보는 test가 아니라 validation과
+domain 기준으로 정한다.
+
+### 7.3 prediction perturbation range
+
+한 사례에 대해 타당한 fit들의 prediction이 `[8,9,13,10]`분이면 관측 perturbation range는
+8–13분이다. 이것은 선택한 pipeline들의 variation이지 자동으로 95% prediction interval이
+아니다. VDS의 calibrated PCS prediction perturbation interval은 별도 calibration data에서
+coverage를 맞추는 단계를 포함한다.[^vds13] Calibration에 쓴 자료와 최종 coverage 평가
+자료를 구분한다.
+
+## 8. 최종 평가 protocol
+
+Test를 열기 전에 아래를 version-controlled 문서로 고정한다.
+
+1. 적용 population·시점·independent unit
+2. training/validation/test 경계와 제외 규칙
+3. baseline, primary metric, 보조 metric, practical threshold
+4. 전체 preprocessing·model·threshold selection 절차
+5. subgroup과 failure analysis 항목
+6. data·model perturbation과 stable해야 할 결론
+7. test 확인 후 수정이 필요할 때의 처리
+
+Test 실행 뒤에는 모든 계획된 결과를 함께 보고한다. 실패한 metric이나 subgroup을 빼지
+않고, 적용 범위를 좁혀야 하는 근거로 사용한다. 13주차에는 이 평가 결과에서 허용되는
+해석과 실제 의사결정 문장을 작성한다.
+
+[^vds13]: Yu, B., & Barter, R. L. (2024). [Producing the Final Prediction Results](https://vdsbook.com/13-final_ml). *Veridical Data Science*, MIT Press.
+[^sklearn-cv]: scikit-learn developers. [Cross-validation: evaluating estimator performance](https://scikit-learn.org/stable/modules/cross_validation.html). *scikit-learn User Guide*.
+[^pr-curve]: Saito, T., & Rehmsmeier, M. (2015). [The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets](https://doi.org/10.1371/journal.pone.0118432). *PLOS ONE*, 10(3), e0118432.

@@ -1,0 +1,222 @@
+---
+title: "점수에서 주장과 행동으로: 결과 해석, 설명, 한계"
+week: 13
+order: 0
+---
+
+좋은 test score는 결론의 시작이지 끝이 아니다. 결과 해석에서는 model이 계산한 것,
+자료가 지지하는 경험적 주장, 사용자가 취할 action을 분리해야 한다. 이번 주에는
+coefficient·feature importance·partial dependence·개별 prediction 설명을 올바른 범위에서
+읽고, PCS 결과를 한계와 함께 의사결정 문장으로 바꾼다.
+
+**지정 읽기**: Yu & Barter, *Veridical Data Science*의
+[Chapter 12 — Decision Trees and the Random Forest Algorithm](https://vdsbook.com/12-rf),
+[Chapter 13 — Producing the Final Prediction Results](https://vdsbook.com/13-final_ml),
+[Chapter 14 — Conclusion](https://vdsbook.com/14-conclusion).
+
+**추가 읽기**:
+[Interpretable Machine Learning](https://christophm.github.io/interpretable-ml-book/).
+
+<Callout type="note">
+식당 prediction과 수치는 결과 문장을 연습하기 위한 가상 예시다. 실제 운영 효과나
+인과관계를 보고한 값이 아니다.
+</Callout>
+
+## 1. 네 종류의 문장을 구분하기
+
+같은 결과에서 다음 문장은 근거의 강도가 다르다.
+
+| 문장 | 실제로 필요한 근거 |
+|---|---|
+| RF의 11월 MAE는 2.8분이었다 | 고정 pipeline, 해당 test 계산 |
+| 이 조건에서 baseline보다 평균 0.7분 작았다 | 같은 test 행의 paired comparison |
+| 다음 학기에도 개선될 것이다 | 다음 학기를 대표하는 자료·shift 가정 또는 새 검증 |
+| 인력을 늘리면 대기가 0.7분 줄어든다 | intervention의 causal effect를 식별하는 설계 |
+
+첫 두 문장은 평가 자료에 관한 기술이다. 세 번째는 generalization, 네 번째는 causation을
+추가한다. Prediction model이 `staff_count`를 중요하게 사용했다는 사실만으로 인력 증원의
+효과를 알 수 없다. 혼잡한 날에 인력을 더 배치했다면 관측 association은 반대 방향일 수도 있다.
+
+결과 문장은 **대상, 기간, 단위, 비교, metric, uncertainty, 적용 범위**를 포함한다.
+“성능이 우수했다”보다 “남겨 둔 11월 8개 평일에서 baseline 대비 날짜별 MAE 차이의 평균이
+-0.7분이었다”가 검토 가능하다. 날짜 수가 적고 다음 학기는 확인하지 않았다는 제한도 붙인다.
+
+## 2. global과 local interpretation
+
+**Global interpretation**은 model이 전체 자료에서 어떤 구조로 prediction하는지 묻는다.
+Coefficient, global permutation importance, partial dependence가 여기에 가깝다.
+**Local interpretation**은 특정 관측의 prediction이 기준값에서 어떻게 달라졌는지 묻는다.
+Tree path, local surrogate, SHAP(SHapley Additive exPlanations) value가 예다.
+
+두 종류를 혼동하면 “이 사례에서 score를 올린 feature”를 전체 population의 핵심 요인으로
+확대할 수 있다. 설명 대상도 명시한다. Training fit, validation prediction, final ensemble,
+thresholded decision 가운데 무엇을 설명하는가?
+
+## 3. 모델별 해석의 조건
+
+### 3.1 linear와 logistic coefficient
+
+Linear model의 $b_j$는 다른 model feature를 고정했을 때 $x_j$ 한 단위 증가에 따른
+prediction 차이다. Logistic model에서는 log-odds 차이고 $e^{b_j}$가 odds ratio다.
+Standardization, log transform, one-hot reference, interaction이 있으면 원 단위 문장으로
+되돌려 설명한다.
+
+Interaction $b_3xr$가 있는 모델에서 $x$의 slope는 $r=0$일 때 $b_1$, $r=1$일 때
+$b_1+b_3$다. Main coefficient 하나만 보고 전체 효과라 부르지 않는다. Correlated feature를
+동시에 고정하는 조건이 현실적으로 불가능할 수도 있으며 coefficient instability를
+data·feature perturbation에서 확인한다.[^vds10]
+
+### 3.2 tree rule과 forest importance
+
+한 decision tree의 path는 해당 tree가 prediction에 도달한 계산 규칙을 보여 준다.
+그 순서가 현실의 causal mechanism을 뜻하지 않는다. Random forest는 많은 tree를 평균내므로
+한 tree를 전체 forest의 대표 설명으로 고르면 안 된다.
+
+Permutation feature importance(PFI)는 feature를 섞었을 때 평가 loss의 증가다.
+
+$$
+I_j=L\bigl(y, f(X_{\operatorname{perm}(j)})\bigr)-L(y,f(X))
+$$
+
+$I_j>0$이면 그 평가 자료와 permutation 아래 feature $j$의 정보를 깨뜨렸을 때 prediction이
+나빠졌다. Correlated feature, 비현실적인 permutation 조합, 작은 평가 자료에 민감하다.
+반복 permutation의 분포와 block·group을 보존한 대안을 검토한다.[^vds12]
+
+Impurity importance는 training split의 impurity 감소를 합산하므로 평가 성능과 같은 양이
+아니다. “importance가 0.2이므로 결과의 20%를 설명한다” 같은 해석을 하지 않는다.
+
+## 4. partial dependence와 개별 곡선
+
+Partial dependence plot(PDP)은 관심 feature $x_S$를 값 $z$로 바꾸고 나머지 feature는
+각 관측값을 유지해 prediction을 평균한다.
+
+$$
+\widehat{PD}_S(z)=\frac1n\sum_{i=1}^{n}f(z,x_{iC})
+$$
+
+이는 **model의 평균 prediction 변화**다. 관측 자료의 causal dose–response가 아니다.
+$z$와 나머지 feature 조합이 현실에 거의 없으면 extrapolation된 prediction을 평균할 수
+있다. 분포 support를 rug·histogram으로 함께 표시하고 correlated feature에서 주의한다.[^molnar]
+
+ICE(individual conditional expectation)는 평균 전 각 관측의 곡선을 보여 준다.
+
+$$
+ICE_i(z)=f(z,x_{iC})
+$$
+
+PDP가 평평해도 일부 관측은 증가하고 다른 관측은 감소해 평균에서 상쇄될 수 있다.
+ICE의 이질성은 interaction 후보를 보여 주지만 실제 개입 효과의 개인차를 확정하지 않는다.
+
+가상으로 `previous_wait`를 5, 10, 15분으로 바꾼 평균 prediction이 7, 10, 14분이라면
+model association은 증가 방향이다. 그러나 15분 값이 특정 식당에만 존재한다면 모든
+식당 행을 15분으로 바꾼 조합은 support 밖일 수 있다.
+
+## 5. local additive explanation의 의미
+
+Local explanation이
+
+$$
+f(x)=\phi_0+\sum_{j=1}^{p}\phi_j
+$$
+
+형태라면 $\phi_0$는 선택한 background의 기준 prediction, $\phi_j$는 이 사례의 feature가
+기준에서 prediction을 이동시킨 귀속값이다. SHAP는 cooperative game의 Shapley value를
+model explanation에 적용하는 방법을 제안한다.[^shap]
+
+가상 예측 16분이 기준 9분, 이전 대기 `+5`, 비 `+3`, 요일 `-1`의 합이면
+$9+5+3-1=16$이다. 이는 model output의 분해다. “비가 실제 대기를 3분 일으켰다”는 뜻이
+아니며, background dataset과 dependent feature를 다루는 방식이 바뀌면 귀속도 달라질 수 있다.
+
+설명 도구가 실제 model을 얼마나 충실히 근사하는지도 평가한다. Local surrogate라면
+관심 neighborhood의 fidelity를 보고하고, 사람이 이해하기 쉬운 설명을 만들기 위해
+원 model과 다른 규칙을 보여 주지 않는지 확인한다. Explanation의 stability도 seed,
+background, perturbation, model fit을 바꿔 비교한다.
+
+## 6. prediction uncertainty와 perturbation을 읽기
+
+VDS는 타당한 data·model pipeline들의 prediction을 단일 fit, PCS ensemble, calibrated
+prediction perturbation interval로 최종화하는 방법을 제시한다.[^vds13] 여러 fit의 범위는
+분석 선택 uncertainty를 보여 주지만 자동으로 미래 outcome의 전체 uncertainty가 되지 않는다.
+
+가상 한 구간의 타당한 fit prediction이 `[9,10,13,15]`분이면 median은 11.5분,
+단순 범위는 9–15분이다. 이 범위에는 선택한 preprocessing과 algorithm 차이는 반영되지만
+측정오차, 알려지지 않은 미래 행사, 후보 밖 모델은 포함되지 않을 수 있다.
+
+Calibration data로 interval 폭을 정했다면 최종 coverage는 별도 test에서 확인한다.
+90% coverage 목표가 100개 test 중 87개를 포함했다면 관측 coverage는 $87/100=0.87$이다.
+표본 변동과 subgroup별 coverage를 함께 본다. 평균 폭이 너무 넓어 의사결정에 쓸 수 없는지도
+평가한다. Coverage만 높이려면 매우 넓은 interval을 만들 수 있기 때문이다.
+
+## 7. error analysis를 자료 수정과 연결하기
+
+Test error가 큰 사례를 보고 model을 바로 고치면 test를 tuning에 사용한다. 먼저 고정된
+평가 결과로 다음을 진단한다.
+
+- 오류가 특정 time, site, group, feature support 밖에 몰리는가.
+- label·timestamp·join 문제처럼 data quality issue가 있는가.
+- false positive와 false negative가 서로 다른 피해를 만드는가.
+- abstention이나 human review가 필요한 조건은 무엇인가.
+- 적용 범위를 좁히면 어떤 대상이 제외되고 누구에게 부담이 가는가.
+
+Data error가 발견되면 정정 전후 결과와 test 오염 여부를 기록한다. 새 방법을 개발하려면
+해당 test를 development data로 전환하고 새로운 evaluation set을 준비한다. 실패 사례를
+삭제해 점수만 다시 계산하지 않는다.
+
+## 8. stability를 결과 문장에 포함하기
+
+모델 평균 점수는 안정적이어도 interpretation이 불안정할 수 있다. 다음 네 결과를 따로 본다.
+
+| 결과 | perturbation 뒤 비교 |
+|---|---|
+| Prediction | 사례별 score와 error |
+| Decision | threshold 뒤 action이 바뀐 사례 |
+| Importance | feature 순위·방향·범위 |
+| Recommendation | 운영 권고와 제외 대상 |
+
+예를 들어 validation MAE가 모두 3분 안팎이어도 일부 pipeline은 14분, 일부는 16분을
+예측해 15분 안내 threshold에서 action이 뒤집힐 수 있다. Score stability와 decision
+stability를 분리해 보고한다. 설명에서 중요한 feature가 바뀌어도 prediction이 안정적일
+수 있는데, correlated feature가 서로 대체하는 상황이 한 원인이다.
+
+새 학기 자료에서 결론을 다시 확인하는 것은 단순히 seed를 100회 반복하는 것보다 다른
+근거다. Seed 반복은 algorithm randomness를, 새로운 자료는 시간 이동에서 predictability를
+검사한다. 둘을 같은 “100회 검증”으로 세지 않는다.
+
+## 9. 결과를 의사결정 문장으로 쓰기
+
+다음 구조를 사용한다.
+
+> **대상과 결과.** 남겨 둔 11월 8개 평일의 식당×30분 구간에서 선택된 ensemble의
+> MAE는 2.8분이었고, 지난주 동일 구간 baseline의 3.5분보다 0.7분 작았다.
+> **변동.** 날짜별 차이는 -1.4분에서 +0.2분이었고 한 날짜에는 baseline이 더 나았다.
+> **결정.** Validation에서 정한 15분 안내 threshold를 적용했을 때 혼잡 20건 중 14건을
+> 찾았고, 안내 30건 중 16건은 false positive였다.
+> **범위.** 식당 A·B와 11월만 평가했으며 새 식당·다음 학기는 확인하지 않았다.
+> **행동.** False alarm 16건을 운영이 감당할 수 있다는 확인 뒤 보조 안내로 제한해 사용한다.
+
+모든 숫자는 같은 evaluation set의 가상 confusion matrix를 사용한다. “0.7분 개선”을
+“대기 시간이 0.7분 감소”로 바꾸지 않는다. 전자는 prediction error 비교이고 후자는
+운영 개입의 outcome 변화다.
+
+## 10. 최종 프로젝트 산출물
+
+| 산출물 | 포함할 내용 |
+|---|---|
+| 결과표 | baseline과 후보의 고정 test metric, 분모, 단위 |
+| Stability table | 타당한 data·model perturbation의 범위와 뒤집힌 결론 |
+| 해석 | global·local 대상, 사용한 자료, 조건과 fidelity |
+| Error analysis | 주요 실패 유형, subgroup, support 밖 사례 |
+| Decision note | threshold, 예상 편익·피해, human review, 중단 조건 |
+| Limitation | 확인하지 못한 population·시점·원인·윤리 위험 |
+| Reproduction | commit, 환경, raw provenance, 실행 명령, 결과 파일 |
+
+한계는 결론을 약하게 보이게 하는 부록이 아니라 결론의 유효 범위를 정하는 정보다.
+재현 가능한 코드는 같은 계산을 다시 만드는 근거이고, stability는 타당한 선택을 바꿨을
+때 결론이 유지되는 근거이며, 새 자료 검증은 적용 상황에서 predictability를 보태는 근거다.
+세 가지를 구분해 최종 보고서의 주장마다 어떤 근거를 확보했는지 연결한다.
+
+[^vds10]: Yu, B., & Barter, R. L. (2024). [Extending the Least Squares Algorithm](https://vdsbook.com/10-ls_continued). *Veridical Data Science*, MIT Press.
+[^vds12]: Yu, B., & Barter, R. L. (2024). [Decision Trees and the Random Forest Algorithm](https://vdsbook.com/12-rf). *Veridical Data Science*, MIT Press.
+[^vds13]: Yu, B., & Barter, R. L. (2024). [Producing the Final Prediction Results](https://vdsbook.com/13-final_ml). *Veridical Data Science*, MIT Press.
+[^molnar]: Molnar, C. (2025). [Interpretable Machine Learning](https://christophm.github.io/interpretable-ml-book/). 3rd edition.
+[^shap]: Lundberg, S. M., & Lee, S.-I. (2017). [A Unified Approach to Interpreting Model Predictions](https://arxiv.org/abs/1705.07874). *NeurIPS 2017*.

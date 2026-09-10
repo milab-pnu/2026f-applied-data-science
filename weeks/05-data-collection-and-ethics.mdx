@@ -1,0 +1,210 @@
+---
+title: "자료를 얻는 순간부터 시작되는 분석: 수집 방법론과 데이터 윤리"
+week: 5
+order: 0
+---
+
+좋은 분석은 이미 주어진 표에서 시작하지 않는다. **누구를 어떤 경로로 관측했고,
+무엇을 기록하지 못했으며, 그 과정과 결과가 누구에게 어떤 부담을 주는가**를 묻는 데서
+시작한다. 같은 열을 가진 두 데이터셋도 수집 장치와 참여자가 다르면 다른 현실을
+근사한다. 이번 주에는 수집 설계를 측정·표집·운영의 문제로 나누고, 윤리 검토를
+동의서 한 장이 아니라 프로젝트 전 과정의 판단으로 연결한다.
+
+**지정 읽기**: Yu & Barter, *Veridical Data Science*의
+[Chapter 2 — The Data Science Life Cycle](https://vdsbook.com/02-dslc),
+[Chapter 4 — Data Preparation](https://vdsbook.com/04-data_cleaning).
+
+**추가 읽기**:
+[The Belmont Report](https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/read-the-belmont-report/index.html),
+[Datasheets for Datasets](https://arxiv.org/abs/1803.09010).
+
+<Callout type="note">
+이 노트의 식당 사례와 수치는 수집 설계를 설명하기 위한 가상 예시다. 실제 사람을
+대상으로 연구할 때 필요한 기관 심의와 법률 검토를 이 노트가 대신하지 않는다.
+</Callout>
+
+## 1. 질문을 관측 절차로 번역하기
+
+2주차의 식당 팀은 “평일 점심 30분 구간의 대기 시간 중앙값을 30분 전에 예측한다”는
+질문을 만들었다. 이제 `대기 시간`을 실제로 얻어야 한다. 주문 시각과 음식 수령 시각의
+차이를 쓸 수도 있고, 관찰자가 줄에 선 시각과 음식을 받은 시각을 기록할 수도 있으며,
+학생에게 체감 대기 시간을 물을 수도 있다. 세 값은 서로 바꿔 쓸 수 없다.
+
+측정하려는 이론적 대상인 **construct**와 기록된 변수인 **operationalization**을
+분리해 쓴다. “불편”은 construct이고, “결제부터 수령까지의 분”은 한 가지
+operationalization이다. 이 값은 줄을 서기 전의 탐색 시간, 자리를 찾는 시간,
+기다림의 심리적 부담을 담지 않는다. 데이터는 현실 그 자체가 아니라 특정 절차로 얻은
+근사라는 VDS의 관점이 수집 단계에서 구체화된다.[^vds2]
+
+| 층위 | 식당 프로젝트의 결정 | 확인할 오차 |
+|---|---|---|
+| 대상 모집단 | 학기 중 평일 점심 이용 구간 | 방학·주말로 일반화할 수 있는가 |
+| observational unit | 식당 × 날짜 × 30분 구간 | 같은 날짜의 인접 구간이 의존하는가 |
+| construct | 이용자가 겪는 기다림 | 기록되지 않은 불편이 무엇인가 |
+| 측정값 | 결제–수령 시각 차이의 중앙값 | 두 시계가 동기화되어 있는가 |
+| 수집 경로 | POS와 호출 시스템 기록 결합 | 실패·취소 주문이 빠지는가 |
+| 적용 대상 | 다음 주 같은 식당의 점심 구간 | 행사·메뉴 변경 뒤에도 같은가 |
+
+변수 이름이 `wait_time`이라고 해서 construct validity가 확보되지는 않는다. 수집 장치의
+시계, 시작·종료 사건의 정의, 포함 규칙을 확인해야 한다. “한 행이 무엇인가”와 “한 값은
+어떻게 생겼는가”를 실제 수집 흐름으로 설명할 수 있어야 한다.
+
+## 2. 표집은 행을 고르는 규칙이다
+
+**target population**은 결론을 적용하려는 전체이고, **sampling frame**은 실제로
+뽑을 수 있는 목록이나 경로이며, **sample**은 관측된 일부다. 세 집합이 어긋나면 행이
+많아도 대표성이 자동으로 생기지 않는다. 설문 링크를 학과 단체방에 올리면 링크를 본
+사람만 frame에 들어오고, 그중 자발적으로 응답한 사람이 sample이 된다.
+
+확률표집에서는 각 단위의 선택 확률을 설계로 설명할 수 있다. simple random sampling,
+중요 집단을 먼저 나누는 stratified sampling, 자연스러운 묶음을 뽑는 cluster sampling은
+서로 다른 비용과 변동 구조를 만든다. 비확률표집도 탐색에 쓸 수 있지만 “무작위 표본”과
+같은 근거를 주장해서는 안 된다. 조사 오차는 sampling error뿐 아니라 coverage,
+nonresponse, measurement, processing에서 생길 수 있다는 total survey error 관점이
+유용하다.[^aapor]
+
+가상으로 하루 600건 주문 중 120건을 관측했다고 하자. $120/600=20\%$라는 포함률은
+확보량을 말할 뿐 대표성을 보증하지 않는다. 관찰자가 12:00 이후에만 기록했다면
+11:30 구간의 선택 확률은 0이다. 반대로 각 구간에서 20%를 난수로 뽑았더라도 주문
+취소가 시스템에 남지 않으면 취소 경험은 frame 밖에 있다.
+
+### 2.1 독립 평가 단위를 수집 때 확보하기
+
+예측을 다음 주에 적용하려면 여러 날짜가 필요하다. 주문 10만 건이 하루에 몰린 자료는
+행 수는 크지만 “새로운 날짜”를 평가할 단위는 하나뿐이다. 같은 학생의 반복 응답,
+같은 센서의 초 단위 기록, 같은 식당의 인접 구간도 비슷한 문제를 만든다.
+
+수집 전에 다음을 정한다.
+
+- 어떤 단위를 통째로 training·validation·test에 나눌 것인가.
+- 적용 상황을 흉내 내기 위해 시간, 사람, 장소 가운데 무엇을 새것으로 남길 것인가.
+- 드문 집단이나 사건을 평가할 만큼 독립 단위가 확보되는가.
+- 자료가 추가되는 순서와 label이 확정되는 시점은 언제인가.
+
+평가 분할을 나중에 만들 수 있다고 생각하면 같은 사람의 기록이 양쪽에 섞이거나,
+마지막 주의 label이 아직 완성되지 않는 문제가 생긴다. 수집표에 `entity_id`, `event_time`,
+`available_time`, `source_version`을 둘 필요가 있는지 지금 판단한다.
+
+## 3. 수집 프로토콜과 품질 기록
+
+수집은 한 번의 다운로드가 아니라 재실행 가능한 protocol이다. API(application programming
+interface)를 쓴다면 endpoint, query, 시간대, pagination, rate limit, 응답 스키마,
+실패 재시도 규칙을 남긴다. 웹 페이지를 수집할 때에는 이용약관, robots 정책, 저작권과
+접근 부하를 확인한다. 공개되어 보이는 정보가 무제한 재사용이나 사람별 프로파일링에
+동의했다는 뜻은 아니다.
+
+수집 직후에는 원자료를 바꾸지 않고 다음 증거를 남긴다. VDS는 raw data를 보존하고,
+수집 과정과 변수 의미를 먼저 이해한 뒤 정제 판단을 하도록 권한다.[^vds4]
+
+| 기록 | 예시 | 나중에 답하는 질문 |
+|---|---|---|
+| 출처와 버전 | API v2, 요청 시각, query hash | 어떤 자료를 다시 받아야 하는가 |
+| 범위 | 9월 1–30일, 평일 11–14시 | 결론의 시간 범위는 어디까지인가 |
+| 단위와 스키마 | 주문 1건, 시각은 KST | 한 행과 한 열의 뜻은 무엇인가 |
+| 수집 로그 | 요청 300회, 실패 4회, 재시도 3회 성공 | 누락이 어디에서 생겼는가 |
+| 무결성 | 파일 checksum, 행 수, key 중복 수 | 파일이 바뀌거나 잘렸는가 |
+| 이용 조건 | 제공기관 약관·라이선스 링크 | 공유·보관·재배포가 가능한가 |
+
+실패 4회 중 3회를 다시 받았으면 미복구 요청은 $4-3=1$회다. 하지만 그 한 요청이
+혼잡 시간 전체라면 행 비율만 보고 “거의 완전하다”고 말하기 어렵다. 누락을 시간·장소·집단별로
+요약하고, 누락 과정이 관심 결과와 연결될 가능성을 검토한다.
+
+## 4. 윤리는 데이터의 생애주기를 따라간다
+
+Belmont Report는 사람 대상 연구를 검토하는 세 원칙으로 respect for persons,
+beneficence, justice를 제시하고 이를 informed consent, risk–benefit assessment,
+participant selection과 연결한다.[^belmont] 이 원칙을 캡스톤에 적용하면 다음 질문이 된다.
+
+| 원칙 | 수집 단계의 질문 | 분석·배포 단계의 질문 |
+|---|---|---|
+| Respect for persons | 참여자가 목적·위험·철회를 이해하고 자발적으로 선택하는가 | 처음 설명한 범위를 넘어 재사용하는가 |
+| Beneficence | 필요한 자료만 모으며 예상 피해를 줄였는가 | 오류·재식별·오용의 피해와 대응책은 무엇인가 |
+| Justice | 편의 때문에 특정 집단에 부담이 몰리는가 | 오류의 부담과 편익이 어떤 집단에 돌아가는가 |
+
+동의는 서명 유무만의 문제가 아니다. 어떤 자료를 왜 모으고, 누구와 얼마나 오래 공유하며,
+철회와 문의가 어떻게 가능한지 이해할 수 있어야 한다. 교수–학생처럼 권력 차이가 있는
+관계에서는 거절의 자유가 실제로 있는지도 살핀다. 기관생명윤리위원회(IRB) 검토가 필요한지
+연구자가 스스로 면제라고 단정하지 말고 소속기관 절차로 확인한다.
+
+<Callout type="warning">
+`공개 데이터`, `익명 데이터`, `연구 목적`은 윤리적 안전을 자동으로 보증하는 표지가
+아니다. 다른 자료와 결합해 개인을 추정할 수 있고, 원래 맥락에서 예상하지 못한 집단
+분류나 위해가 생길 수 있다. 합법성, 기관 승인, 윤리적 정당성은 서로 관련되지만 같은
+판단이 아니다.
+</Callout>
+
+### 4.1 개인정보 위험은 보유 여부보다 처리 과정으로 본다
+
+NIST Privacy Framework는 privacy risk를 개인이 데이터 처리로 겪을 수 있는 문제와
+그 조직적 영향으로 다루고, Identify-P, Govern-P, Control-P, Communicate-P,
+Protect-P 기능으로 관리하도록 제시한다.[^nist-privacy] 프로젝트에서는 법률 용어를
+임의 적용하기보다 다음의 data flow를 그린다.
+
+1. 어느 사람·장치에서 어떤 정보가 생기는가.
+2. 식별자와 민감한 속성이 어디에서 결합되는가.
+3. 원자료·중간자료·모델·로그를 누가 볼 수 있는가.
+4. 결과에서 개인이나 작은 집단을 추론할 수 있는가.
+5. 보관 기간이 끝나면 무엇을 어떤 절차로 폐기하는가.
+
+이 흐름에서 data minimization을 적용한다. 개인 ID가 주간 혼잡 예측에 필요 없다면
+수집하지 않거나 가장 이른 안전한 단계에서 분리한다. 이름을 임의 번호로 바꾸는
+pseudonymization은 연결 키가 남으므로 익명화와 같지 않다. 원자료 접근 권한, 암호화,
+키 보관, 로그, 삭제 책임자를 기술적·운영적 통제로 함께 설계한다.
+
+국내에서 개인정보를 처리한다면 현재 적용되는 개인정보 보호법 원문과 소속기관의 지침을
+확인한다.[^pipa] 데이터 유형·처리 목적·주체에 따라 판단이 달라질 수 있으므로 이 노트의
+일반 원칙을 법률 판단으로 대신하지 않는다.
+
+### 4.2 공정성은 표 하나의 비율을 넘어선다
+
+표본에서 집단 비율이 같아도 측정 오차, label의 의미, threshold가 집단마다 다른 피해를
+만들 수 있다. 반대로 모든 집단에 같은 threshold를 적용하는 것이 항상 공정한 것도 아니다.
+어떤 결정을 자동화하는지, 잘못된 positive와 negative가 각각 누구에게 어떤 결과를
+주는지 먼저 쓴다. 관측 수가 적은 집단의 지표는 불안정할 수 있으므로 값과 분모를 함께
+보고하고, 작은 셀을 공개해 재식별 위험을 키우지 않는다.
+
+Datasheets for Datasets는 dataset의 motivation, composition, collection process,
+preprocessing, uses, distribution, maintenance를 문서화해 제작자와 사용자의 책임 있는
+판단을 돕도록 제안한다.[^datasheets] 우리 프로젝트의 datasheet는 “편향이 없음”을
+선언하는 인증서가 아니라, 알려진 범위와 모르는 부분을 다음 사용자가 확인하게 하는 기록이다.
+
+## 5. 수집 설계에 PCS를 적용하기
+
+**Predictability.** 적용할 사람·장소·시점과 같은 단위를 별도로 확보한다. 수집 장치가
+바뀌면 새 장치에서 이미 알려진 현상을 복원하는 sanity check도 계획한다.
+
+**Computability.** 호출 제한, 저장 공간, 수작업 labeling 시간, 보안 통제 비용까지
+계산한다. 2명의 annotator가 1건당 40초로 3,600건을 각각 labeling하면 순수 작업 시간은
+$2\times3{,}600\times40/3{,}600=80$시간이다. 휴식·교육·불일치 조정은 포함하지 않은
+하한이므로 pilot으로 실제 속도를 측정한다.
+
+**Stability.** 날짜, 장소, 모집 경로, 측정 규칙처럼 현실적으로 달라질 수 있었던 수집
+선택을 perturbation한다. 같은 원자료에서 seed만 바꾸는 것은 수집 uncertainty를 검사하지
+않는다. 반대로 새 달의 자료는 반복 횟수를 늘린 것과 달리 시간 이동에서 predictability를
+직접 확인한다.
+
+다음 수집 사양서를 팀 저장소에 남긴다.
+
+| 항목 | 팀이 확정하거나 확인할 내용 |
+|---|---|
+| 질문과 적용 | 사용자, 결정, 예측·설명 시점 |
+| 모집단과 frame | 포함·제외 규칙, 선택 확률 또는 모집 경로 |
+| 측정 | construct, operationalization, 장치·질문, 단위 |
+| 독립 평가 | 남길 사람·날짜·장소와 필요한 수 |
+| 품질 | 누락·중복·시간대·label 검증 규칙 |
+| 윤리 | 동의·심의 상태, 위험과 편익, 부담·오류의 분포 |
+| 거버넌스 | 권한, 보관, 공유, 폐기, 사고 대응 |
+| provenance | 출처·버전·수집 코드·로그·이용 조건 |
+| 대안 | 가능한 수집·측정 perturbation과 결론 비교 계획 |
+
+모르는 항목은 추측해 채우지 않는다. 확인 주체와 확인 방법을 기록하고, 자료를 얻지
+못하면 어떤 질문으로 축소할지 연결한다. 수집 완료의 기준은 파일의 존재가 아니라
+분석과 윤리의 전제가 검토 가능한 상태라는 데 있다.
+
+[^vds2]: Yu, B., & Barter, R. L. (2024). [The Data Science Life Cycle](https://vdsbook.com/02-dslc). *Veridical Data Science*, MIT Press.
+[^vds4]: Yu, B., & Barter, R. L. (2024). [Data Preparation](https://vdsbook.com/04-data_cleaning). *Veridical Data Science*, MIT Press.
+[^aapor]: American Association for Public Opinion Research. [Best Practices for Survey Research](https://aapor.org/standards-and-ethics/best-practices/). *AAPOR*.
+[^belmont]: National Commission for the Protection of Human Subjects of Biomedical and Behavioral Research. (1979). [The Belmont Report](https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/read-the-belmont-report/index.html). *U.S. Department of Health and Human Services*.
+[^nist-privacy]: National Institute of Standards and Technology. (2020). [NIST Privacy Framework: A Tool for Improving Privacy through Enterprise Risk Management, Version 1.0](https://doi.org/10.6028/NIST.CSWP.01162020). *NIST*.
+[^pipa]: 대한민국. [개인정보 보호법](https://www.law.go.kr/법령/개인정보보호법). *국가법령정보센터*.
+[^datasheets]: Gebru, T., et al. (2021). [Datasheets for Datasets](https://arxiv.org/abs/1803.09010). *Communications of the ACM*, 64(12), 86–92.

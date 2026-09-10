@@ -1,0 +1,241 @@
+---
+title: "분석 가능한 자료 만들기: cleaning, preprocessing, leakage"
+week: 6
+order: 0
+---
+
+원자료를 모델에 넣을 수 있다는 사실과 올바르게 해석된다는 사실은 다르다. 이번 주에는
+수집 맥락을 확인한 뒤 문제를 action item으로 바꾸고, raw data를 보존한 채 cleaning과
+preprocessing을 재실행 가능한 함수로 만든다. 핵심은 하나의 “완벽한 정답 데이터”를
+만드는 것이 아니라 **타당한 판단 대안을 남기고 downstream 결론이 달라지는지 검사하는 것**이다.
+
+**지정 읽기**: Yu & Barter, *Veridical Data Science*의
+[Chapter 4 — Data Preparation](https://vdsbook.com/04-data_cleaning).
+
+<Callout type="note">
+식당 자료와 계산 결과는 전처리 원리를 보이기 위한 가상 예시다. 코드는 교재 코드를
+복사하지 않고 이 노트의 작은 자료에 맞춰 작성했다.
+</Callout>
+
+## 1. cleaning과 preprocessing을 구분하는 이유
+
+**Data cleaning**은 값과 구조의 모호함을 줄여 컴퓨터와 사람이 같은 뜻으로 읽게 하는
+작업이다. 잘못 표기된 결측 코드, 섞인 날짜 형식, 중복 key, 단위 불일치가 여기에
+해당한다. **Preprocessing**은 clean data를 특정 분석의 입력 요건에 맞추는 작업이다.
+결측 대체, one-hot encoding, scaling, log transform, feature construction이 대표적이다.
+두 단계는 겹칠 수 있지만 목적을 구분하면 “오류 수정”과 “모델을 위한 판단”을 섞어
+정답처럼 굳히는 일을 줄일 수 있다.[^vds4]
+
+예를 들어 문자열 `"미측정"`을 missing value로 바꾸는 것은 의미를 명확히 하는 cleaning이다.
+그 missing value를 training median으로 채우는 것은 분석을 위한 preprocessing이다.
+`999`가 미측정 코드인지 실제값인지 codebook으로 확인하지 않은 채 median으로 바꾸면
+두 단계 모두 근거가 없다.
+
+| 원자료 문제 | 확인할 사실 | 가능한 action item | 판단의 대안 |
+|---|---|---|---|
+| `6`, `6분`, `00:06` 혼재 | 모두 같은 대기 시간인가 | 분 단위 숫자로 변환 | 해석 불가 값은 결측 처리 |
+| 같은 주문 ID 두 행 | 수정 이력인가 중복 전송인가 | 최신 version만 유지 | 충돌 행 전체 보류 |
+| 수령 시각 없음 | 취소인가 장비 누락인가 | 원인별 missing flag | 분석 대상에서 제외 |
+| 식당명 철자 변형 | 같은 운영 단위인가 | 승인된 mapping 적용 | 불명확 범주 유지 |
+| 극단적 180분 | 실제 장기 대기인가 오류인가 | 원기록 대조 후 유지·수정 | robust loss와 함께 유지 |
+
+## 2. 네 단계로 조사하고 변환하기
+
+VDS의 절차를 프로젝트에 맞춰 **맥락 확인 → 안전하게 불러오기 → 진단과 action item →
+함수로 변환**의 네 단계로 사용한다.[^vds4]
+
+### 2.1 맥락과 codebook부터 읽기
+
+각 변수에 대해 측정 대상, 장치, 단위, 허용 범위, 결측 코드, 관측 시점, 수정 가능성을
+적는다. 문서가 말하는 내용과 실제 값이 맞는지도 확인한다. `pickup_time`이 호출 버튼을
+누른 시각인지 실제 수령 시각인지는 숫자 분포만으로 확정하기 어렵다. 확인하지 못한
+가정은 그대로 표시한다.
+
+### 2.2 불러온 결과가 원파일과 같은지 확인하기
+
+행·열 수, 처음과 마지막 행, encoding, delimiter, datetime timezone을 대조한다.
+여러 표를 join할 때에는 먼저 key의 cardinality를 확인한다.
+
+가상으로 주문 표 100행과 메뉴 표 20행을 `menu_id`로 join했는데 결과가 108행이면,
+메뉴 표의 key 중복 때문에 주문이 복제되었을 수 있다. 기대한 관계가 many-to-one이라면
+오른쪽 key가 unique인지 assert한다. 결합되지 않은 왼쪽·오른쪽 key 수도 함께 남긴다.
+
+### 2.3 진단을 action item으로 바꾸기
+
+진단은 “이상해 보인다”에서 멈추지 않는다. 관측한 증거, 도메인 확인, 수정 규칙,
+대안, 영향을 받는 행을 연결한다.
+
+```python
+def audit_wait_rows(rows):
+    """가상 레코드의 구조를 바꾸지 않고 문제 수만 센다."""
+    ids = [row["order_id"] for row in rows]
+    return {
+        "rows": len(rows),
+        "duplicate_ids": len(ids) - len(set(ids)),
+        "missing_start": sum(row["order_time"] is None for row in rows),
+        "missing_end": sum(row["pickup_time"] is None for row in rows),
+    }
+```
+
+이 함수는 오류를 고치지 않는다. 원자료를 관찰한 결과를 작고 검증 가능한 수로 만든다.
+수정 함수와 audit 함수를 분리하면 수정 전후의 행 수가 왜 달라졌는지 확인하기 쉽다.
+
+### 2.4 판단을 함수 인자로 드러내기
+
+```python
+def prepare_wait(rows, missing_end="drop", cap_minutes=None):
+    """확인된 규칙만 적용하며 원본 객체는 수정하지 않는다."""
+    output = []
+    for row in rows:
+        if row["order_time"] is None:
+            continue
+        if row["pickup_time"] is None:
+            if missing_end == "drop":
+                continue
+            raise ValueError("지원하지 않는 missing_end 규칙입니다.")
+        minutes = (row["pickup_time"] - row["order_time"]).total_seconds() / 60
+        if minutes < 0:
+            continue
+        if cap_minutes is not None:
+            minutes = min(minutes, cap_minutes)
+        output.append({**row, "wait_minutes": minutes})
+    return output
+```
+
+`missing_end`와 `cap_minutes`는 결과에 영향을 줄 판단이다. 기본값이 있다고 그 선택이
+정당화되는 것은 아니다. `cap_minutes=60`을 쓰려면 60분을 경계로 택한 근거와 실제
+장기 대기를 잘라낼 위험을 기록한다. raw file을 덮어쓰지 않고, 입력 version과 함수
+인자를 결과 metadata에 남긴다.
+
+## 3. 결측은 값이 아니라 생성 과정이다
+
+missingness를 숫자 하나로 채우기 전에 왜 비었는지 살핀다. 완전 무작위 누락,
+관측된 변수로 설명되는 누락, 관측되지 않은 값 자체와 관련된 누락은 요구하는 가정이
+다르다. 실제 자료에서 어느 과정인지 데이터만으로 확정하기 어려운 경우가 많다.
+
+식당에서 호출 장치가 붐빌 때 수령 기록을 더 자주 놓친다면 긴 대기가 선택적으로
+사라진다. 관측된 대기만의 평균은 실제보다 짧아질 수 있다. 이때 전체 평균으로 채우면
+편향을 고치는 것이 아니라 낮은 값을 반복해 넣을 수 있다.
+
+가상 대기 시간이 `[5, 7, missing, 20]`일 때 관측값 평균은
+$(5+7+20)/3=10.67$분, 중앙값은 7분이다. 평균 대체와 중앙값 대체는 서로 다른 완성
+자료를 만든다. 어느 것이 “진짜 missing 값”인지는 알 수 없다. 다음을 함께 보고한다.
+
+- 변수·시간·집단별 missing rate와 missingness pattern
+- 누락 원인에 관해 확인한 문서와 아직 모르는 부분
+- complete-case, 합리적인 imputation, missing indicator 등 비교할 선택
+- 각 선택에서 표본 범위와 핵심 결론이 어떻게 바뀌는지
+
+target을 대체해 정답인 것처럼 학습하는 일은 특히 조심한다. label이 없는 행은 미래
+예측 대상일 수 있지만 supervised training의 정답은 아니다.
+
+## 4. 모델 입력을 만드는 선택
+
+### 4.1 categorical variable
+
+식당 A·B·C에 1·2·3을 주면 모델은 간격과 순서를 읽을 수 있다. 순서가 없는 범주는
+one-hot encoding으로 각 범주의 indicator를 만드는 방법이 흔하다. training에 없던
+새 범주가 운영 중 등장할 때의 규칙도 정한다. 오류로 무시할지, `unknown`으로 묶을지,
+재학습을 요구할지는 적용 맥락에 따라 달라진다.[^sklearn-pitfalls]
+
+고유값이 거의 행 수만큼 많은 ID를 one-hot encoding하면 기억하기 쉬운 입력이 된다.
+식별자는 leakage나 과적합의 경로가 될 수 있으므로 예측 시점의 의미가 있는지 먼저 본다.
+
+### 4.2 scale과 transform
+
+대기 인원은 0–50, 강수량은 0–5라고 하자. Euclidean distance나 penalty는 변수 규모의
+영향을 받는다. training mean $\bar{x}_{train}$과 standard deviation $s_{train}$으로
+
+$$
+z=\frac{x-\bar{x}_{train}}{s_{train}}
+$$
+
+를 계산하고 validation·test에도 같은 두 값을 쓴다. 표준화는 단위를 바꾸지만 outlier나
+왜도를 자동으로 해결하지 않는다. tree 기반 방법은 같은 threshold 순서를 보존하는
+단조 scaling에 대체로 영향을 덜 받지만, 전체 pipeline의 imputation과 다른 feature
+construction은 여전히 분할 안에서 학습해야 한다.
+
+오른쪽 꼬리가 긴 양수 변수에 $\log(1+x)$를 적용하면 큰 값의 간격이 압축된다.
+0 미만 값이 있는지, 1을 더하는 선택이 의미 있는지, 역변환한 예측과 loss의 관계를
+확인한다. 보기 좋은 분포를 만드는 것이 목표가 아니라 모델·질문과 맞는 표현을 만드는
+것이 목표다.
+
+### 4.3 feature construction과 시점
+
+12:00–12:30 대기를 11:30에 예측한다면 “12시 직전 줄 길이”는 아직 알 수 없다.
+지난 7일 같은 구간의 평균은 가능하지만 7일 창에 오늘 이후 기록이 섞이면 leakage다.
+각 feature에 `event_time`과 `available_time`을 붙여 예측 시점 이전 정보만 사용한다.
+
+집계 단위도 주의한다. 주문 단위 feature를 구간 단위 target과 결합할 때 구간 종료 후의
+주문 수를 쓰면 미래가 입력으로 들어온다. 전체 기간의 빈도 encoding, 전체 자료의
+target encoding, 전체 자료에서 고른 PCA 방향도 같은 위험을 만든다.
+
+## 5. leakage 없는 pipeline
+
+자료에서 학습하는 모든 규칙은 training subset에서 `fit`하고 나머지 subset에
+`transform`한다. scikit-learn의 공식 예시는 preprocessing을 분할 전에 전체 자료에
+적용하면 평가 정보가 training에 들어갈 수 있으며, pipeline으로 변환과 모델을 묶어
+이를 줄이도록 안내한다.[^sklearn-pitfalls]
+
+```python
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import Ridge
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+numeric = Pipeline([
+    ("impute", SimpleImputer(strategy="median")),
+    ("scale", StandardScaler()),
+])
+categorical = Pipeline([
+    ("impute", SimpleImputer(strategy="most_frequent")),
+    ("encode", OneHotEncoder(handle_unknown="ignore")),
+])
+prep = ColumnTransformer([
+    ("num", numeric, ["rain", "previous_wait"]),
+    ("cat", categorical, ["restaurant", "weekday"]),
+])
+model = Pipeline([("prep", prep), ("fit", Ridge(alpha=1.0))])
+```
+
+`model.fit(X_train, y_train)`은 median, category 목록, mean·standard deviation,
+coefficient를 training에서 정한다. validation은 hyperparameter와 전처리 대안을 고르는
+데 사용하고, test는 선택이 끝난 뒤 한 번의 독립 평가에 남긴다. cross-validation을
+한다면 pipeline 전체가 각 fold 안에서 다시 fit되어야 한다.
+
+<Callout type="warning">
+결측 규칙이나 feature 목록을 test 결과를 보고 바꾸면 test도 방법 선택에 사용한 셈이다.
+같은 파일을 `test.csv`라고 부르는 것만으로 독립성이 생기지 않는다. 변경을 계속하려면
+새로운 최종 평가 자료가 필요하다.
+</Callout>
+
+## 6. 전처리 stability와 산출물
+
+모든 가능한 조합을 무차별 탐색하지 않는다. 도메인상 가능한 선택 가운데 결론에 영향을
+줄 만한 소수를 정한다. 가상 식당 팀은 다음 세 pipeline을 비교할 수 있다.
+
+| 이름 | missing wait | extreme wait | categorical 처리 |
+|---|---|---|---|
+| A | 해당 주문 제외 | 원기록 확인 후 유지 | one-hot |
+| B | 누락 많은 날짜 제외 | 원기록 확인 후 유지 | one-hot |
+| C | 해당 주문 제외 | 99th percentile에서 cap | one-hot |
+
+각 버전에서 행 수, 날짜 수, target 분포, validation MAE, test 이전의 선택 이유를 남긴다.
+예측 점수만 같아도 혼잡 시간 추천이나 특정 날짜의 오차가 달라질 수 있다. 전처리
+stability는 같은 코드 재실행과 다르다. 전자는 타당한 판단을 바꾸고 결론을 비교하며,
+후자는 같은 입력·환경에서 계산이 반복되는지 본다.
+
+팀 산출물은 다음 네 가지가 서로 연결되어야 한다.
+
+1. raw data의 출처·checksum·접근 조건
+2. audit report와 action item 목록
+3. 인자로 판단을 드러낸 cleaning/preprocessing pipeline
+4. 전처리 대안별 자료 범위와 downstream 결과 비교표
+
+한 팀원이 새 세션에서 raw data부터 표를 재생성하고, 다른 팀원이 작은 입력을 손으로
+계산해 함수 결과와 대조한다. 수행하지 못한 검사와 확인하지 못한 변수 의미도 결과와
+함께 공개한다.
+
+[^vds4]: Yu, B., & Barter, R. L. (2024). [Data Preparation](https://vdsbook.com/04-data_cleaning). *Veridical Data Science*, MIT Press.
+[^sklearn-pitfalls]: scikit-learn developers. [Common pitfalls and recommended practices](https://scikit-learn.org/stable/common_pitfalls.html). *scikit-learn User Guide*.
