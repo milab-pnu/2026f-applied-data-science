@@ -15,6 +15,7 @@ order: 0
 [Chapter 1 — An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds),
 [Chapter 2 — The Data Science Life Cycle](https://vdsbook.com/02-dslc),
 [Chapter 3 — Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility).
+
 <Callout type="note">
 이 노트의 식당 자료와 수치는 개념을 설명하기 위한 가상 예시다.
 </Callout>
@@ -65,11 +66,8 @@ Chapter 1은 관측과 분석이 현실을 얼마나 적절히 반영하는지 �
 식당의 “불편”은 대기 시간뿐 아니라 메뉴, 좌석, 이동 거리에도 관련된다. 주문 기록만
 가지고 불편 전체를 설명하면 기록이 담고 있지 않은 부분까지 주장하게 된다.
 
-<Figure
-  src="https://vdsbook.com/Figures-External/intro/three_realms.png"
-  alt="현실, 현실의 근사인 데이터, 분석과 알고리즘이 속하는 정신적 구성물을 구분한 세 영역 그림"
-  caption="경험하는 불편, 시각으로 남긴 기록, 평균 대기 시간을 계산하는 규칙은 서로 다른 층위에 있다."
-  source="Yu & Barter · Veridical Data Science, Preface, Figure 2 · © MIT Press, 2024 · CC BY-NC-ND · 수정 없음" />
+경험하는 불편, 시각으로 남긴 기록, 대기 시간을 계산하는 규칙은 서로 다른 층위에 있다.
+세 영역의 원래 도식은 [교재 Preface](https://vdsbook.com/)에서 볼 수 있다.
 
 | 질문 | 필요한 관측 | 답으로 할 수 있는 일 |
 |---|---|---|
@@ -242,17 +240,28 @@ PCS에서 세 기준은 겹칠 수 있다. 미래 자료에서 결과를 확인�
 검사하면서 자료 변화에 대한 stability도 본다. 표본 변동에 따른 불확실성과 새 자료의
 성능을 함께 검토한다는 점에서 통계와 머신러닝의 관점을 연결한다.[^vds1]
 
+### 3.4 비교할 대안과 보고할 범위를 정하기
+
+PCS의 원논문은 예측 문제에서 현실과 맞지 않는 모델을 걸러 내고, 남은 모델과 자료의
+대안에서 관심 결과가 얼마나 달라지는지 살펴보는 절차를 제시한다.[^pcs-paper]
+식당 프로젝트에서도 매번 0분을 출력하는 모델은 안정적일 수 있지만, 실제 대기를
+설명하지 못하면 운영 권고의 근거로 쓰기 어렵다. 도메인 근거와 validation 성능으로
+비교할 후보를 정하고 최종 test는 방법 선택에 사용하지 않는다.
+
+가상으로 타당한 세 분석에서 동일한 평가 구간의 baseline 대비 MAE 감소량이
+0.4, 0.6, 0.9분이라면 관측한 개선 범위는 0.4–0.9분이다. 이 범위는 선택한 분석들의
+차이를 나타내며, 자동으로 95% 신뢰구간이 되지는 않는다. 후보를 왜 골랐고 어떤 변동은
+검사하지 못했는지 함께 적는다. 제외한 날짜 때문에 평가 대상까지 달라졌다면 각 점수를
+같은 대상의 성능처럼 비교하지 말고, 공통 평가 구간의 비교와 적용 범위의 변화를 구분한다.
+
 ## 4. 생애주기를 팀의 작업으로 바꾸기
 
 DSLC(data science life cycle)는 질문, 데이터 준비, 분석, 평가, 전달을 연결한다.
 교재의 구조 탐색과 예측·추론 단계는 질문에 따라 선택되며, 뒤에서 발견한 문제가
 앞 단계의 수정을 요구할 수 있다.[^vds2]
 
-<Figure
-  src="https://vdsbook.com/Figures-External/intro/data_science_life_cycle.png"
-  alt="비판적 사고를 중심으로 문제 정의와 수집, 정제와 탐색, 구조 탐색, 예측과 추론, 평가, 전달의 여섯 단계가 연결된 생애주기"
-  caption="각 단계에 우리 팀이 남길 증거를 붙여 보자. 되돌아가는 화살표는 데이터에 맞춰 질문을 개선하는 과정이기도 하다."
-  source="Yu & Barter · Veridical Data Science, Chapter 2, Figure 2.1 · © MIT Press, 2024 · CC BY-NC-ND · 수정 없음" />
+원래 생애주기 도식은 [교재 Chapter 2](https://vdsbook.com/02-dslc)에서 볼 수 있다.
+각 단계에 우리 팀이 남길 증거를 붙이면 다음과 같다.
 
 | 작업 | 식당 팀이 남길 증거 |
 |---|---|
@@ -485,3 +494,5 @@ predictability도 확인한다. 우리 캡스톤에서는 우선 동료가 핵�
 [^setup]: Yu, B., & Barter, R. L. (2024). [Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility). *Veridical Data Science*, MIT Press.
 [^workflow]: Barter, R. L. (2019). [A quick guide to developing a reproducible and consistent data science workflow](https://rebeccabarter.com/blog/2019-03-07_reproducible_pipeline). *Rebecca Barter*.
 [^git]: Chacon, S., & Straub, B. [About Version Control](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). *Pro Git*, 2nd edition.
+
+[^pcs-paper]: Yu, B., & Kumbier, K. (2019). [Veridical Data Science](https://arxiv.org/abs/1901.08152). *arXiv*.
