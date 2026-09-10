@@ -4,6 +4,9 @@ week: 13
 order: 0
 ---
 
+import practiceFigure from "./assets/13-pdp-ice.png";
+
+
 좋은 test score는 결론의 시작이지 끝이 아니다. 결과 해석에서는 model이 계산한 것,
 자료가 지지하는 경험적 주장, 사용자가 취할 action을 분리해야 한다. 이번 주에는
 coefficient·feature importance·partial dependence·개별 prediction 설명을 올바른 범위에서
@@ -107,6 +110,43 @@ ICE의 이질성은 interaction 후보를 보여 주지만 실제 개입 효과�
 가상으로 `previous_wait`를 5, 10, 15분으로 바꾼 평균 prediction이 7, 10, 14분이라면
 model association은 증가 방향이다. 그러나 15분 값이 특정 식당에만 존재한다면 모든
 식당 행을 15분으로 바꾼 조합은 support 밖일 수 있다.
+
+### 4.1 실습: 평균에서 사라지는 개별 곡선
+
+[scikit-learn의 PDP·ICE 예제](https://scikit-learn.org/stable/auto_examples/inspection/plot_partial_dependence.html)에서
+평균 곡선과 개별 곡선을 비교한다(접근일: 2026-09-10). 아래는 그 계산 원리를
+보이기 위해 직접 정한 가상 model이다. NumPy와 Matplotlib으로 실행한다.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+z = np.array([5., 10., 15.])
+group = np.array([0, 1])
+# 두 관측에서 다른 방향의 관계를 갖도록 정한 설명용 모델이다.
+def predict(wait, r):
+    return 10 + (1 - 2 * r) * (wait - 10)
+
+ice = np.array([predict(z, r) for r in group])
+pdp = ice.mean(axis=0)
+print("ICE:", ice)
+print("PDP:", pdp)
+fig, ax = plt.subplots(figsize=(5, 3.5), layout="constrained")
+for r, curve in zip(group, ice):
+    ax.plot(z, curve, "o-", label=f"ICE: group {r}")
+ax.plot(z, pdp, "k--", linewidth=2, label="PDP")
+ax.set(xlabel="Previous wait (minutes)", ylabel="Model prediction (minutes)")
+ax.legend()
+plt.show()
+```
+
+<Figure src={practiceFigure.src} alt="증가하는 ICE와 감소하는 ICE를 같은 비중으로 평균하면 평평한 PDP가 된다." caption="증가하는 ICE와 감소하는 ICE를 같은 비중으로 평균하면 평평한 PDP가 된다." source="MI Lab · 본문 가상 자료와 직접 작성한 실습 코드로 생성" />
+
+개별 prediction은 `[5, 10, 15]`와 `[15, 10, 5]`이고 평균은 `[10, 10, 10]`이다.
+평평한 PDP만 보면 변수가 쓰이지 않는다고 오해할 수 있다. Group 0 관측이 세 개,
+group 1 관측이 하나인 background로 바꿔 평균 곡선을 다시 계산해 본다. 모델을
+바꾸지 않아도 평균을 내는 대상이 달라지면 PDP가 달라진다. 이 가상 모델에는 관측
+support나 인과 설계를 제공하지 않았으므로 현실의 개입 효과로 읽을 수 없다.
 
 ## 5. local additive explanation의 의미
 

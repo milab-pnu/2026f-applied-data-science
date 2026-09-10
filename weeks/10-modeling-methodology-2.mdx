@@ -60,8 +60,13 @@ $$
 R^2=1-\frac{\sum_i(y_i-\hat y_i)^2}{\sum_i(y_i-\bar y)^2}
 $$
 
-평가 자료에서 baseline을 training mean으로 정하고 계산할 수도 있지만, 구현마다
-$R^2$의 기준과 aggregation이 같은지 확인한다. $R^2$가 높아도 분 단위 오차가 운영에
+여기서 $\bar y$는 **평가하는 자료의 response 평균**이다. scikit-learn의 `r2_score`도
+이 정의를 사용한다.[^sklearn-r2] Training mean을 예측값으로 쓰는 baseline의 성능은
+별도로 계산할 수 있지만, 분모를 그 baseline의 제곱오차 합으로 바꾸면 표준 $R^2$와는
+다른 baseline 대비 개선율이 된다. Test 평균을 지표 계산에 사용하는 것과 모델을
+그 평균에 맞춰 조정하는 것도 구분한다. $R^2$는 음수가 될 수 있고, 평가 target이 모두
+같으면 위 식의 분모가 0이므로 구현의 처리 규칙을 확인해야 한다.
+$R^2$가 높아도 분 단위 오차가 운영에
 충분히 작다는 뜻은 아니다. MAE, RMSE(root mean squared error), residual plot을 함께
 보고 domain threshold와 연결한다.[^vds9]
 
@@ -227,3 +232,4 @@ baseline, validation 결과, coefficient와 prediction의 stability를 한 표�
 [^vds9]: Yu, B., & Barter, R. L. (2024). [Continuous Responses and Least Squares](https://vdsbook.com/09-ls). *Veridical Data Science*, MIT Press.
 [^vds10]: Yu, B., & Barter, R. L. (2024). [Extending the Least Squares Algorithm](https://vdsbook.com/10-ls_continued). *Veridical Data Science*, MIT Press.
 [^lasso]: Tibshirani, R. (1996). [Regression Shrinkage and Selection via the Lasso](https://doi.org/10.1111/j.2517-6161.1996.tb02080.x). *Journal of the Royal Statistical Society: Series B*, 58(1), 267–288.
+[^sklearn-r2]: scikit-learn developers. [R² score, the coefficient of determination](https://scikit-learn.org/stable/modules/model_evaluation.html#r2-score). *scikit-learn User Guide*. 접근일: 2026-09-10. — 기준 평균, 음수 점수와 상수 target 처리.

@@ -4,6 +4,9 @@ week: 9
 order: 0
 ---
 
+import practiceFigure from "./assets/09-pca-projection.png";
+
+
 모델링은 알고리즘 이름을 고르는 일보다 먼저 **무엇을 보존하고 무엇을 잃어도 되는지**를
 정하는 일이다. 이번 주에는 response가 없는 자료의 구조를 PCA(principal component
 analysis)와 clustering으로 요약하고, response가 있는 예측 문제에서는 현재 자료와
@@ -76,7 +79,44 @@ $$
 70%가 그 두 선형 방향에 담겼다는 뜻이다. response의 70%를 예측하거나 정보의 70%가
 본질적으로 보존된다는 보장은 아니다.
 
-### 2.2 scaling과 transformation은 모델 일부다
+### 2.2 실습: projection과 복원을 계산하기
+
+[scikit-learn의 Iris PCA 그림](https://scikit-learn.org/stable/auto_examples/decomposition/plot_pca_iris.html)에서
+원변수 좌표와 component 좌표를 비교한다(접근일: 2026-09-10). 다음은 §2.1의 세 점에
+대응하는 독립적인 계산 예제다. NumPy와 Matplotlib을 사용한다.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+X = np.array([[-1., -1.], [0., 0.], [1., 1.]])
+center = X.mean(axis=0)
+U, singular, Vt = np.linalg.svd(X - center, full_matrices=False)
+direction = Vt[0]
+# 그림을 비교하기 위해 축 전체의 부호만 맞춘다.
+if direction[0] < 0:
+    direction = -direction
+score = (X - center) @ direction
+restored = score[:, None] * direction + center
+print("score:", np.round(score, 3))
+print("첫 축 설명 분산 비율:", np.round(singular[0] ** 2 / (singular ** 2).sum(), 3))
+print("재구성 오차:", np.round(((X - restored) ** 2).sum(), 6))
+fig, ax = plt.subplots(figsize=(4.5, 4), layout="constrained")
+ax.scatter(X[:, 0], X[:, 1], label="Observations")
+ends = center + np.array([-2, 2])[:, None] * direction
+ax.plot(ends[:, 0], ends[:, 1], label="First PC")
+ax.set(xlabel="Feature 1", ylabel="Feature 2", aspect="equal")
+ax.legend()
+plt.show()
+```
+
+<Figure src={practiceFigure.src} alt="세 관측이 첫 principal component 위에 놓여 한 축으로 정확히 복원된다." caption="세 관측이 첫 principal component 위에 놓여 한 축으로 정확히 복원된다." source="MI Lab · 본문 가상 자료와 직접 작성한 실습 코드로 생성" />
+
+Score는 약 `[-1.414, 0, 1.414]`, 설명 분산 비율은 1, 재구성 오차는 0이다.
+마지막 점을 `(1, 0.5)`로 바꾸면 오차가 0보다 커지는지 확인한다. 축 하나로 복원하지
+못한 차이가 생겼다는 뜻이다. 이 실습은 자료 압축의 계산이며 미래 예측 성능 평가는 아니다.
+
+### 2.3 scaling과 transformation은 모델 일부다
 
 분 단위 대기 시간과 원 단위 매출을 그대로 쓰면 단위가 큰 변수가 variance를 지배할 수
 있다. 서로 다른 단위의 변수를 동등하게 비교하려면 standardization을 검토한다. 그러나

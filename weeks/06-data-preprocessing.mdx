@@ -218,7 +218,16 @@ coefficient를 training에서 정한다. validation은 hyperparameter와 전처�
 | B | 누락 많은 날짜 제외 | 원기록 확인 후 유지 | one-hot |
 | C | 해당 주문 제외 | 99th percentile에서 cap | one-hot |
 
-각 버전에서 행 수, 날짜 수, target 분포, validation MAE, test 이전의 선택 이유를 남긴다.
+이 표의 제거·cap은 우선 training 자료에 적용할 대안이다. 99th percentile 경계도
+각 training fold에서 구한다. 비교할 validation 행과 정답의 측정·집계 규칙은 공통으로
+고정한다. 예를 들어 실제 대기 80분을 C에서만 60분으로 바꿔 채점하면 동일한 예측도
+오차가 작아져, 전처리의 효과와 정답 변경의 효과가 섞인다.
+
+평가 자료에서도 행 제거가 불가피하면 모든 후보가 예측할 수 있는 공통 행에서 성능을
+비교하고, 제외된 날짜·주문 수와 적용 범위 축소를 별도로 보고한다.[^vds13]
+Target 정의 자체를 바꾸는 분석은 다른 질문에 대한 민감도 분석으로 구분한다.
+각 버전에서 training 행 수, 날짜 수, target 분포, 공통 validation의 MAE,
+test 이전의 선택 이유를 남긴다.
 예측 점수만 같아도 혼잡 시간 추천이나 특정 날짜의 오차가 달라질 수 있다. 전처리
 stability는 같은 코드 재실행과 다르다. 전자는 타당한 판단을 바꾸고 결론을 비교하며,
 후자는 같은 입력·환경에서 계산이 반복되는지 본다.
@@ -236,3 +245,4 @@ stability는 같은 코드 재실행과 다르다. 전자는 타당한 판단을
 
 [^vds4]: Yu, B., & Barter, R. L. (2024). [Data Preparation](https://vdsbook.com/04-data_cleaning). *Veridical Data Science*, MIT Press.
 [^sklearn-pitfalls]: scikit-learn developers. [Common pitfalls and recommended practices](https://scikit-learn.org/stable/common_pitfalls.html). *scikit-learn User Guide*.
+[^vds13]: Yu, B., & Barter, R. L. (2024). [Producing the Final Prediction Results](https://vdsbook.com/13-final_ml). *Veridical Data Science*, MIT Press. — 도입부의 공통 평가 관측 조건.

@@ -4,6 +4,9 @@ week: 11
 order: 0
 ---
 
+import practiceFigure from "./assets/11-calibration.png";
+
+
 Binary prediction은 0과 1을 맞히는 문제처럼 보이지만 실제 decision에는 probability,
 threshold, 오류 비용이 함께 들어간다. 이번 주에는 logistic regression으로 probability를
 모델링하고, decision tree와 random forest가 interaction과 비선형 관계를 자료에서
@@ -108,6 +111,45 @@ validation 자료에서 fit하고 독립 test에서 평가한다.
 Score ranking이 좋아도 probability가 과도하게 확신할 수 있고, calibration이 좋아도
 모든 사례에 prevalence만 출력해 구분 능력이 없을 수 있다. discrimination과 calibration은
 서로 다른 성질이다.
+
+### 4.1 실습: 확률 진단과 decision 비교
+
+[scikit-learn의 calibration 곡선과 score 분포](https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html)를
+함께 읽는다(접근일: 2026-09-10). 다음 가상 열 구간에서는 threshold에 따른 오류 수와
+calibration을 직접 계산한다. NumPy와 Matplotlib을 사용하며, 주어진 score를 진단하는
+예제다. 모델을 학습하거나 calibrate하는 코드는 아니다.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+p = np.array([.1, .2, .3, .4, .45, .55, .6, .7, .8, .9])
+y = np.array([0, 0, 1, 0, 0, 1, 0, 1, 1, 1])
+for threshold in [.5, .7]:
+    decision = p >= threshold
+    tp = ((y == 1) & decision).sum()
+    fp = ((y == 0) & decision).sum()
+    fn = ((y == 1) & ~decision).sum()
+    print("threshold, TP, FP, FN:", threshold, tp, fp, fn)
+groups = [p < .5, p >= .5]
+mean_score = [p[group].mean() for group in groups]
+observed = [y[group].mean() for group in groups]
+print("Brier:", np.round(((y - p) ** 2).mean(), 4))
+fig, ax = plt.subplots(figsize=(4.5, 4), layout="constrained")
+ax.plot([0, 1], [0, 1], "--", color="gray", label="Reference")
+ax.plot(mean_score, observed, "o-", label="Two bins (5 cases each)")
+ax.set(xlabel="Mean predicted probability", ylabel="Observed positive fraction",
+       xlim=(0, 1), ylim=(0, 1))
+ax.legend()
+plt.show()
+```
+
+<Figure src={practiceFigure.src} alt="두 bin의 평균 예측 확률과 관측 positive 비율. 각 점의 분모는 5건이다." caption="두 bin의 평균 예측 확률과 관측 positive 비율. 각 점의 분모는 5건이다." source="MI Lab · 본문 가상 자료와 직접 작성한 실습 코드로 생성" />
+
+Threshold 0.5에서는 `(TP, FP, FN)=(4, 1, 1)`, 0.7에서는 `(3, 0, 2)`다.
+경보를 줄이면 이 예시에서는 놓치는 혼잡이 늘어난다. 어느 쪽이 나은지는 비용에 달렸다.
+각 bin은 5건뿐이고 경계 선택에도 영향을 받으므로 이 그림만으로 calibration이
+충분하다고 결론하지 않는다. Bin을 더 나누면 각 점의 분모가 얼마나 줄어드는지 확인한다.
 
 ## 5. decision tree: 질문을 순서대로 나누기
 
