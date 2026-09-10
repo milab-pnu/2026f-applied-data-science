@@ -9,14 +9,11 @@ Linear model은 단순해서 넘어갈 모델이 아니라, prediction과 interp
 계산하고, 여러 feature·category·비선형 변환을 한 설계 행렬로 연결한다. 이어 ridge와
 lasso가 coefficient를 제한해 prediction stability를 얻는 방식과 그 대가를 살펴본다.
 
+계수와 오차의 의미는 가상의 식당 자료로 계산해 본다. 예시의 금액과 시간은 계산 원리를 보여 주기 위해 정한 값이며, 실제 식당에서 추정한 계수가 아니다.
+
 **지정 읽기**: Yu & Barter, *Veridical Data Science*의
 [Chapter 9 — Continuous Responses and Least Squares](https://vdsbook.com/09-ls),
 [Chapter 10 — Extending the Least Squares Algorithm](https://vdsbook.com/10-ls_continued).
-
-<Callout type="note">
-식당 자료와 계산은 이 노트를 위해 만든 가상 예시다. 금액·시간의 계수는 실제 식당에
-대한 추정이 아니다.
-</Callout>
 
 ## 1. fitted line은 loss를 가장 작게 하는 규칙이다
 

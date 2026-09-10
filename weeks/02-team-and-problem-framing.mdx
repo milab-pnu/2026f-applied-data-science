@@ -8,7 +8,8 @@ order: 0
 어떤 결과를 내야 할지 결정하기 어렵다. 이번 주에는 팀이 관심 있는 문제를 골라
 **누구의 어떤 판단을 도울 것인지, 무엇을 관측할 것인지, 답을 어떻게 확인할 것인지**를
 연결한다. 그 판단을 코드와 문서로 남길 프로젝트 구조까지 설계한다. 수업을 마칠 때에는
-문제 정의 초안, PCS 검증 계획, 팀의 실행 경로가 연결되어 있어야 한다.
+문제 정의 초안, PCS(predictability, computability, stability) 검증 계획, 팀의 실행
+경로가 연결되어 있어야 한다.
 
 **지정 읽기**: Yu & Barter, *Veridical Data Science*의
 [Preface](https://vdsbook.com/),
@@ -16,9 +17,8 @@ order: 0
 [Chapter 2 — The Data Science Life Cycle](https://vdsbook.com/02-dslc),
 [Chapter 3 — Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility).
 
-<Callout type="note">
-이 노트의 식당 자료와 수치는 개념을 설명하기 위한 가상 예시다.
-</Callout>
+캠퍼스 식당의 대기 시간을 연구하는 가상 사례로 설명한다. 주문 기록과 수치는 계산을
+익히도록 만든 예시다.
 
 ## 1. 팀이 함께 책임질 질문
 
@@ -60,6 +60,11 @@ Preface는 데이터사이언스를 컴퓨팅, 통계·수학, 도메인 지식�
 
 ## 2. 현실의 불편을 측정 가능한 질문으로
 
+문제 정의(problem framing)는 관심 주제를 관측·분석·검증할 수 있는 질문으로
+구체화하는 일이다. 같은 식당 혼잡 문제라도 학생은 30분 뒤의 대기를 알고 싶고,
+식당 담당자는 전날 식재료를 준비하기 위해 다음 날 주문량을 알고 싶을 수 있다.
+결과를 사용할 사람이 무엇을 언제 결정하는지에 따라 정답과 입력 정보가 달라진다.
+
 ### 2.1 현실·기록·계산을 구분하기
 
 Chapter 1은 관측과 분석이 현실을 얼마나 적절히 반영하는지 묻는다.[^vds1]
@@ -94,13 +99,16 @@ Chapter 2의 observational unit은 데이터 한 행이 나타내는 관측 대�
 | A | 9월 7일 12:00 | 15 | 14 | 31 |
 | A | 9월 8일 11:30 | 5 | 7 | 14 |
 
-`식당`은 categorical variable, 대기 인원은 count, 구간 시작은 datetime이다.
+`식당`은 범주형 변수(categorical variable), 대기 인원은 개수를 세는 변수(count),
+구간 시작은 날짜·시각 변수(datetime)다.
 같은 숫자라도 식당 코드를 평균 내는 계산에는 의미가 없고, 대기 시간을 평균 내는
 계산에는 단위가 있다. 데이터 사전에 변수명뿐 아니라 단위·수집 시점·결측의 뜻을
 적는 이유다.
 
-행은 관측 대상, 열은 변수(feature), 셀은 해당 대상에서 측정한 값이다. 이런 형태를
-tabular data라고 한다. 변수 수를 데이터의 차원이라고 부르지만, 식당 이름을 여러 개의
+행은 관측 대상, 열은 변수, 셀은 해당 대상에서 측정한 값이다. 이런 형태를 표 형태의
+자료(tabular data)라고 한다. 예측에서는 모델에 넣는 입력 변수를 feature, 맞히려는
+변수를 정답 또는 target이라고 구분한다. 모든 열이 모델 입력인 것은 아니다.
+변수 수를 데이터의 차원이라고 부르지만, 식당 이름을 여러 개의
 지시 변수로 바꾸는 등 표현 방식에 따라 분석 입력의 차원은 달라진다.[^vds2]
 사진이나 자유 서술형 의견도 수치 특징으로 표현할 수 있다. 예를 들어 식당 의견을
 “대기”라는 단어의 등장 횟수로 바꾸면 표에 넣기는 쉬워지지만 “대기가 없었다”와
@@ -127,12 +135,35 @@ baseline은 새 방법을 비교할 기준 방법이다. 이 문장은 대상, �
 입력에 섞는 data leakage는 실행 가능한 예측과 다른 문제를 평가하게 만든다.
 
 <Callout type="example">
-12:00–12:30 구간을 11:30에 예측한다면 11:30까지의 주문 기록은 후보 입력이다.
+12:00–12:30 구간을 11:30에 예측한다면 11:30까지 시스템에서 확인할 수 있는 주문
+기록은 후보 입력이다. 11:29에 결제됐지만 11:35에야 수령한 주문의 최종 대기 시간은
+11:30에는 아직 알 수 없다.
 12:00의 대기 인원과 12:30까지 집계한 주문 수는 그 시점에 알 수 없다. 입력 자료가
 부족하면 예측 시점을 바꾸거나 필요한 기록을 수집해야 한다.
 </Callout>
 
-### 2.4 기대에 맞는 결과도 의심하기
+### 2.4 대기 시간을 실제로 어떻게 잴 것인가
+
+“대기 시간”을 계산하려면 시작과 끝을 정해야 한다. 줄에 선 시각부터 식사를 받은
+시각까지는 주문 전의 줄을 포함하지만, 결제부터 수령까지는 결제 뒤의 처리 시간만
+측정한다. 이처럼 개념을 구체적인 관측 규칙으로 정하는 것을 조작화(operationalization)라고
+한다. 이 사례에서는 **결제 완료부터 수령까지의 시간**을 사용한다.
+
+결제 시각이 11:58이고 수령 시각이 12:07이면 대기 시간은 9분이다. 결제 시각을 기준으로
+집계하면 이 주문은 11:30–12:00 구간에 속한다. 수령 시각으로 집계하면 다음 구간으로
+이동하므로, 구간을 배정하는 기준도 정답의 정의에 포함된다. 구간 시작은 포함하고 끝은
+제외하면 정확히 12:00에 결제한 주문은 12:00–12:30에 한 번만 들어간다.
+
+한 구간의 대기 시간이 2, 4, 6, 8, 30분이면 중앙값은 6분이고 평균은 10분이다.
+중앙값은 긴 대기 한 건의 영향을 평균보다 적게 받지만, 오래 기다린 사람의 경험도
+덜 드러낸다. 구간 중앙값을 예측한다면 개인의 대기 시간을 예측하는 것으로 해석하지
+않고, 긴 대기 사례는 별도로 살핀다.
+
+수령 시각이 없는 주문은 0분으로 계산하지 않는다. 특히 자료를 구간 종료 직후에
+추출하면 오래 기다리는 주문이 아직 완료되지 않았을 수 있다. 완료된 주문만 집계하면
+대기가 짧은 주문에 치우치므로, 정답을 확정할 때는 이후의 수령 기록까지 확인해야 한다.
+
+### 2.5 기대에 맞는 결과도 의심하기
 
 팀이 “비가 오면 대기가 길어진다”고 믿는다고 하자. 그 방향의 그래프는 그대로 받아들이고
 반대 방향의 그래프만 오류를 찾는다면 confirmation bias가 개입한다. 발표에서 좋은
@@ -148,7 +179,7 @@ baseline은 새 방법을 비교할 기준 방법이다. 이 문장은 대상, �
 
 ## 3. 답을 믿을 근거를 미리 설계하기
 
-PCS(predictability, computability, stability)는 결과를 현실과 대조하고, 계산을
+PCS는 결과를 현실과 대조하고, 계산을
 수행하며, 합리적인 선택의 변화에 결론이 얼마나 민감한지 확인하는 관점이다. 검사를
 통과했다는 사실은 신뢰할 근거를 보태지만 결론의 참을 보증하지 않는다.[^vds1]
 우리 팀은 이를 다음 세 가지 실험 계획으로 구체화한다.
@@ -213,7 +244,8 @@ perturbation은 실제로 가능했을 다른 자료나 분석 선택을 만들�
 교재는 자료 수집, 정제·전처리 판단, 알고리즘 선택에서 생기는 불확실성을 구분한다.[^vds1]
 식당 팀이라면 관측 날짜의 구성, 결측 처리 규칙, 예측 방법을 각각 바꿔 볼 수 있다.
 날짜를 바꿀 때는 하루 안의 연속된 기록을 함께 다루는 등 수집 구조를 고려한다.
-난수 seed만 바꾸는 검사는 이 가운데 일부 계산 변동만 확인한다.
+난수 발생기의 초기 상태를 정하는 값인 seed만 바꾸는 검사는 이 가운데 일부 계산
+변동만 확인한다.
 
 먼저 무엇의 안정성을 볼지 정한다. 예측 오차, 변수의 중요도 순위, 운영 권고는 서로
 다른 결과다. 점수가 비슷해도 추천 시간대가 달라질 수 있다. 타당한 대안들의 결과 범위와
@@ -253,6 +285,17 @@ PCS의 원논문은 예측 문제에서 현실과 맞지 않는 모델을 걸러
 차이를 나타내며, 자동으로 95% 신뢰구간이 되지는 않는다. 후보를 왜 골랐고 어떤 변동은
 검사하지 못했는지 함께 적는다. 제외한 날짜 때문에 평가 대상까지 달라졌다면 각 점수를
 같은 대상의 성능처럼 비교하지 말고, 공통 평가 구간의 비교와 적용 범위의 변화를 구분한다.
+
+### 3.5 예측 오차와 실제 활용의 차이
+
+두 식당의 실제 대기가 A 8분, B 10분이라고 하자. 예측이 A 9분, B 7분이면
+MAE는 2분이지만 대기가 더 긴 B를 추천한다. 예측이 A 11분, B 13분이면 MAE는
+3분으로 더 크지만 짧은 곳인 A를 고른다. 따라서 대기 시간을 숫자로 안내할지,
+짧은 식당을 추천할지에 따라 추가로 평가할 내용이 달라진다.
+
+또한 예측 오차가 1분 줄었다고 실제 대기도 1분 줄었다고 할 수는 없다. 실제 대기의
+감소는 안내에 따른 이용자의 행동 변화와 식당 운영의 영향을 별도로 관측해야 확인할
+수 있다. 이 프로젝트의 직접적인 검증 대상은 우선 대기 시간의 예측 오차다.
 
 ## 4. 생애주기를 팀의 작업으로 바꾸기
 
@@ -488,10 +531,10 @@ predictability도 확인한다. 우리 캡스톤에서는 우선 동료가 핵�
 묻는다. 답이 막히는 부분이 다음 주 feasibility review의 첫 작업이다.
 
 [^preface]: Yu, B., & Barter, R. L. (2024). [Veridical Data Science: The Practice of Responsible Data Analysis and Decision Making](https://vdsbook.com/). *MIT Press*.
-[^vds1]: Yu, B., & Barter, R. L. (2024). [An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds). *Veridical Data Science*, MIT Press.
-[^vds2]: Yu, B., & Barter, R. L. (2024). [The Data Science Life Cycle](https://vdsbook.com/02-dslc). *Veridical Data Science*, MIT Press.
+[^vds1]: Yu, B., & Barter, R. L. (2024). [An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds). *Veridical Data Science*, MIT Press. 온라인판 2026-09-10 확인.
+[^vds2]: Yu, B., & Barter, R. L. (2024). [The Data Science Life Cycle](https://vdsbook.com/02-dslc). *Veridical Data Science*, MIT Press. 온라인판 2026-09-10 확인.
 
-[^setup]: Yu, B., & Barter, R. L. (2024). [Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility). *Veridical Data Science*, MIT Press.
+[^setup]: Yu, B., & Barter, R. L. (2024). [Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility). *Veridical Data Science*, MIT Press. 온라인판 2026-09-10 확인.
 [^workflow]: Barter, R. L. (2019). [A quick guide to developing a reproducible and consistent data science workflow](https://rebeccabarter.com/blog/2019-03-07_reproducible_pipeline). *Rebecca Barter*.
 [^git]: Chacon, S., & Straub, B. [About Version Control](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). *Pro Git*, 2nd edition.
 

@@ -10,13 +10,11 @@ threshold, 오류 비용이 함께 들어간다. 이번 주에는 logistic regre
 구성하는 방식을 살펴본다. 알고리즘은 달라도 같은 prediction time, split, baseline,
 metric으로 비교한다.
 
+확률을 안내 여부로 바꾸는 과정을 가상의 식당 사례로 따라가 보자. 계산에 쓰는 수치와 판단 기준, 오류 비용은 원리를 설명하도록 정한 값이며 실제 식당의 운영 기준이나 피해를 나타내지 않는다.
+
 **지정 읽기**: Yu & Barter, *Veridical Data Science*의
 [Chapter 11 — Binary Responses and Logistic Regression](https://vdsbook.com/11-ls_binary),
 [Chapter 12 — Decision Trees and the Random Forest Algorithm](https://vdsbook.com/12-rf).
-
-<Callout type="note">
-식당 사례와 수치는 계산을 위해 만든 가상 자료다. 실제 운영 threshold나 피해를 나타내지 않는다.
-</Callout>
 
 ## 1. response, probability, decision을 분리하기
 
