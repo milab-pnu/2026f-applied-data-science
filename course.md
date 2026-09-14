@@ -12,7 +12,7 @@ weeks:
   - { n: 1, topic: "Introduction" }
   - { n: 2, topic: "Team Formation, Collaboration Workflow, Problem Framing" }
   - { n: 3, topic: "Topic Feasibility Review" }
-  - { n: 4, topic: "Milestone 1 — Proposal Presentation (Quiz 1)" }
+  - { n: 4, topic: "Milestone 1 — Proposal Presentation (Quiz 1)", submissionUrl: "https://github.com/milab-pnu/2026f-applied-data-science/discussions/1" }
   - { n: 5, topic: "Data Collection Methodology, Data Ethics" }
   - { n: 6, topic: "Data Preprocessing" }
   - { n: 7, topic: "Exploratory Data Analysis (EDA)" }
