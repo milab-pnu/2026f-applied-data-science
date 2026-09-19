@@ -12,7 +12,13 @@ weeks:
   - { n: 1, topic: "Introduction" }
   - { n: 2, topic: "Team Formation, Collaboration Workflow, Problem Framing" }
   - { n: 3, topic: "Topic Feasibility Review" }
-  - { n: 4, topic: "Milestone 1 — Proposal Presentation (Quiz 1)", submissionUrl: "https://github.com/milab-pnu/2026f-applied-data-science/discussions/1" }
+  - n: 4
+    topic: "Milestone 1 — Proposal Presentation (Quiz 1)"
+    submissionLinks:
+      - label: "과제 제출 (금 09시 수업)"
+        url: "https://github.com/milab-pnu/2026f-applied-data-science/discussions/1"
+      - label: "과제 제출 (금 19시 수업)"
+        url: "https://github.com/milab-pnu/2026f-applied-data-science/discussions/2"
   - { n: 5, topic: "Data Collection Methodology, Data Ethics" }
   - { n: 6, topic: "Data Preprocessing" }
   - { n: 7, topic: "Exploratory Data Analysis (EDA)" }
