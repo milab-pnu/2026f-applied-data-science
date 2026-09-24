@@ -134,12 +134,14 @@ PCS는 이 문제에 대한 처방으로, 판단과 근거를 문서로 남긴 �
 | 조사방법 | 응답을 받는 방식 | 무선 ARS(automatic response system, 녹음된 음성에 버튼으로 응답), 무선 전화면접(조사원이 통화) |
 | 표본추출 틀 | 전화를 걸 대상 번호를 뽑는 바탕 | 무선 RDD(random digit dialing, 번호를 무작위로 생성), 휴대전화 가상번호(통신사가 제공하는 안심번호) |
 | 표본수 | 응답을 완료한 사람 수 | 대부분 1,000명 안팎 |
-| 접촉률 | 조사 대상 가운데 실제로 접촉이 된 비율 | 수십 % |
-| 응답률 | 접촉된 사람 가운데 응답을 끝까지 마친 비율 | 대부분 한 자릿수 %에서 10%대 |
+| 접촉률 | 응답 자격이 있는 조사 대상 가운데 실제로 접촉이 된 비율 | 수십 % |
+| 응답률 | 접촉된 응답 적격자 가운데 응답을 끝까지 마친 비율 | 대부분 한 자릿수 %에서 10%대 |
 | 95% 신뢰수준 표본오차 | 표본을 뽑아서 생기는 추정의 오차 범위 | 1,000명 조사에서 ±3.1%p |
 
-접촉률과 응답률은 분모가 다르다. 접촉률은 조사 대상 전체를, 응답률은 접촉된 사람만을
-분모로 삼는다. 현재 게시된 선거여론조사기준(2026년 개정)이 이렇게 정의하며, 논문은
+접촉률과 응답률은 분모가 다르다. 둘 다 결번·사업체 번호·조사 지역 밖 번호처럼 응답
+자격이 없는 경우를 빼고 계산하는데, 접촉률은 응답 적격 대상 전체를, 응답률은 그중 접촉된
+사람만을 분모로 삼는다. 접촉하지 못한 번호는 적격 여부를 알 수 없으므로 비율을 추정해
+반영한다. 현재 게시된 선거여론조사기준(2026년 개정)이 이렇게 정의하며, 논문은
 2023년 12월 1일부터 시행된 기준의 정의를 사용했다고 밝힌다.[^nesdc-std][^case]
 
 지표·기준·후보를 분석 전에 적어 둔 것이 중요하다. 논문 2.3.2절이 소개하듯, 자료를
@@ -298,60 +300,60 @@ $\mathbf{1}$은 조건이 맞으면 1, 아니면 0인 indicator다. 즉 각 범�
 | 기타정당 | 4.9 | 1.8–8.0 | 1.69 | 0 | 2.63 | 1 |
 | 포함률 | | | | 4/8 = 0.5 | | 4/8 = 0.5 |
 
-<svg viewBox="0 0 460 294" role="img" aria-label="논문의 첫 조사를 8개 정당 범주별로 표시한 도식. 막대는 조사 지지율 ±3.1%p 구간이고, 채운 원은 선거인 수 기준 득표율, 빈 원은 유효투표 기준 득표율이다. 두 기준 모두 더불어민주당·국민의힘·조국혁신당은 구간 밖이고, 작은 정당들은 0 근처 구간 안에 들어온다. 포함률은 두 기준 모두 4/8=0.5다." xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, sans-serif">
-  <line x1="120.0" y1="32" x2="120.0" y2="248" stroke="#e2e8f0"/>
-  <text x="120.0" y="262" text-anchor="middle" font-size="10" fill="#64748b">0%</text>
-  <line x1="184.0" y1="32" x2="184.0" y2="248" stroke="#e2e8f0"/>
-  <text x="184.0" y="262" text-anchor="middle" font-size="10" fill="#64748b">10%</text>
-  <line x1="248.0" y1="32" x2="248.0" y2="248" stroke="#e2e8f0"/>
-  <text x="248.0" y="262" text-anchor="middle" font-size="10" fill="#64748b">20%</text>
-  <line x1="312.0" y1="32" x2="312.0" y2="248" stroke="#e2e8f0"/>
-  <text x="312.0" y="262" text-anchor="middle" font-size="10" fill="#64748b">30%</text>
-  <line x1="376.0" y1="32" x2="376.0" y2="248" stroke="#e2e8f0"/>
-  <text x="376.0" y="262" text-anchor="middle" font-size="10" fill="#64748b">40%</text>
+<svg viewBox="0 0 460 294" role="img" aria-label="논문의 첫 조사를 8개 정당 범주별로 표시한 도식. 막대는 조사 지지율 ±3.1%p 구간으로 모든 범주에서 폭이 6.2%p로 같고, 조사값이 0인 범주는 음수 영역까지 걸친다. 채운 원은 선거인 수 기준 득표율, 빈 원은 유효투표 기준 득표율이다. 두 기준 모두 더불어민주당·국민의힘·조국혁신당은 구간 밖이고, 작은 정당들은 0 근처 구간 안에 들어온다. 포함률은 두 기준 모두 4/8=0.5다." xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, sans-serif">
+  <line x1="149.1" y1="32" x2="149.1" y2="248" stroke="#94a3b8"/>
+  <text x="149.1" y="262" text-anchor="middle" font-size="10" fill="#64748b">0%</text>
+  <line x1="207.3" y1="32" x2="207.3" y2="248" stroke="#e2e8f0"/>
+  <text x="207.3" y="262" text-anchor="middle" font-size="10" fill="#64748b">10%</text>
+  <line x1="265.5" y1="32" x2="265.5" y2="248" stroke="#e2e8f0"/>
+  <text x="265.5" y="262" text-anchor="middle" font-size="10" fill="#64748b">20%</text>
+  <line x1="323.6" y1="32" x2="323.6" y2="248" stroke="#e2e8f0"/>
+  <text x="323.6" y="262" text-anchor="middle" font-size="10" fill="#64748b">30%</text>
+  <line x1="381.8" y1="32" x2="381.8" y2="248" stroke="#e2e8f0"/>
+  <text x="381.8" y="262" text-anchor="middle" font-size="10" fill="#64748b">40%</text>
   <line x1="440.0" y1="32" x2="440.0" y2="248" stroke="#e2e8f0"/>
   <text x="440.0" y="262" text-anchor="middle" font-size="10" fill="#64748b">50%</text>
-  <text x="120.0" y="22" font-size="11" fill="#0f172a">첫 조사: 지지율 ± 표본오차 3.1%p</text>
+  <text x="120" y="22" font-size="11" fill="#0f172a">첫 조사: 지지율 ± 표본오차 3.1%p (모든 구간 폭 6.2%p)</text>
   <text x="112" y="57.0" text-anchor="end" font-size="11" fill="#0f172a">더불어민주당</text>
-  <rect x="381.8" y="48.0" width="39.7" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="401.6" y1="46.0" x2="401.6" y2="60.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="229.4" cy="53.0" r="4" fill="#0f172a"/>
-  <circle cx="290.9" cy="53.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="387.1" y="48.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="405.1" y1="46.0" x2="405.1" y2="60.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="248.5" cy="53.0" r="4" fill="#0f172a"/>
+  <circle cx="304.4" cy="53.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <text x="112" y="83.0" text-anchor="end" font-size="11" fill="#0f172a">국민의힘</text>
-  <rect x="312.6" y="74.0" width="39.7" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="332.5" y1="72.0" x2="332.5" y2="86.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="270.3" cy="79.0" r="4" fill="#0f172a"/>
-  <circle cx="354.7" cy="79.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="324.2" y="74.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="342.3" y1="72.0" x2="342.3" y2="86.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="285.7" cy="79.0" r="4" fill="#0f172a"/>
+  <circle cx="362.4" cy="79.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <text x="112" y="109.0" text-anchor="end" font-size="11" fill="#0f172a">녹색정의당</text>
-  <rect x="120.0" y="100.0" width="34.6" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="134.7" y1="98.0" x2="134.7" y2="112.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="128.8" cy="105.0" r="4" fill="#0f172a"/>
-  <circle cx="133.8" cy="105.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="144.4" y="100.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="162.5" y1="98.0" x2="162.5" y2="112.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="157.1" cy="105.0" r="4" fill="#0f172a"/>
+  <circle cx="161.6" cy="105.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <text x="112" y="135.0" text-anchor="end" font-size="11" fill="#0f172a">새로운미래</text>
-  <rect x="120.0" y="126.0" width="19.8" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="120.0" y1="124.0" x2="120.0" y2="138.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="127.0" cy="131.0" r="4" fill="#0f172a"/>
-  <circle cx="130.9" cy="131.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="131.1" y="126.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="149.1" y1="124.0" x2="149.1" y2="138.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="155.4" cy="131.0" r="4" fill="#0f172a"/>
+  <circle cx="159.0" cy="131.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <text x="112" y="161.0" text-anchor="end" font-size="11" fill="#0f172a">개혁신당</text>
-  <rect x="120.0" y="152.0" width="19.8" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="120.0" y1="150.0" x2="120.0" y2="164.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="134.8" cy="157.0" r="4" fill="#0f172a"/>
-  <circle cx="143.2" cy="157.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="131.1" y="152.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="149.1" y1="150.0" x2="149.1" y2="164.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="162.6" cy="157.0" r="4" fill="#0f172a"/>
+  <circle cx="170.2" cy="157.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <text x="112" y="187.0" text-anchor="end" font-size="11" fill="#0f172a">자유통일당</text>
-  <rect x="120.0" y="178.0" width="19.8" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="120.0" y1="176.0" x2="120.0" y2="190.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="129.3" cy="183.0" r="4" fill="#0f172a"/>
-  <circle cx="134.5" cy="183.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="131.1" y="178.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="149.1" y1="176.0" x2="149.1" y2="190.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="157.5" cy="183.0" r="4" fill="#0f172a"/>
+  <circle cx="162.3" cy="183.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <text x="112" y="213.0" text-anchor="end" font-size="11" fill="#0f172a">조국혁신당</text>
-  <rect x="120.0" y="204.0" width="19.8" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="120.0" y1="202.0" x2="120.0" y2="216.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="219.3" cy="209.0" r="4" fill="#0f172a"/>
-  <circle cx="275.2" cy="209.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="131.1" y="204.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="149.1" y1="202.0" x2="149.1" y2="216.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="239.4" cy="209.0" r="4" fill="#0f172a"/>
+  <circle cx="290.2" cy="209.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <text x="112" y="239.0" text-anchor="end" font-size="11" fill="#0f172a">기타정당</text>
-  <rect x="131.5" y="230.0" width="39.7" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
-  <line x1="151.4" y1="228.0" x2="151.4" y2="242.0" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="130.8" cy="235.0" r="4" fill="#0f172a"/>
-  <circle cx="136.8" cy="235.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="159.6" y="230.0" width="36.1" height="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <line x1="177.6" y1="228.0" x2="177.6" y2="242.0" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="158.9" cy="235.0" r="4" fill="#0f172a"/>
+  <circle cx="164.4" cy="235.0" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/>
   <rect x="120" y="274" width="16" height="8" fill="#e2e8f0" stroke="#94a3b8"/><text x="142" y="282" font-size="10" fill="#64748b">조사 구간</text>
   <circle cx="220" cy="278" r="4" fill="#0f172a"/><text x="228" y="282" font-size="10" fill="#64748b">선거인 수 기준</text>
   <circle cx="320" cy="278" r="4" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5"/><text x="328" y="282" font-size="10" fill="#64748b">유효투표 기준</text>
@@ -363,7 +365,7 @@ $\mathbf{1}$은 조건이 맞으면 1, 아니면 0인 indicator다. 즉 각 범�
 표에서 한 가지가 더 보인다. 실제 득표율이 1–3%대인 작은 정당은 조사값이 0이어도
 ±3.1%p 구간에 쉽게 들어온다. 새로운미래·개혁신당·조국혁신당은 이 조사 당시 아직 창당
 전이라 원자료에서 결측이었고, 정제에서 0이 되었다(§5.1). 그런데도 앞의 둘은 포함으로
-판정된다. 반면 조국혁신당처럼 실제
+판정된다(논문이 쓴 선거인 수 기준). 반면 조국혁신당처럼 실제
 득표가 큰 범주는 조사값과의 차이가 커서 포함되기 어렵다. 포함률은 8개 범주에 같은 무게를
 주므로, 점수의 상당 부분이 작은 정당에서 결정될 수 있다.
 
@@ -591,6 +593,7 @@ M1 발표 전까지, 모델을 본격적으로 개발하기 전에 다음을 실
 3. **작은 baseline 계산하기.** 예측이라면 간단한 기준 방법의 지표를, 기술·비교 연구라면
    비교할 요약 통계를 계산한다. 기저율도 함께 구한다.
 4. **동료 재실행.** 다른 팀원이 문서대로 실행하고 결과, 소요 시간, 막힌 단계를 남긴다.
+   1인 팀은 다른 팀 학생과 서로의 코드를 바꿔 실행한다.
 
 ### 9.3 계속·축소·전환 판단
 
