@@ -156,6 +156,14 @@ P 질문이 “현실과 맞는가”를, S 질문이 “perturbation에도
 
 <Details summary="여론조사 원자료 보기 (그림 3.2–3.3)">
 
+논문 29쪽에 제시된 원자료의 크기는 246행 × 21열이다. 변수명은 다음과 같다.
+
+| 구분 | 변수명 |
+|---|---|
+| 조사 식별·설계 | 등록번호, 조사기관, 의뢰자, 조사일자, 조사방법, 표본추출틀 |
+| 표본·응답 정보 | 표본수(명), 접촉률(%), 응답률(%), 95%신뢰수준표본오차(%p) |
+| 정당·응답 범주별 지지율(%) | 더불어민주당, 국민의힘, 녹색정의당, 새로운미래, 개혁신당, 자유통일당, 조국혁신당, 진보당, 기타정당, 지지정당 없음, 모름/무응답 |
+
 <Figure src={rawFigure2.src} alt="전국 단위 여론조사 원자료: 1–7행, A–J열" caption="논문 그림 3.2. 전국 단위 여론조사 원자료: 1–7행, A–J열" />
 
 <Figure src={rawFigure3.src} alt="전국 단위 여론조사 원자료: 1–7행, K–U열" caption="논문 그림 3.3. 전국 단위 여론조사 원자료: 1–7행, K–U열" />
@@ -163,6 +171,19 @@ P 질문이 “현실과 맞는가”를, S 질문이 “perturbation에도
 </Details>
 
 <Details summary="비례대표 선거 개표 원자료 보기 (그림 3.4–3.8)">
+
+논문 30쪽에 제시된 원자료의 크기는 22,650행 × 59열이다. 변수명은 다음과 같다.
+
+| 구분 | 변수명 |
+|---|---|
+| 지역·개표 단위 | 시도명, 구시군명, 읍면동명, 투표구명 |
+| 선거인·투표 정보 | 선거인수, 투표수 |
+| 정당별 득표수 | 더불어민주연합, 국민의미래, 녹색정의당, 새로운미래, 개혁신당, 자유통일당, 조국혁신당, 가가국민참여신당, 가가호호공명선거대한당, 반공정당코리아, 가락특권폐지당, 공화당, 국가혁명당, 국민대통합당, 금융개혁당, 기독당, 기후민생당, 내일로미래로, 노동당, 노인복지당, 대중민주당, 대대한민국민당, 대한민국당, 대한상공인당, 미래당, 새누리당, 소나무당, 신한반도당, 여성의당, 우리공화당, 자유민주당, 케이정치혁신연합당, 통일대한민국당, 대한민국농어민당, 한나라당, 한류연합당, 홍익당, 히시태그국민정책당 |
+| 무효·기권 | 무효 투표수, 기권수 |
+
+59개 열 전체에 변수명이 있는 것은 아니다. AS–BD 열에는 정당명이 없고,
+BE열에는 본문의 변수 목록에 따로 적지 않은 합계 열(`계`)이 있다.
+두 자료는 정당을 분류하는 방법이 다르며, 개표 자료에 더 많은 정당이 포함된다.
 
 <Figure src={rawFigure4.src} alt="비례대표 선거 원자료: 1–21행, A–F열" caption="논문 그림 3.4. 비례대표 선거 원자료: 1–21행, A–F열" />
 
@@ -172,7 +193,10 @@ P 질문이 “현실과 맞는가”를, S 질문이 “perturbation에도
 
 <Figure src={rawFigure7.src} alt="비례대표 선거 원자료: 1–21행, AM–BD열" caption="논문 그림 3.7. 비례대표 선거 원자료: 1–21행, AM–BD열" />
 
-<Figure src={rawFigure8.src} alt="비례대표 선거 원자료: 1–21행, BE–BG열" caption="논문 그림 3.8. 비례대표 선거 원자료: 1–21행, BE–BG열" />
+<figure class="lecture-figure">
+  <img src={rawFigure8.src} alt="비례대표 선거 원자료: 1–21행, BE–BG열" loading="lazy" decoding="async" style="width: 9rem; max-width: 100%; height: auto; margin-inline: auto;" />
+  <figcaption>논문 그림 3.8. 비례대표 선거 원자료: 1–21행, BE–BG열</figcaption>
+</figure>
 
 </Details>
 
@@ -696,16 +720,6 @@ M1의 문헌 조사를 준비하는 데 도움이 된다.
 [^pcs]: Yu, B., & Barter, R. L. (2024). [An Introduction to Veridical Data Science](https://vdsbook.com/01-veridical_ds). *Veridical Data Science*, MIT Press.
 
 [^vds2]: Yu, B., & Barter, R. L. (2024). [The Data Science Life Cycle](https://vdsbook.com/02-dslc). *Veridical Data Science*, MIT Press.
-
-[^setup]: Yu, B., & Barter, R. L. (2024). [Setting Up Your Data Science Project](https://vdsbook.com/03-code_reproducibility). *Veridical Data Science*, MIT Press.
-
-[^nesdc]: 중앙선거여론조사심의위원회. (2024). [2024.4.3주차 선거여론조사결과 주요 데이터 게시](https://www.nesdc.go.kr/portal/bbs/B0000025/view.do?nttId=2204&menuNo=200500).
-
-[^nesdc-std]: 중앙선거여론조사심의위원회. (2026). [선거여론조사기준](https://www.nesdc.go.kr/portal/content/view.do?menuNo=300010).
-
-[^nec-reg]: 부산광역시선거관리위원회. (2024). [[4·10 총선 Q&A] ② 후보자 정보는 어디에서?](https://bs.nec.go.kr/bs/bbs/B0000264/view.do?category1=bs&category2=&deleteCd=0&menuNo=300002&nttId=237671&pageIndex=2).
-
-[^nec]: 중앙선거관리위원회. (2024). [제22대 국회의원선거 개표결과](https://www.nec.go.kr/site/nec/ex/bbs/View.do?cbIdx=1129&bcIdx=233922).
 
 [^nec-party]: 중앙선거관리위원회. [정당등록현황](https://www.nec.go.kr/site/nec/ex/bbs/List.do?cbIdx=1239).
 
