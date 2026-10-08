@@ -7,7 +7,7 @@ instructor: 오재훈
 schedule: 금 09:00–12:00 (데이터사이언스학과·데이터사이언스융합전공) · 금 19:00–22:00 (산업데이터사이언스융합학과)
 location: 제12공학관 201호
 credits: 3
-summary: 팀이 16주 동안 데이터사이언스 연구의 전 과정을 수행하는 캡스톤 디자인 과목.
+summary: 팀이 15주 동안 데이터사이언스 연구의 전 과정을 수행하는 캡스톤 디자인 과목.
 weeks:
   - { n: 1, topic: "Introduction" }
   - { n: 2, topic: "Team Formation, Collaboration Workflow, Problem Framing" }
@@ -29,13 +29,12 @@ weeks:
   - { n: 12, topic: "Evaluation Methodology" }
   - { n: 13, topic: "Result Interpretation" }
   - { n: 14, topic: "Demo" }
-  - { n: 15, topic: "Final Feedback" }
-  - { n: 16, topic: "Milestone 3 — Final Presentation and Report (Quiz 3)" }
+  - { n: 15, topic: "Milestone 3 — Final Presentation and Report (Quiz 3)" }
 ---
 
 ## Course Description
 
-본 강의는 일반적으로 석사과정 마지막 학기 학생을 대상으로 한다. 팀이 16주 동안
+본 강의는 일반적으로 석사과정 마지막 학기 학생을 대상으로 한다. 팀이 15주 동안
 데이터사이언스 연구의 전 과정 — 주제 선정 → 데이터 수집·전처리 → 모델링 → 분석 —
 을 수행하는 캡스톤 디자인 과목이다. 수업시간은 방법론 강의, 피드백, 마일스톤
 발표로 운영한다.
