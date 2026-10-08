@@ -20,8 +20,8 @@ weeks:
       - label: "과제 제출 (금 19시 수업)"
         url: "https://github.com/milab-pnu/2026f-applied-data-science/discussions/2"
   - { n: 5, topic: "Data Collection, Data Ethics, Data Preprocessing" }
-  - { n: 6, topic: "Exploratory Data Analysis (EDA)" }
-  - { n: 7, topic: "Dimension Reduction (PCA), Clustering" }
+  - { n: 6, topic: "Exploratory Data Analysis (EDA), Dimension Reduction (PCA)" }
+  - { n: 7, topic: "Clustering" }
   - { n: 8, topic: "Milestone 2 — Mid-term Presentation (Quiz 2)" }
   - { n: 9, topic: "Modeling Methodology 1" }
   - { n: 10, topic: "Modeling Methodology 2" }
