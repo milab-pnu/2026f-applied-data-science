@@ -281,6 +281,29 @@ K-EmoCon을 받은 사람이 이용 조건에 묶이듯, 데이터를 쓰는 사
 있다. 이번 학기 프로젝트처럼 남이 만든 데이터를 쓸 때 확인할 것을 먼저 보고, 이어서 사람에게서 직접 데이터를
 모을 때의 규정을 본다.
 
+<Details summary="데이터 윤리: 대표성, 편향과 공정성">
+
+데이터 윤리는 동의와 개인정보 보호뿐 아니라, 분석 결과가 누구에게 어떤 영향을 주는지도 다룬다.
+이 문제는 AI 이전의 통계·설문에도 있었으며, AI가 기존의 편향을 학습해 많은 사람에게 적용하면서
+영향이 커질 수 있다. NIST의 편향 보고서도 데이터의 대표성과 함께 사회·제도와 사람의 판단에서 생기는
+편향을 살펴보도록 권한다.[^nist-bias]
+
+- **누가 빠졌는가.** 특정 인종·성별·연령·지역의 자료가 적으면, 전체 결과가 그 집단에도 맞는지 확인하기
+  어렵다. K-EmoCon처럼 젊고 학력이 높은 참가자 중심의 자료로 모든 사람의 감정을 설명할 수 있는지
+  묻는 것이 출발점이다.
+- **무엇을 정답으로 삼았는가.** 가령 과거의 채용 결정을 정답으로 학습하면, 그 결정에 있던 차별까지
+  재현할 수 있다. 인종이나 성별 열을 지워도 다른 변수가 그 정보를 간접적으로 담을 수 있으므로,
+  민감한 열을 삭제하는 것만으로 공정성이 확보되지는 않는다.
+- **누가 오류의 부담을 지는가.** 전체 정확도가 높아도 특정 집단에서 오류가 더 많을 수 있다.
+  같은 오류라도 채용 기회를 잃거나 필요한 지원에서 제외되는 경우에는 피해가 크다. 집단별 오류와
+  결과의 사용 목적을 함께 살펴야 한다.
+
+팀 프로젝트에서도 데이터가 대표하는 사람과 빠진 사람, 라벨을 만든 기준, 결과를 적용할 대상과 예상되는
+피해를 짧게 적어 둔다. 집단별 점검에 필요한 정보가 없다면 그 한계도 밝힌다. 어떤 결과를 공정하다고 볼지는
+사용 맥락에 따라 판단해야 하며, 하나의 성능 지표만으로 결정하기 어렵다.
+
+</Details>
+
 ### 6.1 공개 데이터와 웹 수집
 
 공개되었거나 제공받은 데이터를 쓸 때, 그리고 웹에서 데이터를 직접 수집할 때 확인할 것이다.
@@ -402,3 +425,5 @@ IRB 심의를 받은 연구는 연구 기록을 연구가 끝난 뒤 3년간 보
 [^russell]: Russell, J. A. (1980). [A circumplex model of affect](https://doi.org/10.1037/h0077714). *Journal of Personality and Social Psychology*, 39(6), 1161–1178.
 
 [^datasheets]: Gebru, T., Morgenstern, J., Vecchione, B., Vaughan, J. W., Wallach, H., Daumé III, H., & Crawford, K. (2021). [Datasheets for datasets](https://doi.org/10.1145/3458723). *Communications of the ACM*, 64(12), 86–92. [arXiv:1803.09010](https://arxiv.org/abs/1803.09010).
+
+[^nist-bias]: Schwartz, R., Vassilev, A., Greene, K., Perine, L., Burt, A., & Hall, P. (2022). Towards a Standard for Identifying and Managing Bias in Artificial Intelligence. *NIST Special Publication*, 1270. [DOI](https://doi.org/10.6028/NIST.SP.1270).
