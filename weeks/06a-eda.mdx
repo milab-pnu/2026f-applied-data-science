@@ -1,13 +1,11 @@
 ---
 title: "탐색적 데이터 분석"
 week: 6
-order: 0
+order: 1
 ---
 
 import billSimpson from "./assets/06-bill-simpson.svg";
 import billStability from "./assets/06-bill-stability.svg";
-import kemoconFig3 from "./assets/06-kemocon-fig3.png";
-import kemoconFig4 from "./assets/06-kemocon-fig4.png";
 
 5주차에는 데이터를 분석할 수 있는 상태로 만들었다. 이번 주에는 그 데이터를 들여다본다. 탐색적 데이터
 분석(exploratory data analysis, EDA)은 그림과 요약 통계로 데이터 속의 패턴, 추세, 관계를 찾는 일이다.
@@ -18,7 +16,7 @@ EDA에는 함정이 하나 있다. 그림을 많이 그리다 보면 우연히 �
 가지 발견을 끝까지 따라가며 predictability와 stability를 직접 점검한다.
 
 **읽기 자료**: 교재 5장 [Exploratory Data Analysis](https://vdsbook.com/05-data_viz) 전체.[^vds5] 교재는
-5주차에 정제한 장기기증 데이터로 탐색을 이어 가고, 이 노트는 다른 데이터로 같은 점검을 해 본다.
+장기기증 데이터로 탐색을 이어 가고, 이 노트는 Palmer Penguins로 같은 점검을 해 본다.
 
 ## 1. 이번 주의 데이터
 
@@ -44,6 +42,10 @@ EDA에는 함정이 하나 있다. 그림을 많이 그리다 보면 우연히 �
 이 데이터는 결측이 적고 형식이 깔끔해서 정제할 것이 거의 없다. 05b에서 본 지저분함을 이번 주에는 덜 신경
 쓰고 탐색과 PCS 검토에 집중하기 위해 골랐다. 팀 데이터는 이보다 훨씬 지저분할 것이다.
 </Callout>
+
+EDA에서는 종·성별에 따른 분포와 변수 사이의 관계를 보고, PCA에서는 네 측정 변수를 몇 개의 축으로 요약한다.
+군집화에서는 종 라벨을 입력에 넣지 않고 측정값만으로 묶은 뒤, 그 결과가 알려진 종과 얼마나 맞는지 비교한다.
+변수가 네 개라 대규모 차원 축소의 사례는 아니지만, 같은 관측을 세 방법으로 해석하는 과정을 따라가기 좋다.
 
 ## 2. 질문에서 출발하기
 
@@ -253,48 +255,7 @@ for sp, g in df.groupby("species"):
 
 </Details>
 
-## 6. K-EmoCon 그림을 PCS로 읽기
-
-남이 발표한 탐색 결과도 같은 눈으로 읽을 수 있다. 05a에서 본 K-EmoCon 논문의 Technical Validation 절에는 탐색
-결과 두 가지가 실려 있다.[^kemocon]
-
-<Figure src={kemoconFig3.src} alt="본인, 상대방, 외부 평가자의 감정 평가 분포 막대그래프 아홉 개. 대부분 중립 또는 가장 낮은 값에 몰려 있음" caption="세 관점의 감정 평가 분포. 각성도와 정서가는 중립(3)에, 다섯 감정은 가장 낮은 값(1)에, 범주형은 몰입과 없음에 몰려 있다. 외부 평가(초록)는 다수결로 합친 값이라 쏠림이 더 심하다." source="Park et al. (2020), Fig. 3 · Scientific Data · CC BY 4.0 · 수정 없음" />
-
-그림 출처: [Park 등 (2020)](https://doi.org/10.1038/s41597-020-00630-y), Fig. 3·4.
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). 수정 없음.
-
-첫째 결과는 **감정 평가가 중립에 크게 쏠려 있다**는 것이다. 저자들은 실제 생활에서도 사람은 화나거나 슬픈
-때보다 평온한 때가 많으니 예상된 불균형이라고 해석했다. 이 그림을 PCS로 읽으면 질문이 몇 가지 생긴다.
-
-- 외부 평가의 쏠림이 유난히 심한 것은 감정을 덜 읽어서일까, 다섯 명의 평가를 다수결로 합친 처리 때문일까?
-  다섯 명 중 한두 명만 중립에서 벗어난 평가를 하면 다수결은 중립을 고르므로, 합치는 과정에서 약한 감정 신호가 지워진다. 개별 평가를 그대로 보거나 순서형 점수의 중앙값으로 합친 결과와 비교해 볼 수 있다.
-- 모델링 주차에서는 이 불균형 때문에 "항상 중립이라고 답하는 모델"도 정확도가 높게 나온다. 평가 지표를 고를
-  때 다시 만날 문제다.
-
-<Details summary="Fig. 4 관점 간 일치도 히트맵 보기">
-
-<Figure src={kemoconFig4.src} alt="일곱 감정마다 참가자 32명의 Krippendorff alpha 히트맵. 행은 본인-상대방, 본인-외부, 상대방-외부, 전체, 그리고 본인-외부에서 본인-상대방을 뺀 차이" caption="감정마다 참가자별 평가자 간 일치도(Krippendorff's alpha). 마지막 행은 본인-외부 일치도에서 본인-상대방 일치도를 뺀 값이고, 맨 오른쪽 열이 참가자 평균이다." source="Park et al. (2020), Fig. 4 · Scientific Data · CC BY 4.0 · 수정 없음" />
-
-</Details>
-
-둘째 결과는 **본인 평가가 상대방보다 외부 관찰자와 더 잘 맞는 경향**이다. 각성도에서 32명 중 22명이 그랬고, 차이의
-평균은 0.145였다. 저자들은 관점에 따라 감정 인식이 실제로 다를 가능성을 보여 주지만 유의성은 더 연구해야 한다고
-조심스럽게 적었다. 그 조심이 왜 필요한지는 PCS로 보인다.
-
-- **다른 감정에서도 나타나는가.** Fig. 4의 평균 열을 보면 이 차이가 각성도 0.14, 쾌활함 0.06, 정서가 0.05, 행복 0.02,
-  분노 0.007, 슬픔 0.003, 긴장 −0.04다. 뚜렷한 것은 각성도 하나이고 나머지는 0 근처다. 일곱 감정 중 하나에서 본
-  패턴은 data snooping의 결과일 수 있다.
-- **전처리 판단에 흔들리지 않는가.** 저자들은 각 평가 파일의 감정 열마다 최빈값을 중립으로 보고 뺀 뒤 일치도를 계산했다. 평가자마다 다른 점수의 기준을 맞추려는 처리지만, 감정 수준의 차이도 제거될 수 있다. 이 처리를 빼거나 다른 중립
-  기준을 쓰면 값이 바뀐다. 외부 평가를 다수결로 합친 방식도 마찬가지다.
-- **표본을 어떻게 다시 뽑아야 하는가.** 참가자별 차이의 표준편차는 0.279로 평균보다 크지만, 32명의 평균이라 평균의
-  표준오차는 약 $0.279/\sqrt{32} \approx 0.049$다. 참가자를 서로 독립이라고 보면 평균 0.145는 0과 꽤 떨어져 있다. 그런데
-  32명은 16개 토론의 짝이다. 한 토론의 두 사람은 서로를 평가했으니 독립이 아니다. 부트스트랩을 한다면 참가자가 아니라
-  토론 쌍을 단위로 다시 뽑아야 한다. 참가자 단위로 계산한 구간은 이 의존성을 무시하므로 불확실성을 작게 볼 수 있다. 재표집 단위를 정하는 것도 stability 점검의 판단이다.
-
-이렇게 읽으면 논문의 문장을 의심하라는 뜻이 아니라, 저자들이 "추가 연구가 필요하다"고 쓴 이유를 구체적으로
-이해하게 된다. 우리 발표에서도 같은 수준의 조심을 보여 주면 된다.
-
-## 7. 우리 데이터의 탐색
+## 6. 우리 데이터의 탐색
 
 이번 주 활동은 05b에서 만든 정제 함수로 시작한다.
 
@@ -317,5 +278,3 @@ for sp, g in df.groupby("species"):
 [^gorman]: Gorman, K. B., Williams, T. D., & Fraser, W. R. (2014). [Ecological sexual dimorphism and environmental variability within a community of Antarctic penguins (genus *Pygoscelis*)](https://doi.org/10.1371/journal.pone.0090081). *PLoS ONE*, 9(3), e90081.
 
 [^wilke]: Wilke, C. O. (2019). [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/). O'Reilly Media.
-
-[^kemocon]: Park, C. Y., Cha, N., Kang, S., Kim, A., Khandoker, A. H., Hadjileontiadis, L., Oh, A., Jeong, Y., & Lee, U. (2020). [K-EmoCon, a multimodal sensor dataset for continuous emotion recognition in naturalistic conversations](https://doi.org/10.1038/s41597-020-00630-y). *Scientific Data*, 7, 293. [arXiv:2005.04120](https://arxiv.org/abs/2005.04120).
