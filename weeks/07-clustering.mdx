@@ -8,8 +8,9 @@ import chooseK from "./assets/07b-choose-k.svg";
 import kmeansScores from "./assets/07b-kmeans-scores.svg";
 import pcaScores from "./assets/07a-pca-scores.svg";
 
-[06b](./06b-pca)의 주성분 산점도에서 펭귄은 세 무리로 모였다. 그 그림은 종 라벨로 색을 칠했기 때문에 무리가 보였다.
-라벨이 없었다면 어땠을까? 데이터만 보고 비슷한 관측끼리 묶는 일이 **군집화**(clustering)다. 고객 세분화, 증상이
+[06b](./06b-pca)의 주성분 산점도에서 펭귄은 세 무리로 모였다. 주성분은 종 라벨 없이 계산했고, 색은 각 무리가 어느 종인지
+확인하려고 나중에 칠했다. 그렇다면 색 없이, 측정값만으로 이 무리를 찾아 묶을 수 있을까? 데이터만 보고 비슷한 관측끼리
+묶는 일이 **군집화**(clustering)다. 고객 세분화, 증상이
 비슷한 환자 묶기, 문서 주제 나누기처럼 "정답 묶음"이 따로 없는 문제에서 쓴다.
 
 정답이 없다는 점이 군집화를 어렵게 만든다. 알고리즘은 언제나 군집을 돌려준다. 데이터에 실제로 무리가 없어도
@@ -45,6 +46,11 @@ $$
 거리에 거의 기여하지 못한다. [06b §4-1](./06b-pca#41-표준화)에서 PCA가 단위가 큰 변수에 끌려간 것과 같은 문제다.
 그래서 이 노트의 분석은 네 변수를 표준화한 뒤 한다. 표준화하지 않으면 결과가 어떻게 달라지는지는 §6-3에서 본다.
 
+거리만이 "비슷함"의 정의는 아니다. 지역별 월 매출처럼 값의 크기보다 오르내리는 모양이 중요하면 두 관측의 상관계수를
+유사도로 쓸 수 있고, 범주형 변수가 섞여 있으면 Gower 거리처럼 범주형도 다루는 척도를 쓴다. 무엇을 비슷하다고 볼지는
+문제의 맥락이 정한다(교재 §7.1.2). 다만 아래의 K-means는 중심과의 유클리드 거리를 전제로 만든 방법이다. 다른 거리를
+쓰려면 Ward 연결이 아닌 계층적 군집처럼 관측 사이의 거리만 있으면 되는 방법을 고른다.
+
 ## 3. 두 가지 알고리즘
 
 ### 3.1 계층적 군집
@@ -58,15 +64,25 @@ $$
 - **단일 연결**(single linkage): 두 군집에서 가장 가까운 두 관측의 거리. 길게 이어진 군집을 잘 찾지만, 사이에 점 몇 개만
   있어도 두 무리가 사슬처럼 이어진다.
 - **완전 연결**(complete linkage): 가장 먼 두 관측의 거리. 둥글고 크기가 비슷한 군집을 만든다.
-- **평균 연결**(average linkage): 모든 관측 쌍의 평균 거리.
+- **평균 연결**(average linkage): 두 군집에서 하나씩 고른 모든 관측 쌍의 평균 거리.<Sidenote>교재 §7.2.1은 두 군집 중심 사이의 거리를 평균 연결이라고 부른다. 이 정의는 보통 중심 연결(centroid linkage)이라고 하는 것이고, scikit-learn의 `linkage="average"`를 비롯해 흔히 평균 연결이라 하면 모든 관측 쌍의 평균 거리를 뜻한다.[^sklearn-agg]</Sidenote>
 - **Ward 연결**: 두 군집을 합쳤을 때 군집 내 제곱합이 가장 적게 늘어나는 쌍을 합친다. 아래 K-means와 같은 목표를 계층적으로
-  따른다.
+  따르며, 제곱합을 쓰므로 유클리드 거리에서만 정의된다.
+
+수직선 위의 다섯 점 1, 2, 4, 7, 8에 단일 연결을 적용해 보자. 처음에는 다섯 점이 각자 군집이다. 가장 가까운 쌍은 거리 1인
+1과 2, 7과 8이라 이 둘이 먼저 합쳐진다. 남은 군집 $\lbrace 1, 2 \rbrace$, $\lbrace 4 \rbrace$, $\lbrace 7, 8 \rbrace$ 사이의 거리는
+$\lbrace 1, 2 \rbrace$와 $\lbrace 4 \rbrace$가 2(2와 4 사이), $\lbrace 4 \rbrace$와 $\lbrace 7, 8 \rbrace$가 3(4와 7 사이)이므로
+$\lbrace 1, 2, 4 \rbrace$가 합쳐지고, 마지막으로 거리 3에서 전체가 하나가 된다. 덴드로그램은 높이 1, 2, 3에서 가지가 합쳐지는
+나무가 되고, 높이 2와 3 사이를 자르면 두 군집 $\lbrace 1, 2, 4 \rbrace$와 $\lbrace 7, 8 \rbrace$이 남는다.
+
+계층적 군집은 이렇게 군집 중심 없이 군집을 만든다. 그래도 만들어진 군집마다 소속 관측의 평균을 내면 중심을 얼마든지 구할 수
+있다. 위 예라면 $\lbrace 1, 2, 4 \rbrace$의 중심은 7/3 ≈ 2.33, $\lbrace 7, 8 \rbrace$의 중심은 7.5다. 이 중심으로 새 관측을 가장
+가까운 중심에 배정하는 규칙을 덧붙이면, §5의 교차검증과 §6-1의 새 데이터 점검을 계층적 군집에도 똑같이 적용할 수 있다.
 
 ### 3.2 K-means
 
 **K-means**는 군집 수 $K$를 먼저 정하고 시작한다.
 
-1. 군집 중심 $K$개를 임의로 놓는다.
+1. 군집 중심 $K$개를 무작위로 놓는다.
 2. 각 관측을 가장 가까운 중심의 군집에 넣는다.
 3. 군집마다 소속 관측의 평균으로 중심을 옮긴다.
 4. 소속이 더 바뀌지 않을 때까지 2–3을 반복한다.
@@ -77,9 +93,23 @@ $$
 \text{WSS} = \sum_{k=1}^{K} \sum_{i \in C_k} \lVert x_i - c_k \rVert^2
 $$
 
-다만 한 번 실행으로 이 값의 최솟값에 도달한다는 보장은 없다. 출발점에 따라 다른 지점에서 멈출 수 있다. 펭귄 데이터로
-$K = 3$ K-means를 초기값만 바꿔 50번 실행하면, 가장 좋은 해와 똑같은 군집이 나온 것은 34–40%뿐이었다. 나머지는 다른 곳에서
-멈췄고, 가장 좋은 해와의 일치도(§4-3의 ARI)가 0.47까지 떨어진 경우도 있었다. 그래서 실무에서는 초기값을 여러 번 바꿔
+다만 한 번 실행으로 이 값의 최솟값에 도달한다는 보장은 없다. 출발점이 무작위라서, 실행할 때마다 다른 지점에서 멈추고 다른
+군집을 내놓을 수 있다. §3-1의 다섯 점에 $K = 2$로 적용해 보자. 중심이 1과 8에서 출발하면 1, 2, 4는 1에, 7과 8은 8에 가깝다.
+중심을 소속 관측의 평균인 2.33과 7.5로 옮긴 뒤 다시 배정해도 소속이 바뀌지 않으므로 멈춘다. 결과는 계층적 군집과 같은
+$\lbrace 1, 2, 4 \rbrace$, $\lbrace 7, 8 \rbrace$이고 WSS는 5.17이다. 그런데 중심이 1과 2에서 출발하면 다르게 흘러간다.
+
+| 반복 | 중심 | 배정 결과 |
+|---|---|---|
+| 1 | 1, 2 | $\lbrace 1 \rbrace$, $\lbrace 2, 4, 7, 8 \rbrace$ |
+| 2 | 1, 5.25 | $\lbrace 1, 2 \rbrace$, $\lbrace 4, 7, 8 \rbrace$ |
+| 3 | 1.5, 6.33 | $\lbrace 1, 2 \rbrace$, $\lbrace 4, 7, 8 \rbrace$ (변화 없음, 멈춤) |
+
+세 번째 반복에서 4는 1.5까지 2.5, 6.33까지 2.33 떨어져 있어 오른쪽에 남는다. 이 결과의 WSS는 9.17로, 앞의 5.17보다 나쁜데도
+소속이 더 바뀌지 않아 여기서 멈춘다.
+
+펭귄 데이터에서도 같은 일이 일어난다. $K = 3$ K-means를 시드 50개로 한 번씩 실행하면, 가장 좋은 해와 똑같은 군집이 나온 것은
+scikit-learn의 기본 초기화(k-means++)로 34%, 완전 무작위 초기화로 40%뿐이었다. 나머지는 다른 곳에서 멈췄고, 가장 좋은 해와의
+일치도(§4-3의 ARI)가 0.47까지 떨어진 경우도 있었다. 그래서 실무에서는 초기값을 여러 번 바꿔
 실행하고 WSS가 가장 작은 결과를 고른다(scikit-learn의 `n_init`). 이것 자체가 교재가 말하는 초기값에 대한 stability 점검이다.
 
 ## 4. 군집 품질의 지표
@@ -113,12 +143,18 @@ $s_i$가 1에 가까우면 자기 군집에 잘 들어가 있고, 0 근처면 �
 그래서 **관측의 쌍**을 본다. 두 결과 모두에서 같이 묶였거나, 두 결과 모두에서 따로 묶인 쌍은 "일치"다. **Rand 지수**는 전체
 쌍 중 일치하는 쌍의 비율이다.
 
-네 관측을 결과 A는 $\lbrace 1, 2 \rbrace$와 $\lbrace 3, 4 \rbrace$로, 결과 B는 $\lbrace 1, 2, 3 \rbrace$과 $\lbrace 4 \rbrace$로 묶었다고 하자. 쌍 여섯 개 중 (1, 2)는 둘 다 같이, (1, 4)와
-(2, 4)는 둘 다 따로 묶여 일치한다. 나머지 세 쌍은 한쪽에서만 같이 묶였다. Rand 지수는 3/6 = 0.5다.
+관측 네 개를 결과 A는 두 군집 $\lbrace 1, 2 \rbrace$, $\lbrace 3, 4 \rbrace$로, 결과 B는 세 군집 $\lbrace 1 \rbrace$, $\lbrace 2, 3 \rbrace$, $\lbrace 4 \rbrace$로 묶었다고 하자.
+쌍 여섯 개 중 (1, 3), (1, 4), (2, 4)는 두 결과 모두에서 따로 묶여 일치한다. (1, 2)와 (3, 4)는 A에서만, (2, 3)은 B에서만 같이
+묶였으니 불일치다. Rand 지수는 3/6 = 0.5다.
+
+이처럼 쌍만 세면 되므로 두 결과의 군집 수가 달라도 Rand 지수를 계산할 수 있다. 대신 두 결과가 **같은 관측들**을 묶은 것이어야
+한다. 관측의 수만 같아서는 안 되고 같은 개체여야 하며, 묶은 관측이 다르면 비교할 쌍부터 맞지 않는다.
 
 Rand 지수는 아무렇게나 묶어도 꽤 높게 나온다. 대부분의 쌍은 어차피 따로 묶이기 때문이다. **수정 Rand 지수**(adjusted Rand
 index, ARI)는 무작위로 묶었을 때 기대되는 값을 빼고 다시 척도를 맞춘 것이다. 1이면 완전히 같고, 0이면 무작위 수준이다.
-이 노트는 ARI를 쓴다. ARI는 두 군집 결과뿐 아니라 군집 결과와 이미 아는 라벨(펭귄의 종)을 비교할 때도 쓸 수 있다.
+예를 들어 §6-2에서 비교할 펭귄의 두 군집 결과는 Rand 지수로는 0.90이지만 ARI로는 0.79다. 이 노트는 ARI를 쓴다. ARI도
+군집 수가 다른 결과끼리 비교할 수 있고, 두 군집 결과뿐 아니라 군집 결과와 이미 아는 라벨(펭귄의 종)을 비교할 때도 쓸 수 있다.
+§5에서 $K$가 2부터 6인 군집 결과를 모두 세 종과 비교하는 것이 그 예다.
 
 ## 5. 군집 수 정하기
 
@@ -132,8 +168,14 @@ $K$는 알고리즘이 정해 주지 않는 하이퍼파라미터다. 펭귄 데
 
 교재는 $K$를 고를 때 **교차검증**(cross-validation, CV)을 권한다(교재 §7.7). 데이터를 다섯 겹으로 나누고, 네 겹으로 표준화 기준과
 군집을 만든 뒤 남은 한 겹을 같은 기준으로 표준화해 가장 가까운 중심에 배정하고 실루엣 점수를 잰다. 표준화 기준까지
-학습 부분에서만 정해야 남은 한 겹의 정보가 새어 들어가지 않는다([05b §5-1](./05b-data-preprocessing#51-학습평가-분리)의 학습·평가 분리 원칙). 이를 다섯 번 돌려 평균을 낸다. 학습에 쓰지 않은 데이터로
-평가하므로 predictability와 stability를 가볍게 흉내 낸 점검이다. 펭귄 데이터에서는 교차검증 실루엣 점수도 $K = 2$에서 가장 높았다.
+학습 부분에서만 정해야 남은 한 겹의 정보가 새어 들어가지 않는다([05b §5-1](./05b-data-preprocessing#51-학습평가-분리)의 학습·평가 분리 원칙). 이를 다섯 번 돌려 평균을 낸다. 펭귄 데이터에서는 교차검증 실루엣 점수도 $K = 2$에서 가장 높았다. 겹을 펭귄 단위로 무작위로
+나눠도, 같은 둥지의 암수가 한 겹에 들어가도록 둥지 단위로 나눠도 결과는 같았다.
+
+평가하는 겹은 그 차례의 학습에 쓰지 않았으니 predictability를, 차례마다 학습 데이터가 달라지니 stability를 가볍게 흉내 낸
+점검이다. 어디까지나 흉내다. 어느 겹이든 다른 차례에는 학습에 쓰이고, 모든 겹이 같은 시기에 같은 방법으로 모은 한 데이터에서
+나왔다. 그래서 교차검증 점수는 수집 시기나 장소, 방법이 다른 외부 데이터에서의 성능을 대신하지 못한다. 교재도 교차검증은
+$K$ 같은 하이퍼파라미터를 고르는 데 쓰고, 최종 결과는 §6처럼 따로 PCS 검토하라고 권한다(교재 §7.7.1). 교차검증은 군집화만의 도구도 아니다. 9주차부터 다룰 예측 모델에서도 하이퍼파라미터를 고를
+때 가장 널리 쓰는 방법이다.
 
 그런데 우리는 펭귄이 세 종이라는 사실을 안다. 종 라벨과의 ARI는 $K = 3$에서 가장 높다. 어느 쪽이 맞을까? 둘 다 맞다.
 실루엣 점수는 이 데이터에서 가장 분명한 구조를, 종 라벨은 우리가 알고 싶은 구조를 말한다. 교재가 교차검증을 "하나의
@@ -192,6 +234,8 @@ Gentoo는 완벽하게 한 군집으로 묶였다. Adelie와 Chinstrap의 경계
 | 데이터 (둥지 단위 부트스트랩 200회) | 같은 비교, 중앙값 / 하위 5% | 0.97 / 0.86 |
 | 같은 점검을 K = 4에서 (개체 단위) | 중앙값 / 하위 5% | 0.91 / 0.57 |
 
+부트스트랩 표본은 같은 펭귄이 여러 번 뽑히거나 빠져서 원래 데이터와 관측 구성이 다르다. ARI는 같은 관측끼리만 비교할 수
+있으므로(§4-3), 부트스트랩 표본으로 군집 중심을 만든 뒤 원래 342마리를 그 중심에 다시 배정해 원래 군집과 비교했다.
 부트스트랩에는 $K = 3$ 군집이 꽤 안정적이다. $K = 4$로 늘리면 중앙값은 비슷해도 하위 5%가 0.57로 떨어진다. $K = 4$의 분할 전체가
 표본 변화에 덜 안정적이라는 뜻이다. ARI는 분할 전체의 일치도를 요약할 뿐이라 어느 군집이 흔들렸는지까지는 알려 주지 않는다.
 그것을 보려면 군집별로 원래 군집과의 대응을 따로 확인해야 한다.
@@ -200,6 +244,9 @@ Gentoo는 완벽하게 한 군집으로 묶였다. Adelie와 Chinstrap의 경계
 두 알고리즘 모두 Gentoo는 똑같이 묶었고, Adelie와 Chinstrap의 경계를 다르게 그었다. 따라서 "Gentoo는 따로 묶인다"는 결론은 알고리즘에
 안정적이지만, "Adelie와 Chinstrap을 가르는 경계"는 그렇지 않다. Ward의 종 일치도가 더 높다고(0.92) Ward가 "정답"인 것은 아니다.
 정답이 없는 상황이라면 우리는 이 차이를 보고 경계 부근의 펭귄에 대한 결론을 조심해야 한다.
+
+실루엣 점수로 비교해도 어느 쪽이 늘 낫지는 않다. $K = 3$에서는 Ward가 0.454로 K-means의 0.447보다 조금 높고, $K = 5$와 6에서는
+K-means가 더 높다. K-means가 줄이는 것은 WSS이지 실루엣 점수가 아니기 때문이다.
 
 ### 6.3 전처리 판단에 대한 안정성
 
@@ -213,13 +260,13 @@ Gentoo는 완벽하게 한 군집으로 묶였다. Adelie와 Chinstrap의 경계
 묶은 것과 비슷해져 Gentoo마저 두 군집으로 쪼개진다. 교재의 영양소 데이터에서는 로그 변환 여부에 군집이 안정적이지 않았다(교재 §7.8.2).
 데이터마다 어떤 판단이 중요한지가 다르므로, 점검을 직접 해 봐야 안다.
 
-<Details summary="이 노트의 계산을 재현하는 Python 코드">
+<Details summary="이 노트의 주요 계산을 재현하는 Python 코드">
 
 ```python
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans, AgglomerativeClustering
-from sklearn.metrics import adjusted_rand_score as ari, silhouette_score
+from sklearn.metrics import adjusted_rand_score as ari, rand_score, silhouette_score
 from sklearn.preprocessing import StandardScaler
 
 url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv"
@@ -234,7 +281,8 @@ for K in range(2, 7):                                   # K에 따른 실루엣�
 km3 = KMeans(3, n_init=50, random_state=0).fit(Z)
 ward3 = AgglomerativeClustering(3, linkage="ward").fit_predict(Z)
 print(pd.crosstab(km3.labels_, [df["species"], df["sex"].fillna("미상")]))
-print(round(ari(km3.labels_, ward3), 3))                # 알고리즘 비교
+print(round(ari(km3.labels_, ward3), 3), round(rand_score(km3.labels_, ward3), 3))  # 알고리즘 비교
+print(round(silhouette_score(Z, ward3), 3))             # Ward의 실루엣
 
 rng = np.random.default_rng(1)                          # 부트스트랩
 boot = []
@@ -243,7 +291,21 @@ for b in range(200):
     fit = KMeans(3, n_init=10, random_state=b).fit(Z[idx])
     boot.append(ari(km3.labels_, fit.predict(Z)))
 print(np.round(np.quantile(boot, [0.05, 0.5]), 2))
+
+from sklearn.model_selection import KFold              # K 선택을 위한 5겹 교차검증
+X = df[cols].to_numpy(float)
+for K in range(2, 7):
+    s = []
+    for tr, te in KFold(5, shuffle=True, random_state=0).split(X):
+        sc = StandardScaler().fit(X[tr])                # 표준화 기준도 학습 겹에서만
+        km = KMeans(K, n_init=20, random_state=0).fit(sc.transform(X[tr]))
+        Zte = sc.transform(X[te])
+        s.append(silhouette_score(Zte, km.predict(Zte)))
+    print(K, round(np.mean(s), 3))
 ```
+
+연도로 나눈 점검과 전처리 비교는 [06b의 코드](./06b-pca#63-전처리-판단에-대한-안정성)와 같은 방식으로, 둥지 단위 점검은
+[06a의 코드](./06a-eda#53-시각화-판단)에서 만든 둥지 번호로 한다.
 
 </Details>
 
@@ -262,3 +324,5 @@ print(np.round(np.quantile(boot, [0.05, 0.5]), 2))
 5주차의 판단 기록표, 6주차의 탐색 결과와 함께 이 결과가 8주차 M2 발표의 분석 절이 된다.
 
 [^vds7]: Yu, B., & Barter, R. L. (2024). [Clustering](https://vdsbook.com/07-cluster). *Veridical Data Science*, MIT Press.
+
+[^sklearn-agg]: scikit-learn developers. (2026). [sklearn.cluster.AgglomerativeClustering](https://scikit-learn.org/1.9/modules/generated/sklearn.cluster.AgglomerativeClustering.html). *scikit-learn 1.9 documentation*.
