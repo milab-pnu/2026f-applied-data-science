@@ -201,6 +201,8 @@ $K = 2$의 군집은 Gentoo와 나머지 두 종이다.
 표준화 기준까지 학습 부분에서만 정해야 남은 한 겹의 정보가 새어 들어가지 않는다([05b §5-1](./05b-data-preprocessing#51-학습평가-분리)의 학습·평가 분리 원칙).
 이를 다섯 번 돌려 평균을 낸다.
 펭귄 데이터에서는 교차검증 실루엣 점수도 $K = 2$에서 가장 높았다.
+이 계산은 펭귄 한 마리 단위로 겹을 나눠, 같은 둥지의 암수가 학습 겹과 평가 겹에 갈라 들어갈 수 있다.
+둥지 단위로 겹을 나눠도(scikit-learn의 `GroupKFold`) $K = 2$가 0.527로 가장 높아 결론은 같다.
 
 평가하는 겹은 그 차례의 학습에 쓰지 않았으니 predictability를, 차례마다 학습 데이터가 달라지니 stability를 가볍게 흉내 낸 점검이다.
 다만 모든 겹이 같은 시기에 같은 방법으로 모은 한 데이터에서 나왔으므로, 교차검증 점수가 수집 조건이 다른 외부 데이터에서의 성능을 대신하지는 못한다.
@@ -437,8 +439,8 @@ for eps in [0.5, 0.6, 0.7, 0.8]:                        # DBSCAN의 eps 민감�
 
 [^sklearn-gmm]: scikit-learn developers. (2026). [Gaussian mixture models](https://scikit-learn.org/1.9/modules/mixture.html). *scikit-learn 1.9 documentation*.
 
-[^dbscan]: Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996). [A density-based algorithm for discovering clusters in large spatial databases with noise](https://aaai.org/papers/kdd96-037-a-density-based-algorithm-for-discovering-clusters-in-large-spatial-databases-with-noise/). *Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96)*. AAAI Press.
+[^dbscan]: Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996). [A density-based algorithm for discovering clusters in large spatial databases with noise](https://aaai.org/papers/kdd96-037-a-density-based-algorithm-for-discovering-clusters-in-large-spatial-databases-with-noise/). *Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96)*, 226–231. AAAI Press.
 
-[^hdbscan]: Campello, R. J. G. B., Moulavi, D., & Sander, J. (2013). [Density-based clustering based on hierarchical density estimates](https://doi.org/10.1007/978-3-642-37456-2_14). *Advances in Knowledge Discovery and Data Mining (PAKDD 2013)*, Lecture Notes in Computer Science, 160–172.
+[^hdbscan]: Campello, R. J. G. B., Moulavi, D., & Sander, J. (2013). [Density-based clustering based on hierarchical density estimates](https://doi.org/10.1007/978-3-642-37456-2_14). *Advances in Knowledge Discovery and Data Mining (PAKDD 2013)*, Lecture Notes in Computer Science, 7819, 160–172.
 
 [^sklearn-agg]: scikit-learn developers. (2026). [sklearn.cluster.AgglomerativeClustering](https://scikit-learn.org/1.9/modules/generated/sklearn.cluster.AgglomerativeClustering.html). *scikit-learn 1.9 documentation*.

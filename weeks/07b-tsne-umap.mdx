@@ -352,7 +352,9 @@ print(round(ari(ytr, km.labels_), 2), round(ari(yte, km.predict(mapper.transform
 ## 7. 우리 데이터의 지도
 
 변수가 열 개를 넘고 PCA 두 축이 분산을 많이 놓친다면, 06b의 PCA 산점도 옆에 t-SNE나 UMAP 지도를 함께 그려 본다.
-변수가 몇 개뿐이고 PCA 두 축이 대부분을 담는다면 PCA 산점도로 충분하다.
+변수가 몇 개뿐이면 먼저 PCA 산점도로 살펴본다.
+다만 설명된 분산이 커도 이웃 관계는 덜 지켜질 수 있다(펭귄의 PCA 두 축은 분산의 88%를 담지만, §2의 방식으로 재면 가까운 이웃 10마리 중 45%만 남는다).
+지도를 따로 그릴지는 분석 목적과, 원래 공간에서 만든 군집이 PCA 그림에서 잘 보이는지로 정한다.
 
 1. **전처리를 정한다.**
    06b와 07a에서 정한 변수와 척도를 그대로 쓴다.
@@ -366,7 +368,7 @@ print(round(ari(ytr, km.labels_), 2), round(ari(yte, km.predict(mapper.transform
    지도 위 군집을 결론에 쓰려면 원래 공간에서도 그 무리가 보이는지, 군집마다 관측을 몇 개 직접 읽어 이름을 붙일 수 있는지 확인한다.
 
 **완료 기준**: 설정 셋 이상을 시드 둘 이상으로 그린 지도와, 모든 지도에서 유지된 구조와 지도마다 달라진 특징을 나눠 적은 메모가 있으면 된다.
-지도를 그리지 않았다면 PCA 두 축으로 충분하다고 본 근거(설명된 분산 비율 등)를 한 줄 적는다.
+지도를 그리지 않았다면 PCA 산점도로 충분하다고 본 근거(군집이 PCA 그림에서 어떻게 보이는지 등)를 한 줄 적는다.
 
 [^vds6]: Yu, B., & Barter, R. L. (2024). [Principal Component Analysis](https://vdsbook.com/06-pca). *Veridical Data Science*, MIT Press.
 
