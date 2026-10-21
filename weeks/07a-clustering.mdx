@@ -348,7 +348,7 @@ print(np.round(np.quantile(boot, [0.05, 0.5]), 2))
 from sklearn.model_selection import KFold              # K 선택을 위한 5겹 교차검증
 for K in range(2, 7):
     s = []
-    for tr, te in KFold(5, shuffle=True, random_state=0).split(X):
+    for tr, te in KFold(5, shuffle=True, random_state=0).split(X):  # 둥지 단위: GroupKFold(5).split(X, groups=둥지 번호)
         sc = StandardScaler().fit(X[tr])                # 표준화 기준도 학습 겹에서만
         km = KMeans(K, n_init=20, random_state=0).fit(sc.transform(X[tr]))
         Zte = sc.transform(X[te])
