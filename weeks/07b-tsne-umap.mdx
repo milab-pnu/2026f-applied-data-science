@@ -1,0 +1,344 @@
+---
+title: "t-SNE와 UMAP"
+week: 7
+order: 2
+---
+
+import embedDigits from "./assets/07-embed-digits.svg";
+import embedPitfalls from "./assets/07-embed-pitfalls.svg";
+import embedSettings from "./assets/07-embed-settings.svg";
+import embedOnes from "./assets/07-embed-ones.svg";
+
+[06b](./06b-pca)의 PCA는 펭귄의 네 측정값을 두 축으로 줄여도 차이의 88%를 담았다.
+변수가 수십, 수백 개로 늘면 사정이 달라진다.
+손글씨 숫자 이미지는 8×8 픽셀이라 변수가 64개인데, PCA의 처음 두 주성분은 전체 분산의 28.5%만 담는다.
+90%를 담으려면 주성분이 21개 필요하다.
+이런 데이터를 그림 한 장으로 보고 싶다면, 두 축에 무엇을 남기고 무엇을 버릴지 다시 정해야 한다.
+
+**t-SNE**와 **UMAP**은 남길 것을 "이웃"으로 정한다.
+원래 공간에서 가까웠던 관측이 2차원 지도에서도 가깝게 놓이도록 배치하고, 멀리 떨어진 관측 사이의 거리는 덜 신경 쓴다.
+그렇게 만든 지도는 섬처럼 떨어진 무리로 이루어질 때가 많다.
+그래서 이 방법들은 차원 축소이자 시각화이고, 지도 위의 섬을 그대로 군집으로 읽고 싶은 유혹 때문에 군집화와도 쉽게 섞인다.
+이 노트는 두 방법이 무엇을 보존하고 무엇을 보존하지 않는지 보고, 지도에서 본 무리를 결론으로 삼기 전에 어떤 점검이 필요한지 [07](./07-clustering)의 도구로 따져 본다.
+
+**읽기 자료**: 교재는 두 방법을 PCA의 대안으로 이름만 든다(교재 §6.9).[^vds6]
+Wattenberg 등의 [How to Use t-SNE Effectively](https://distill.pub/2016/misread-tsne/)는 설정을 바꿔 가며 지도가 어떻게 변하는지 직접 만져 볼 수 있는 글이다.[^distill]
+UMAP은 Coenen과 Pearce의 [Understanding UMAP](https://pair-code.github.io/understanding-umap/)이 같은 방식으로 보여 준다.[^pair]
+
+## 1. 손글씨 숫자 데이터
+
+이 노트는 scikit-learn에 들어 있는 손글씨 숫자 데이터(`load_digits`)를 쓴다.[^digits]
+숫자 0–9를 쓴 이미지 1,797장이고, 숫자마다 약 180장씩이다.
+이미지 한 장은 8×8 칸이고, 칸마다 0(빈칸)부터 16(가장 진함)까지의 정수가 들어 있다.
+64칸을 한 줄로 펴면 관측 하나가 변수 64개가 된다.
+설치만 하면 내려받을 것 없이 쓸 수 있고, 관측 하나하나를 이미지로 직접 열어 볼 수 있어서 지도에서 본 무리를 확인하기 좋다.
+
+펭귄의 종처럼 이 데이터에도 정답 라벨(어느 숫자인지)이 있다.
+여기서도 라벨은 지도와 군집을 계산할 때 넣지 않고, 결과에 색을 칠하거나 사후에 비교할 때만 쓴다.
+
+전처리는 06b의 기준으로 정한다.
+64개 변수는 모두 같은 단위(칸의 진하기)이고, 가장자리 칸이 늘 거의 비어 있다는 크기 차이 자체가 정보다.
+그래서 표준화하지 않고 값 그대로 쓴다([06b §4-1](./06b-pca#41-표준화)에서 본 "표준화가 늘 정답은 아니다"의 경우다).
+이 판단이 결과를 얼마나 바꾸는지는 §6-3에서 본다.
+
+<Figure src={embedDigits.src} alt="위에는 숫자 0부터 9까지의 8×8 이미지 예시 열 장. 아래에는 같은 1797장을 PCA, t-SNE, UMAP으로 그린 세 지도. PCA에서는 0, 4, 6 정도만 따로 보이고 나머지 숫자는 가운데에서 겹친다. t-SNE와 UMAP에서는 숫자마다 섬처럼 모이고, 숫자 1은 섬 두세 개로 나뉜다" caption="같은 1,797장을 세 방법으로 그린 지도. 색과 숫자 표시는 라벨로 나중에 칠했다. (a) PCA는 0, 4, 6 정도만 떼어 내고 나머지는 겹친다. (b) t-SNE와 (c) UMAP에서는 숫자마다 섬이 생긴다. 축 눈금을 그리지 않은 것은 t-SNE와 UMAP 지도의 축에 뜻이 없기 때문이다(§5)." source="자체 작성 · 손글씨 숫자 데이터(Alpaydin & Kaynak 1998, CC BY 4.0)" wide />
+
+## 2. 이웃을 지키는 지도
+
+PCA는 분산이 가장 큰 방향으로 데이터를 비춘 그림자다.
+64차원의 점구름을 어느 방향에서 비추든 그림자에서는 서로 다른 숫자가 겹치기 쉽다.
+t-SNE와 UMAP은 그림자를 만드는 대신 지도를 새로 그린다.
+
+지하철 노선도를 떠올리면 된다.
+노선도는 어느 역 다음에 어느 역이 오는지는 정확히 지키지만, 역 사이의 실제 거리와 방향은 마음대로 늘이고 구부린다.
+덕분에 복잡한 노선망이 한 장에 들어오지만, 노선도에서 두 역이 가까이 그려졌다고 실제로 가까운 것은 아니다.
+t-SNE와 UMAP도 "누가 누구의 이웃인가"를 지키는 대신 먼 거리와 넓이는 지키지 않는다.
+비유에는 한계도 있다.
+노선도는 역의 연결이 처음부터 정해져 있지만, 이 방법들은 이웃 관계를 데이터의 거리에서 추정하고, 그 추정이 설정에 따라 달라진다.
+
+이웃을 얼마나 지켰는지는 직접 잴 수 있다.
+각 이미지에 대해 원래 64차원 공간에서 가장 가까운 이미지 10장을 찾고, 지도에서도 가장 가까운 10장 안에 몇 장이 남는지 센다.
+위 그림의 지도에서 이 비율은 PCA 12%, t-SNE 58%, UMAP 49%였다.
+PCA의 두 축은 이웃을 거의 지키지 못하고, 두 방법은 이웃의 절반 안팎을 지킨다.
+
+## 3. t-SNE
+
+**t-SNE**(t-distributed stochastic neighbor embedding)는 원래 공간과 지도에서 각각 "이웃일 확률"을 정의하고, 두 확률이 비슷해지도록 지도 위의 점을 옮긴다.[^tsne]
+
+### 3.1 원래 공간의 이웃 확률
+
+관측 $i$가 이웃 하나를 고른다고 하자.
+가까운 관측일수록 잘 고르도록, $i$를 중심으로 한 정규분포의 밀도에 비례해 $j$를 고를 확률을 정한다.
+
+$$
+p_{j|i} = \frac{\exp\left(-\lVert x_i - x_j \rVert^2 / 2\sigma_i^2\right)}{\sum_{k \ne i} \exp\left(-\lVert x_i - x_k \rVert^2 / 2\sigma_i^2\right)}
+$$
+
+$\sigma_i$는 관측마다 따로 정한다.
+주변이 빽빽한 관측은 $\sigma_i$를 작게, 듬성듬성한 관측은 크게 잡아서, 어느 관측이든 "대략 몇 개의 이웃"을 보도록 맞춘다.
+이 개수를 정하는 하이퍼파라미터가 **perplexity**다.
+정확히는 확률 분포 $p_{\cdot|i}$의 엔트로피 $H$로 $2^H$를 계산한 값인데, 확률을 이웃 $k$개에 똑같이 나눠 주면 $H = \log_2 k$라서 perplexity가 정확히 $k$가 된다.
+그래서 perplexity 30은 "이웃을 30개쯤 본다"로 읽으면 된다.
+원논문은 5–50 사이를 흔한 값으로 들었고, scikit-learn의 기본값은 30이다.[^sklearn-tsne]
+
+두 방향의 확률을 평균해 $p_{ij} = (p_{j|i} + p_{i|j}) / 2n$으로 대칭으로 만든 것이 원래 공간의 이웃 확률이다($n$은 관측 수).
+
+### 3.2 지도의 이웃 확률
+
+지도 위의 점 $y_i$, $y_j$ 사이의 이웃 확률 $q_{ij}$도 비슷하게 정의하되, 정규분포 대신 꼬리가 두꺼운 분포(자유도 1인 t 분포)를 쓴다.
+
+$$
+q_{ij} = \frac{\left(1 + \lVert y_i - y_j \rVert^2\right)^{-1}}{\sum_{k \ne l} \left(1 + \lVert y_k - y_l \rVert^2\right)^{-1}}
+$$
+
+꼬리가 두꺼운 분포를 쓰는 이유는 2차원 지도가 좁기 때문이다.
+10차원 공간에는 서로 같은 거리에 있는 점 11개를 놓을 수 있지만, 2차원 평면에는 3개까지만 놓을 수 있다.
+원래 공간에서 "적당히 먼" 관측들을 지도에 다 담을 자리가 모자라는 이 문제를 원논문은 crowding problem이라고 불렀다.
+꼬리가 두꺼운 분포에서는 지도 위 거리가 꽤 멀어도 이웃 확률이 천천히 줄어든다.
+그래서 원래 공간에서 적당히 먼 관측을 지도에서는 훨씬 멀리 놓아도 확률이 맞춰지고, 무리 사이에 넓은 여백이 생긴다.
+t-SNE 지도의 섬들이 또렷하게 떨어져 보이는 이유가 여기에 있다.
+
+### 3.3 두 확률 맞추기
+
+지도의 점은 두 확률 분포의 차이인 KL 발산(Kullback–Leibler divergence)을 줄이도록 경사하강법으로 옮긴다.
+
+$$
+C = \sum_{i \ne j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
+$$
+
+이 비용은 두 종류의 실수를 다르게 벌한다.
+원래 이웃이던 쌍($p_{ij} = 0.01$)을 지도에서 떼어 놓으면($q_{ij} = 0.001$) 그 쌍의 비용은 $0.01 \times \ln 10 \approx 0.023$이다.
+반대로 원래 멀던 쌍($p_{ij} = 0.001$)을 지도에서 붙여 놓으면($q_{ij} = 0.01$) 그 쌍의 항은 $0.001 \times \ln 0.1 \approx -0.0023$이다.
+항 하나는 이렇게 음수일 수 있지만 모든 쌍을 더한 비용은 늘 0 이상이다. 여기서 볼 것은 크기가 앞의 열 분의 일이라는 점이다.
+이웃을 떼어 놓는 실수는 크게 벌하고 먼 관측을 붙여 놓는 실수는 거의 벌하지 않으니, t-SNE는 국소 구조를 지키는 데 집중하고 무리 사이의 배치는 덜 신경 쓴다.
+
+비용 함수가 볼록하지 않아서, K-means처럼 출발점에 따라 다른 지도에서 멈출 수 있다.
+scikit-learn은 1.2부터 PCA 좌표에서 출발하는 것이 기본이라, 이 노트의 실험에서는 `random_state`를 바꿔도 같은 지도가 나왔다.
+무작위 출발점(`init="random"`)으로 바꾸면 시드마다 지도가 달라진다(§6-2).
+또 scikit-learn의 t-SNE에는 학습에 쓰지 않은 새 관측을 지도에 올리는 기능(`transform`)이 없다.
+지도는 그 데이터 한 벌에 대해서만 그려진다.
+
+## 4. UMAP
+
+**UMAP**(uniform manifold approximation and projection)도 이웃을 지키는 지도를 그리지만, 출발점이 확률이 아니라 이웃 그래프다.[^umap]
+
+1. 각 관측에서 가장 가까운 관측 `n_neighbors`개(기본값 15)를 찾아 선으로 잇는다. 선의 굵기(가중치)는 거리가 멀수록 줄어들고, t-SNE의 $\sigma_i$처럼 관측마다 주변 밀도에 맞춰 척도를 따로 잡는다.
+2. 2차원 지도에 점을 놓고, 굵은 선으로 이어진 쌍은 가깝게, 이어지지 않은 쌍은 멀게 놓이도록 점을 옮긴다. 점끼리 얼마나 바짝 붙을 수 있는지는 `min_dist`(기본값 0.1)가 정한다.[^umap-params]
+
+`n_neighbors`는 t-SNE의 perplexity와 비슷한 역할이다.
+작으면 아주 가까운 이웃만 보고 잘게 나뉜 지도를, 크면 넓은 범위를 보고 덩어리가 큰 지도를 만든다.
+원논문은 이 절차를 위상수학의 언어로 정당화하는데, 지도를 읽고 점검하는 데는 위의 두 단계로 충분하다.
+
+t-SNE와 비교해 실무에서 차이가 나는 점은 둘이다.
+첫째, umap-learn 구현에는 `transform`이 있어서, 한 데이터로 만든 지도에 새 관측을 올릴 수 있다.
+그래서 06b·07처럼 학습 데이터로 만든 것을 새 데이터에 적용해 보는 predictability 점검을 할 수 있다(§6-1).
+둘째, umap-learn 문서는 군집화가 목적이면 지도를 2차원보다 크게(예: 10차원) 만들어 입력으로 쓰라고 권한다(§6).
+
+흔히 UMAP이 t-SNE보다 무리 사이의 큰 배치(전역 구조)를 잘 지킨다고 소개된다.
+Kobak과 Linderman은 이 차이가 알고리즘보다 초기화에서 온다고 보였다.
+두 방법 모두 무작위 출발점이면 전역 구조를 똑같이 잘 지키지 못하고, PCA 같은 출발점을 주면 똑같이 잘 지킨다는 것이다.[^kobak]
+§5에서 이 데이터로 재 본 결과도 UMAP이 더 낫다고 하기 어렵다.
+
+## 5. 지도를 읽을 때의 함정
+
+t-SNE와 UMAP 지도는 보기 좋아서 결론을 너무 쉽게 끌어내게 만든다.
+Distill 글이 짚은 함정을 이 데이터와 가상 데이터로 다시 확인해 보자.[^distill]
+
+**축에는 뜻이 없다.**
+PCA의 PC1에는 적재값이 있어 "몸 크기"처럼 이름을 붙일 수 있었다.
+t-SNE와 UMAP 지도의 가로세로 축은 그런 뜻이 없고, 지도를 돌리거나 뒤집어도 같은 지도다.
+
+**섬의 크기에는 뜻이 없다.**
+50차원에서 표준편차가 1인 무리와 10인 무리를 300개씩 만들었다.
+원래 공간에서는 넓은 무리의 퍼짐(중심까지 평균 거리)이 좁은 무리의 9.9배다.
+그런데 t-SNE 지도에서는 이 비율이 perplexity 5, 30, 100에서 모두 1.0 안팎이었고, UMAP에서도 1.0이었다(아래 그림 (a)).
+§3-1에서 본 대로 관측마다 $\sigma_i$를 주변 밀도에 맞추니, 빽빽한 무리는 넓혀지고 성긴 무리는 좁혀진다.
+
+**섬 사이의 거리도 그대로 믿을 수 없다.**
+숫자 열 개의 평균 이미지 사이 거리 45쌍을 원래 공간과 지도에서 각각 재고, 두 거리의 순위가 얼마나 같은지(스피어만 순위 상관) 보았다.
+PCA 0.82, t-SNE 0.82, UMAP 0.56이었다.
+t-SNE가 PCA만큼 높은 것은 PCA 좌표에서 출발했기 때문이고, 무작위 출발점으로 바꾸면 시드에 따라 0.71–0.74로 내려간다.
+섬이 서로 가까이 그려졌다고 원래 데이터에서도 비슷한 숫자라고 단정할 수 없다.
+
+**구조가 없어도 무리가 보인다.**
+64차원 표준정규분포에서 점 1,797개를 뽑았다.
+이 데이터에는 무리가 없고, 실제로 원래 공간에서 [07 §7](./07-clustering#7-다른-군집화-방법)의 HDBSCAN(최소 군집 크기 20)을 돌리면 모든 점이 잡음으로 남는다.
+그런데 perplexity 2의 t-SNE 지도에 같은 HDBSCAN을 돌리면 군집 3개가 잡힌다(아래 그림 (b)).
+perplexity 30에서도 2개가 잡혔다.
+지도는 이웃을 지키려다 우연히 조금 더 가까운 점들을 뭉쳐 놓고, 지도 위의 밀도도 고르지 않게 만든다.
+그 뭉침과 밀도 차이가 밀도 기반 군집화에는 진짜 무리처럼 보인다.
+
+<Figure src={embedPitfalls.src} alt="두 산점도. 왼쪽은 표준편차 1인 무리(파랑)와 10인 무리(빨강)의 t-SNE 지도로 두 원의 크기가 같다. 오른쪽은 구조 없는 정규분포 잡음의 t-SNE 지도(perplexity 2)로, 회색 점 사이에 HDBSCAN이 잡은 작은 색 무리들이 흩어져 있다" caption="t-SNE 지도의 두 함정. (a) 원래 공간에서 퍼짐이 10배 다른 두 무리가 같은 크기로 그려진다. (b) 무리가 없는 잡음에서도, 지도 위에서 군집화하면 가운데의 빽빽한 영역과 작은 뭉침 둘이 군집으로 잡힌다. 원래 공간에서는 같은 설정의 HDBSCAN이 군집을 하나도 찾지 않는다." source="자체 작성 · 가상 데이터" />
+
+**모양은 설정에 따라 달라진다.**
+같은 숫자 데이터를 perplexity와 `n_neighbors`만 바꿔 그리면 섬의 모양, 간격, 나뉘는 정도가 달라진다.
+perplexity 5의 t-SNE 지도는 섬마다 잘게 부서지고, UMAP은 `n_neighbors`가 클수록 섬들이 서로 붙는다.
+Distill 글은 반복 횟수가 모자라면 이상하게 꼬집힌 모양이 남는다는 점도 지적한다.
+
+<Figure src={embedSettings.src} alt="숫자 데이터의 지도 네 장. t-SNE perplexity 5에서는 섬이 잘게 흩어지고, perplexity 100에서는 섬이 둥글고 가깝다. UMAP n_neighbors 5와 50에서는 섬의 배치와 간격이 다르다" caption="같은 데이터를 설정만 바꿔 그린 지도. 모든 지도에서 0, 4, 6은 따로 떨어지고 숫자 1은 두세 조각으로 나뉜다. 섬의 모양과 간격처럼 지도마다 다른 특징은 결론에 쓰지 않는다." source="자체 작성 · 손글씨 숫자 데이터(Alpaydin & Kaynak 1998, CC BY 4.0)" />
+
+<Callout type="warning">
+지도에서 결론을 말하기 전에 설정(perplexity나 `n_neighbors`)을 셋 이상, 시드를 둘 이상 바꿔 그려 본다.
+모든 지도에서 같은 구조가 보일 때만 그 구조를 말하고, 섬의 크기와 섬 사이 거리는 결론에 쓰지 않는다.
+</Callout>
+
+## 6. 지도 위의 군집화
+
+지도의 섬이 또렷하니, 지도 좌표를 군집화의 입력으로 쓰고 싶어진다.
+실제로 흔히 쓰는 방법이고, 숫자 데이터에서는 결과도 좋다.
+군집 결과와 숫자 라벨의 ARI([07 §4-3](./07-clustering#43-두-군집-결과의-비교-rand-지수와-ari))를 비교하면 다음과 같다.
+HDBSCAN은 최소 군집 크기 20으로 두고, 잡음으로 남은 이미지는 하나의 묶음으로 쳐서 ARI를 계산했다.
+
+| 군집화한 공간 | 방법 | 군집 수 | 잡음 | 숫자 라벨과의 ARI |
+|---|---|---|---|---|
+| 원래 64차원 | K-means(K = 10) | 10 | | 0.67 |
+| 원래 64차원 | HDBSCAN | 8 | 915 | 0.20 |
+| PCA 2차원 | K-means(K = 10) | 10 | | 0.39 |
+| t-SNE 지도 | K-means(K = 10) | 10 | | 0.89 |
+| t-SNE 지도 | HDBSCAN | 10 | 29 | 0.81 |
+| UMAP 지도 | K-means(K = 10) | 10 | | 0.82 |
+| UMAP 지도 | HDBSCAN | 14 | 21 | 0.90 |
+
+원래 64차원에서 HDBSCAN은 이미지의 절반을 잡음으로 남겼다.
+차원이 크면 관측 사이의 거리가 고만고만해져 "빽빽한 곳"을 찾기 어렵다.
+지도는 이웃끼리 모아 밀도 차이를 키워 주니, 밀도 기반 군집화가 숫자를 훨씬 잘 찾는다.
+umap-learn 문서도 더 큰 손글씨 데이터(MNIST)에서 원래 공간의 K-means는 ARI 0.37, UMAP 지도 위의 HDBSCAN은 0.92였다고 보고한다.[^umap-clustering]
+
+그러나 §5의 잡음 실험에서 보았듯, 지도는 없는 무리도 만들 수 있다.
+같은 문서도 UMAP이 밀도를 완전히 보존하지 않고 군집 안에 실제로는 없는 틈을 만들 수 있어 조심해서 써야 한다고 적고, 군집화용으로는 `n_neighbors`를 키우고 `min_dist`를 0으로 두고 지도 차원을 2보다 크게 잡는 것을 권한다.[^umap-clustering]
+지도 위의 군집은 07의 군집과 똑같이, 아니 그보다 더 꼼꼼히 PCS로 검토해야 한다.
+
+### 6.1 Predictability
+
+UMAP은 새 관측을 기존 지도에 올릴 수 있으니 07처럼 학습과 평가를 나눌 수 있다.
+이미지의 70%로 UMAP 지도와 K-means 군집 중심을 만들고, 나머지 30%를 그 지도에 올려 가장 가까운 중심에 배정했다.
+
+| 군집화 | 학습 70%의 ARI | 평가 30%의 ARI |
+|---|---|---|
+| 원래 64차원 K-means | 0.66 | 0.65 |
+| UMAP 지도 K-means | 0.80 | 0.79 |
+
+UMAP 지도로 만든 군집은 학습에 쓰지 않은 이미지에서도 비슷한 일치도를 보였다.
+t-SNE는 `transform`이 없어서 이 점검을 그대로 할 수 없다.
+데이터를 둘로 나눠 지도를 따로 그리고 같은 구조가 나오는지 보는 정도가 대안이다.
+
+**도메인 지식.**
+숫자 1은 어느 지도에서나 섬 두세 개로 나뉘었다.
+UMAP 지도의 HDBSCAN도 1을 세 군집(97장, 55장, 27장)으로 나눴다.
+지도가 만든 틈인지, 실제로 다른 무리인지는 이미지를 직접 열어 보면 알 수 있다.
+07에서 라벨이 없을 때 군집마다 관측을 몇 개 뽑아 읽어 보라고 한 그 점검이다.
+
+<Figure src={embedOnes.src} alt="숫자 1이 나뉜 세 무리의 평균 이미지와 예시 여섯 장씩. 가는 곧게 내려 그은 1, 나는 위쪽에 왼쪽으로 삐친 획이 있는 1, 다는 아래에 가로 받침이 있는 1이다" caption="UMAP 지도의 HDBSCAN이 숫자 1을 나눈 세 무리. 가는 곧게 내려 긋기, 나는 위쪽의 삐침, 다는 아래쪽 받침이 있는 글씨다." source="자체 작성 · 손글씨 숫자 데이터(Alpaydin & Kaynak 1998, CC BY 4.0)" />
+
+세 무리는 1을 쓰는 서로 다른 습관이다.
+지도를 거치지 않고 원래 64차원에서 1 이미지 182장만 K-means(K = 3)로 나눠도 27장, 101장, 54장으로 크기가 거의 같은 세 무리가 나온다.
+그러니 이 갈라짐은 지도가 만든 틈이 아니라 원래 데이터에 있는 구조다.
+
+### 6.2 설정과 시드에 대한 안정성
+
+지도를 그리는 설정과 시드를 바꿔 같은 군집화(지도 위 HDBSCAN)를 다시 했다.
+
+| 지도 | 설정 | 군집 수 | 잡음 | 숫자 라벨과의 ARI | 시드끼리의 ARI |
+|---|---|---|---|---|---|
+| t-SNE | perplexity 5 | 12 | 220 | 0.71 | 1(같은 지도) |
+| t-SNE | perplexity 30 | 10 | 29 | 0.81 | 1(같은 지도) |
+| t-SNE | perplexity 100 | 11 | 128 | 0.79 | 1(같은 지도) |
+| t-SNE | perplexity 30, 무작위 출발점 | 10–12 | 26–88 | 0.80–0.87 | 0.82–0.91 |
+| UMAP | n_neighbors 5 | 10–12 | 19–66 | 0.86–0.89 | 0.84–0.99 |
+| UMAP | n_neighbors 15 | 13–14 | 13–35 | 0.89–0.91 | 0.97–0.98 |
+| UMAP | n_neighbors 50 | 11 | 21–27 | 0.83–0.84 | 0.99 |
+
+범위는 시드 0, 1, 2로 세 번 그린 결과다.
+"숫자 대부분이 각자의 섬이 되고 1이 두세 조각으로 나뉜다"는 결론은 모든 설정에서 유지됐다.
+반면 군집 수는 10에서 14 사이를, 잡음은 13장에서 220장 사이를 오갔다.
+"이 데이터에는 군집이 정확히 몇 개 있다"는 식의 결론은 지도 위 군집화로는 말할 수 없다.
+
+### 6.3 전처리 판단에 대한 안정성
+
+§1에서 표준화하지 않기로 했다.
+반대로 64개 픽셀을 각각 표준화하면 UMAP 지도 위 HDBSCAN의 ARI가 0.90에서 0.81로 떨어진다.
+가장자리에는 거의 늘 비어 있는 칸이 많다(표준편차가 0인 칸 3개, 0.1보다 작은 칸 8개).
+표준화는 이런 칸의 작은 흔들림을 숫자의 획이 지나가는 가운데 칸과 같은 크기로 키워, 거리 계산에 잡음을 보탠다.
+변수의 의미로 전처리를 정하라는 06b의 기준이 지도에서도 그대로 통한다.
+
+<Details summary="이 노트의 주요 계산을 재현하는 Python 코드">
+
+`umap-learn` 패키지가 필요하다(`pip install umap-learn`).
+UMAP은 시드를 줘도 운영체제와 라이브러리 버전에 따라 소수 둘째 자리가 조금씩 달라질 수 있다.
+
+```python
+import numpy as np
+import umap
+from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+from sklearn.cluster import KMeans, HDBSCAN
+from sklearn.neighbors import NearestNeighbors
+from sklearn.metrics import adjusted_rand_score as ari
+from sklearn.model_selection import train_test_split
+
+X, y = load_digits(return_X_y=True)                     # 1797 x 64, 값 0-16
+pca = PCA().fit(X)
+print(pca.explained_variance_ratio_[:2].sum().round(3))  # 0.285
+print(np.searchsorted(np.cumsum(pca.explained_variance_ratio_), 0.9) + 1)  # 21
+
+maps = {"PCA": PCA(2).fit_transform(X),
+        "t-SNE": TSNE(perplexity=30, random_state=0).fit_transform(X),
+        "UMAP": umap.UMAP(n_neighbors=15, random_state=0).fit_transform(X)}
+
+def knn(A, k=10):                                       # 자기 자신을 뺀 가까운 이웃 k개
+    return NearestNeighbors(n_neighbors=k + 1).fit(A).kneighbors(A, return_distance=False)[:, 1:]
+
+nn_x = knn(X)
+for name, E in maps.items():                            # 이웃 보존 비율과 군집 일치도
+    kept = np.mean([len(set(a) & set(b)) / 10 for a, b in zip(nn_x, knn(E))])
+    km = KMeans(10, n_init=20, random_state=0).fit_predict(E)
+    hdb = HDBSCAN(min_cluster_size=20).fit_predict(E)   # -1이 잡음
+    print(name, round(kept, 2), round(ari(y, km), 2), len(set(hdb) - {-1}), (hdb == -1).sum(), round(ari(y, hdb), 2))
+
+noise = np.random.default_rng(0).normal(size=(1797, 64))  # 구조 없는 잡음
+lab = HDBSCAN(min_cluster_size=20).fit_predict(noise)
+print("원래 공간", len(set(lab) - {-1}))                 # 0
+lab = HDBSCAN(min_cluster_size=20).fit_predict(TSNE(perplexity=2, random_state=0).fit_transform(noise))
+print("t-SNE 지도", len(set(lab) - {-1}))                 # 난수에 따라 몇 개씩 잡힌다
+
+Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.3, random_state=0, stratify=y)
+mapper = umap.UMAP(random_state=0).fit(Xtr)             # predictability: 새 이미지를 지도에 올린다
+km = KMeans(10, n_init=20, random_state=0).fit(mapper.embedding_)
+print(round(ari(ytr, km.labels_), 2), round(ari(yte, km.predict(mapper.transform(Xte))), 2))
+```
+
+</Details>
+
+## 7. 우리 데이터의 지도
+
+변수가 열 개를 넘고 PCA 두 축이 분산을 많이 놓친다면, 06b의 PCA 산점도 옆에 t-SNE나 UMAP 지도를 함께 그려 본다.
+변수가 몇 개뿐이고 PCA 두 축이 대부분을 담는다면 PCA 산점도로 충분하다.
+
+1. **전처리를 정한다.** 06b와 07에서 정한 변수와 척도를 그대로 쓴다. 지도는 거리에서 이웃을 정하므로 척도 판단에 똑같이 흔들린다.
+2. **여러 설정으로 그린다.** t-SNE의 perplexity나 UMAP의 `n_neighbors`를 셋 이상, 시드를 둘 이상 바꾼다.
+3. **아는 것으로 칠한다.** 07에서 원래 공간으로 만든 군집 번호, 그리고 라벨이 있다면 라벨로 지도에 색을 칠한다. 원래 공간의 군집이 지도에서도 모여 있는지, 한 군집이 여러 섬으로 흩어지지 않는지 본다.
+4. **지도 위에서 군집화한다면 따로 확인한다.** 지도 위 군집을 결론에 쓰려면 원래 공간에서도 그 무리가 보이는지, 군집마다 관측을 몇 개 직접 읽어 이름을 붙일 수 있는지 확인한다.
+
+**완료 기준**: 설정을 바꾼 지도 세 장 이상과, 모든 지도에서 유지된 구조와 지도마다 달라진 특징을 나눠 적은 메모가 있으면 된다.
+지도를 그리지 않았다면 PCA 두 축으로 충분하다고 본 근거(설명된 분산 비율 등)를 한 줄 적는다.
+
+[^vds6]: Yu, B., & Barter, R. L. (2024). [Principal Component Analysis](https://vdsbook.com/06-pca). *Veridical Data Science*, MIT Press.
+
+[^distill]: Wattenberg, M., Viégas, F., & Johnson, I. (2016). [How to Use t-SNE Effectively](https://doi.org/10.23915/distill.00002). *Distill*, 1(10).
+
+[^pair]: Coenen, A., & Pearce, A. (n.d.). [Understanding UMAP](https://pair-code.github.io/understanding-umap/). Google PAIR.
+
+[^digits]: Alpaydin, E., & Kaynak, C. (1998). [Optical Recognition of Handwritten Digits](https://doi.org/10.24432/C50P49). *UCI Machine Learning Repository*. CC BY 4.0.
+
+[^tsne]: van der Maaten, L., & Hinton, G. (2008). [Visualizing Data using t-SNE](https://www.jmlr.org/papers/v9/vandermaaten08a.html). *Journal of Machine Learning Research*, 9(86), 2579–2605.
+
+[^sklearn-tsne]: scikit-learn developers. (2026). [sklearn.manifold.TSNE](https://scikit-learn.org/1.9/modules/generated/sklearn.manifold.TSNE.html). *scikit-learn 1.9 documentation*.
+
+[^umap]: McInnes, L., Healy, J., & Melville, J. (2018). [UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction](https://arxiv.org/abs/1802.03426). arXiv:1802.03426.
+
+[^umap-params]: McInnes, L. [Basic UMAP Parameters](https://umap-learn.readthedocs.io/en/latest/parameters.html). *umap-learn documentation*.
+
+[^umap-clustering]: McInnes, L. [Using UMAP for Clustering](https://umap-learn.readthedocs.io/en/latest/clustering.html). *umap-learn documentation*.
+
+[^kobak]: Kobak, D., & Linderman, G. C. (2021). [Initialization is critical for preserving global data structure in both t-SNE and UMAP](https://doi.org/10.1038/s41587-020-00809-z). *Nature Biotechnology*, 39(2), 156–157.
