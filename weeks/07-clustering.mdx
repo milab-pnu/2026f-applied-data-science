@@ -47,9 +47,8 @@ $$
 그래서 이 노트의 분석은 네 변수를 표준화한 뒤 한다. 표준화하지 않으면 결과가 어떻게 달라지는지는 §6-3에서 본다.
 
 거리만이 "비슷함"의 정의는 아니다. 지역별 월 매출처럼 값의 크기보다 오르내리는 모양이 중요하면 두 관측의 상관계수를
-유사도로 쓸 수 있고, 범주형 변수가 섞여 있으면 Gower 거리처럼 범주형도 다루는 척도를 쓴다. 무엇을 비슷하다고 볼지는
-문제의 맥락이 정한다(교재 §7.1.2). 다만 아래의 K-means는 중심과의 유클리드 거리를 전제로 만든 방법이다. 다른 거리를
-쓰려면 Ward 연결이 아닌 계층적 군집처럼 관측 사이의 거리만 있으면 되는 방법을 고른다.
+유사도로 쓸 수도 있다. 무엇을 비슷하다고 볼지는 문제의 맥락이 정한다(교재 §7.1.2). 다만 K-means는 유클리드 거리를 전제로
+만든 방법이라, 다른 거리를 쓰려면 계층적 군집을 고른다.
 
 ## 3. 두 가지 알고리즘
 
@@ -107,8 +106,8 @@ $\lbrace 1, 2, 4 \rbrace$, $\lbrace 7, 8 \rbrace$이고 WSS는 5.17이다. 그�
 세 번째 반복에서 4는 1.5까지 2.5, 6.33까지 2.33 떨어져 있어 오른쪽에 남는다. 이 결과의 WSS는 9.17로, 앞의 5.17보다 나쁜데도
 소속이 더 바뀌지 않아 여기서 멈춘다.
 
-펭귄 데이터에서도 같은 일이 일어난다. $K = 3$ K-means를 시드 0부터 49까지 바꿔 가며 초기값 한 벌로만(`n_init=1`) 실행하면, 가장 좋은 해와 똑같은 군집이 나온 것은
-scikit-learn의 기본 초기화(k-means++)로 34%, 완전 무작위 초기화로 40%뿐이었다. 나머지는 다른 곳에서 멈췄고, 가장 좋은 해와의
+펭귄 데이터에서도 같은 일이 일어난다. $K = 3$ K-means를 초기값 한 벌로만(`n_init=1`) 시드를 바꿔 50번 실행하면, 가장 좋은 해와 똑같은 군집이 나온 것은
+34–40%뿐이었다(초기화 방식에 따라 다르다). 나머지는 다른 곳에서 멈췄고, 가장 좋은 해와의
 일치도(§4-3의 ARI)가 0.47까지 떨어진 경우도 있었다. 이렇게 초기값만 바꿔 결과가 얼마나 달라지는지 보는 것이 교재가 말하는
 알고리즘의 무작위성에 대한 stability 점검이다(교재 §7.8.2.2). 실무에서는 초기값을 여러 번 바꿔 실행하고 WSS가 가장 작은
 결과를 고른다(scikit-learn의 `n_init`).
@@ -149,7 +148,7 @@ $s_i$가 1에 가까우면 자기 군집에 잘 들어가 있고, 0 근처면 �
 묶였으니 불일치다. Rand 지수는 3/6 = 0.5다.
 
 이처럼 쌍만 세면 되므로 두 결과의 군집 수가 달라도 Rand 지수를 계산할 수 있다. 대신 두 결과가 **같은 관측들**을 묶은 것이어야
-한다. 관측의 수만 같아서는 안 되고 같은 개체여야 하며, 묶은 관측이 다르면 비교할 쌍부터 맞지 않는다.
+한다. 묶은 관측이 다르면 비교할 쌍부터 맞지 않는다.
 
 Rand 지수는 아무렇게나 묶어도 꽤 높게 나온다. 대부분의 쌍은 어차피 따로 묶이기 때문이다. **수정 Rand 지수**(adjusted Rand
 index, ARI)는 무작위로 묶었을 때 기대되는 값을 빼고 다시 척도를 맞춘 것이다. 1이면 완전히 같고, 0이면 무작위 수준이다.
@@ -169,12 +168,11 @@ $K$는 알고리즘이 정해 주지 않는 하이퍼파라미터다. 펭귄 데
 
 교재는 $K$를 고를 때 **교차검증**(cross-validation, CV)을 권한다(교재 §7.7). 데이터를 다섯 겹으로 나누고, 네 겹으로 표준화 기준과
 군집을 만든 뒤 남은 한 겹을 같은 기준으로 표준화해 가장 가까운 중심에 배정하고 실루엣 점수를 잰다. 표준화 기준까지
-학습 부분에서만 정해야 남은 한 겹의 정보가 새어 들어가지 않는다([05b §5-1](./05b-data-preprocessing#51-학습평가-분리)의 학습·평가 분리 원칙). 이를 다섯 번 돌려 평균을 낸다. 펭귄 데이터에서는 교차검증 실루엣 점수도 $K = 2$에서 가장 높았다. 겹을 펭귄 단위로 무작위로
-나눠도, 같은 둥지의 암수가 한 겹에 들어가도록 둥지 단위로 나눠도 결과는 같았다.
+학습 부분에서만 정해야 남은 한 겹의 정보가 새어 들어가지 않는다([05b §5-1](./05b-data-preprocessing#51-학습평가-분리)의 학습·평가 분리 원칙). 이를 다섯 번 돌려 평균을 낸다. 펭귄 데이터에서는 교차검증 실루엣 점수도 $K = 2$에서 가장 높았다.
 
 평가하는 겹은 그 차례의 학습에 쓰지 않았으니 predictability를, 차례마다 학습 데이터가 달라지니 stability를 가볍게 흉내 낸
-점검이다. 어디까지나 흉내다. 어느 겹이든 다른 차례에는 학습에 쓰이고, 모든 겹이 같은 시기에 같은 방법으로 모은 한 데이터에서
-나왔다. 그래서 교차검증 점수는 수집 시기나 장소, 방법이 다른 외부 데이터에서의 성능을 대신하지 못한다. 교재도 교차검증은
+점검이다. 다만 모든 겹이 같은 시기에 같은 방법으로 모은 한 데이터에서 나왔으므로, 교차검증 점수가 수집 조건이 다른 외부
+데이터에서의 성능을 대신하지는 못한다. 교재도 교차검증은
 $K$ 같은 하이퍼파라미터를 고르는 데 쓰고, 최종 결과는 §6처럼 따로 PCS 검토하라고 권한다(교재 §7.7.1). 교차검증은 군집화만의 도구도 아니다. 9주차부터 다룰 예측 모델에서도 하이퍼파라미터를 고를
 때 가장 널리 쓰는 방법이다.
 
@@ -246,7 +244,7 @@ Gentoo는 완벽하게 한 군집으로 묶였다. Adelie와 Chinstrap의 경계
 안정적이지만, "Adelie와 Chinstrap을 가르는 경계"는 그렇지 않다. Ward의 종 일치도가 더 높다고(0.92) Ward가 "정답"인 것은 아니다.
 정답이 없는 상황이라면 우리는 이 차이를 보고 경계 부근의 펭귄에 대한 결론을 조심해야 한다.
 
-실루엣 점수로 비교해도 어느 쪽이 늘 낫지는 않다. $K = 3$에서는 Ward가 0.454로 K-means의 0.447보다 조금 높고($K = 4$도 Ward가 높다),
+실루엣 점수로 비교해도 어느 쪽이 늘 낫지는 않다. $K = 3$에서는 Ward가 0.454로 K-means의 0.447보다 조금 높고,
 $K = 5$와 6에서는 K-means가 더 높다. K-means가 줄이는 것은 WSS이지 실루엣 점수가 아니기 때문이다.
 
 ### 6.3 전처리 판단에 대한 안정성
@@ -310,13 +308,58 @@ for K in range(2, 7):
 
 </Details>
 
-## 7. 우리 데이터의 군집화
+## 7. 다른 군집화 방법
+
+교재가 다루는 두 방법은 모두 거리로 묶고, 특히 K-means는 군집을 중심 둘레의 둥근 덩어리로 본다. 군집의 모양을 다르게
+가정하는 방법도 실무에서 많이 쓴다. 대표적인 두 갈래는 다음과 같다.
+
+| 방법 | 군집을 보는 방식 | 군집 수 | 쓰기 좋은 경우 |
+|---|---|---|---|
+| 가우스 혼합 모형(Gaussian mixture model, GMM) | 군집마다 정규분포 하나. 기울어진 타원 모양의 군집도 되고, 관측마다 각 군집에 속할 확률을 준다 | 정해야 한다. BIC(Bayesian information criterion) 같은 정보 기준으로 고를 수 있다 | 군집이 길쭉하거나 크기가 다를 때, 경계에 있는 관측을 따로 보고 싶을 때 |
+| DBSCAN,[^dbscan] HDBSCAN[^hdbscan] | 점이 빽빽한 영역을 하나의 군집으로 보고, 어느 군집에도 끼지 못한 점은 잡음으로 남긴다 | 정하지 않는다. 대신 밀도의 기준(DBSCAN의 반경 eps 등)을 정한다 | 군집 모양이 불규칙하거나 이상치가 섞였을 때 |
+
+펭귄에 적용하면 두 방법이 서로 다른 답을 낸다. 공분산에 제한을 두지 않은 GMM은 BIC가 $K = 3$에서 가장 낮았고, 종 라벨과의
+ARI가 0.96으로 K-means의 0.79보다 훨씬 높았다. Adelie 151마리 중 149마리가 한 군집에 들어가, §6에서 K-means가 Chinstrap 쪽으로
+넘긴 큰 Adelie 수컷들도 대부분 Adelie 쪽에 남았다. 종마다 기울어진 타원 모양인 점구름을 둥근 덩어리로 억지로 나누지 않은
+결과로 볼 수 있다. 한편 HDBSCAN은 최소 군집 크기를 5부터 30까지 바꿔도 Gentoo와 나머지 두 종, 두 군집만 찾았다. 밀도로 보면 Adelie와
+Chinstrap은 하나로 이어진 덩어리다. §5의 실루엣 점수가 $K = 2$를 고른 것과 같은 이야기다.
+
+방법을 바꿔도 판단은 따라오고, 점검도 똑같이 필요하다. GMM의 공분산을 변수끼리 독립인 꼴(대각 행렬)로 제한하면 종 라벨과의
+ARI가 0.62로 떨어지고 BIC는 $K = 5$를 고른다. 초기값 한 벌로만 실행하면 10번 중 2번은 ARI 0.51인 다른 해에서 멈춘다. DBSCAN은
+eps를 0.5에서 0.8로 바꾸는 사이에 군집 4개와 잡음 69마리에서 군집 2개와 잡음 5마리로 결과가 크게 바뀌었다. 어느 방법을 쓰든
+§6의 PCS 점검을 그대로 한다.
+
+<Details summary="GMM·HDBSCAN·DBSCAN 코드">
+
+```python
+from sklearn.mixture import GaussianMixture
+from sklearn.cluster import DBSCAN, HDBSCAN
+
+for K in range(2, 6):                                   # BIC로 K 고르기
+    gmm = GaussianMixture(K, covariance_type="full", n_init=10, random_state=0).fit(Z)
+    print(K, round(gmm.bic(Z), 1), round(ari(df["species"], gmm.predict(Z)), 3))
+
+gmm3 = GaussianMixture(3, covariance_type="full", n_init=10, random_state=0).fit(Z)
+print((gmm3.predict_proba(Z).max(axis=1) < 0.9).sum())  # 소속 확률이 낮은 펭귄 수
+
+for m in [5, 10, 15, 20, 30]:                           # HDBSCAN: -1은 잡음
+    lab = HDBSCAN(min_cluster_size=m).fit_predict(Z)
+    print(m, len(set(lab) - {-1}), (lab == -1).sum())
+
+for eps in [0.5, 0.6, 0.7, 0.8]:                        # DBSCAN의 eps 민감도
+    lab = DBSCAN(eps=eps, min_samples=5).fit_predict(Z)
+    print(eps, len(set(lab) - {-1}), (lab == -1).sum())
+```
+
+</Details>
+
+## 8. 우리 데이터의 군집화
 
 1. **목적을 적는다.** 군집으로 무엇을 하려는지(세분화, 탐색, 라벨이 없는 데이터의 구조 파악) 한 문장으로 쓴다. 목적이
    $K$와 알고리즘을 고르는 기준이 된다.
 2. **거리와 전처리를 정한다.** 어떤 변수로 거리를 잴지, 척도를 맞출지를 06b와 같은 기준으로 정한다.
-3. **두 알고리즘으로 군집을 만든다.** K-means(`n_init`을 충분히)와 계층적 군집 하나 이상. $K$는 실루엣 점수나 교차검증과 도메인
-   판단을 함께 써서 고른다.
+3. **두 알고리즘으로 군집을 만든다.** K-means(`n_init`을 충분히)와 계층적 군집 하나 이상. 군집이 둥글지 않아 보이면 §7의
+   GMM이나 HDBSCAN도 비교한다. $K$는 실루엣 점수나 교차검증과 도메인 판단을 함께 써서 고른다.
 4. **군집을 읽는다.** 군집마다 관측 몇 개를 직접 보고 이름을 붙인다. 라벨이 있다면 교차표를 만든다.
 5. **PCS로 검토한다.** predictability 점검 하나, stability 점검 둘 이상(알고리즘, 부트스트랩, 전처리 대안 중)을 하고, 어느
    결론이 안정적이고 어느 결론이 흔들리는지 나눠 적는다.
@@ -325,5 +368,9 @@ for K in range(2, 7):
 5주차의 판단 기록표, 6주차의 탐색 결과와 함께 이 결과가 8주차 M2 발표의 분석 절이 된다.
 
 [^vds7]: Yu, B., & Barter, R. L. (2024). [Clustering](https://vdsbook.com/07-cluster). *Veridical Data Science*, MIT Press.
+
+[^dbscan]: Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996). [A density-based algorithm for discovering clusters in large spatial databases with noise](https://aaai.org/papers/kdd96-037-a-density-based-algorithm-for-discovering-clusters-in-large-spatial-databases-with-noise/). *Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96)*. AAAI Press.
+
+[^hdbscan]: Campello, R. J. G. B., Moulavi, D., & Sander, J. (2013). [Density-based clustering based on hierarchical density estimates](https://doi.org/10.1007/978-3-642-37456-2_14). *Advances in Knowledge Discovery and Data Mining (PAKDD 2013)*, Lecture Notes in Computer Science, 160–172.
 
 [^sklearn-agg]: scikit-learn developers. (2026). [sklearn.cluster.AgglomerativeClustering](https://scikit-learn.org/1.9/modules/generated/sklearn.cluster.AgglomerativeClustering.html). *scikit-learn 1.9 documentation*.
