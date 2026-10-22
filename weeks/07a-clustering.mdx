@@ -125,7 +125,8 @@ $$
 이 결과의 WSS는 9.17로, 앞의 5.17보다 나쁜데도 소속이 더 바뀌지 않아 여기서 멈춘다.
 
 펭귄 데이터에서도 같은 일이 일어난다.
-$K = 3$ K-means를 초기값 한 벌로만(`n_init=1`) 시드를 바꿔 50번 실행하면, 가장 좋은 해와 똑같은 군집이 나온 것은 34–40%뿐이었다.
+$K = 3$ K-means를 초기값 한 벌로만(`n_init=1`) 시드를 바꿔 50번 실행하면, 가장 좋은 해와 똑같은 군집이 나온 것은 34%뿐이었다.
+출발점을 관측 가운데서 무작위로 고르는 방식으로 바꿔도 40%였다.
 나머지는 다른 곳에서 멈췄고, 가장 좋은 해와의 일치도(§4-3의 ARI)가 0.47까지 떨어진 경우도 있었다.
 이렇게 초기값만 바꿔 결과가 얼마나 달라지는지 보는 것이 알고리즘의 무작위성에 대한 stability 점검이다.
 실무에서는 초기값을 여러 번 바꿔 실행하고 WSS가 가장 작은 결과를 고른다.
@@ -332,7 +333,7 @@ K-means가 줄이는 것은 WSS이지 실루엣 점수가 아니기 때문이다
 
 그래서 결론을 고쳐 써야 한다.
 Gentoo는 해·표본·알고리즘을 바꿔도 따로 묶인다.
-하지만 Adelie와 Chinstrap 사이의 경계는 **종보다 몸집과 부리 크기를 따르고, 알고리즘에 따라 달라진다.**
+하지만 Adelie와 Chinstrap 사이의 경계는 알고리즘에 따라 달라지고, **K-means의 경계는 종보다 몸집과 부리 크기를 따른다.**
 두 결론 모두 네 변수를 표준화했다는 판단 위에서만 성립한다.
 
 <Details summary="이 노트의 주요 계산을 재현하는 Python 코드">
@@ -367,7 +368,7 @@ for b in range(200):
     sc = StandardScaler().fit(X[idx])                   # 표준화 기준도 부트스트랩 표본에서
     fit = KMeans(3, n_init=10, random_state=b).fit(sc.transform(X[idx]))
     boot.append(ari(km3.labels_, fit.predict(sc.transform(X))))
-print(np.round(np.quantile(boot, [0.05, 0.5]), 2))
+print(np.round(np.quantile(boot, [0.05, 0.5]), 2))           # 하위 5%, 중앙값
 
 from sklearn.model_selection import KFold              # K 선택을 위한 5겹 교차검증
 for K in range(2, 7):
@@ -382,6 +383,7 @@ for K in range(2, 7):
 
 $K = 4$ 부트스트랩과 $K$별 Ward 실루엣 비교는 위 코드에서 $K$와 알고리즘만 바꾸면 된다.
 연도로 나누는 방법, 전처리 대안, 둥지 번호(`nest`) 만들기와 둥지 단위 부트스트랩은 [06b의 코드](./06b-pca#62-stability)와 같은 방식이다.
+Gentoo 군집의 구성은 연도별·부트스트랩별 결과를 `pd.crosstab`으로 종과 맞대어 확인한다.
 다만 이 코드는 `reset_index`로 줄 번호를 새로 매기므로, 둥지 번호는 `dropna` 전에 원자료와 줄을 맞춰 붙인다.
 
 ```python
