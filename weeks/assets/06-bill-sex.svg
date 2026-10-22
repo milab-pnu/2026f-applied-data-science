@@ -8,9 +8,7 @@
 <text x="99.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">수컷</text>
 <line x1="155" x2="180" y1="47" y2="47" stroke="#64748b" stroke-width="2" stroke-dasharray="5 4"/>
 <text x="186.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">암수를 합친 추세선</text>
-<circle cx="345" cy="47" r="4" fill="#94a3b8"/>
-<text x="354.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">성별 미상</text>
-<text x="440.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">실선: 같은 성별 안의 추세선</text>
+<text x="345.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">실선: 같은 성별 안의 추세선</text>
 <line x1="72" x2="258" y1="320.0" y2="320.0" stroke="#e2e8f0" stroke-width="1"/>
 <text x="66.0" y="324.0" font-size="13" fill="#64748b" text-anchor="end">15</text>
 <line x1="72" x2="258" y1="286.3" y2="286.3" stroke="#e2e8f0" stroke-width="1"/>
@@ -34,11 +32,6 @@
 <line x1="258.0" x2="258.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
 <text x="258.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">50</text>
 <line x1="72" x2="258" y1="320" y2="320" stroke="#64748b" stroke-width="1"/>
-<circle cx="110.1" cy="215.5" r="3" fill="#94a3b8" fill-opacity="0.55"/>
-<circle cx="183.6" cy="144.7" r="3" fill="#94a3b8" fill-opacity="0.55"/>
-<circle cx="144.5" cy="249.2" r="3" fill="#94a3b8" fill-opacity="0.55"/>
-<circle cx="144.5" cy="242.5" r="3" fill="#94a3b8" fill-opacity="0.55"/>
-<circle cx="141.8" cy="188.5" r="3" fill="#94a3b8" fill-opacity="0.55"/>
 <circle cx="160.3" cy="239.1" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
 <circle cx="167.8" cy="218.9" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
 <circle cx="134.3" cy="175.0" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
@@ -311,10 +304,6 @@
 <line x1="710.0" x2="710.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
 <text x="710.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">60</text>
 <line x1="524" x2="710" y1="320" y2="320" stroke="#64748b" stroke-width="1"/>
-<circle cx="565.9" cy="242.5" r="3" fill="#94a3b8" fill-opacity="0.55"/>
-<circle cx="581.7" cy="239.1" r="3" fill="#94a3b8" fill-opacity="0.55"/>
-<circle cx="591.9" cy="259.3" r="3" fill="#94a3b8" fill-opacity="0.55"/>
-<circle cx="565.9" cy="195.3" r="3" fill="#94a3b8" fill-opacity="0.55"/>
 <circle cx="580.7" cy="279.5" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
 <circle cx="604.9" cy="249.2" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
 <circle cx="584.5" cy="269.4" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
