@@ -59,6 +59,7 @@ $$
 
 거리만이 "비슷함"의 정의는 아니다.
 지역마다 12개월 매출이 있고 크기보다 오르내리는 모양이 중요하다면, 두 지역의 월별 매출 12개로 상관계수를 구해 유사도로 쓸 수도 있다.
+매출 규모가 10배 다른 두 지역도 같은 달에 오르고 내리면 상관계수는 1에 가깝지만, 유클리드 거리로는 멀다.
 06a의 상관계수는 두 변수를 관측들에 걸쳐 비교했는데, 여기서는 두 관측을 변수들에 걸쳐 비교한다.
 무엇을 비슷하다고 볼지는 문제의 맥락이 정한다(교재 §7.1.2).
 다만 K-means(§3-2)는 유클리드 거리를 전제로 만든 방법이라, 다른 거리를 쓰려면 계층적 군집처럼 관측 사이의 거리만 있으면 되는 방법을 고른다.
@@ -78,7 +79,7 @@ $$
 - **완전 연결**(complete linkage): 가장 먼 두 관측의 거리.
   군집의 지름을 작게 유지하려 하므로 둥글고 빽빽한 군집이 되기 쉽다.
 - **평균 연결**(average linkage): 두 군집에서 하나씩 고른 모든 관측 쌍의 평균 거리.<Sidenote>교재 §7.2.1은 두 군집 중심 사이의 거리를 평균 연결이라고 부른다. 이 정의는 보통 중심 연결(centroid linkage)이라고 하는 것이고, scikit-learn의 `linkage="average"`를 비롯해 흔히 평균 연결이라 하면 모든 관측 쌍의 평균 거리를 뜻한다.[^sklearn-agg]</Sidenote>
-- **Ward 연결**: 두 군집을 합쳤을 때 군집 안 관측이 중심에서 떨어진 거리 제곱의 합(군집 내 제곱합, §3-2)이 가장 적게 늘어나는 쌍을 합친다.
+- **Ward 연결**(Ward linkage): 두 군집을 합쳤을 때 군집 안 관측이 중심에서 떨어진 거리 제곱의 합(군집 내 제곱합, §3-2)이 가장 적게 늘어나는 쌍을 합친다.
   아래 K-means와 같은 목표를 계층적으로 따르며, 제곱합을 쓰므로 유클리드 거리에서만 정의된다.
 
 수직선 위의 다섯 점 1, 2, 4, 7, 8에 단일 연결을 적용해 보자.
@@ -141,7 +142,8 @@ scikit-learn에서는 `n_init`이 그 횟수인데, 기본값(`"auto"`)은 k-mea
 WSS는 작을수록 군집이 빽빽하다.
 하지만 $K$를 늘리면 거의 항상 줄어든다.
 관측마다 군집을 하나씩 주면 0이 된다.
-그래서 WSS가 작다는 이유만으로 큰 $K$가 낫다고 할 수 없고, 관측 수가 다른 데이터끼리 비교할 때는 관측 수로 나눠야 한다.
+그래서 WSS가 작다는 이유만으로 큰 $K$가 낫다고 할 수 없다.
+관측 수가 다른 데이터끼리 비교할 때도 WSS는 관측 수로 나눠야 한다.
 
 ### 4.2 실루엣 점수
 
@@ -161,7 +163,7 @@ $s_i$가 1에 가까우면 자기 군집에 잘 들어가 있고, 0 근처면 �
 모든 관측의 평균이 그 군집 결과의 실루엣 점수다.
 예를 들어 평면 위의 네 점 (0, 0), (0, 1), (4, 0), (4, 1)을 왼쪽 둘과 오른쪽 둘로 묶으면, 점 (0, 0)의 $a_i = 1$이고 $b_i = (4 + \sqrt{17})/2 \approx 4.06$이라 $s_i = (4.06 - 1)/4.06 \approx 0.75$다.
 네 점이 대칭이라 평균도 0.75다.
-WSS와 달리 $K$를 늘린다고 저절로 좋아지지 않으므로(한 무리를 둘로 쪼개면 $b_i$가 작아진다), 서로 다른 $K$를 비교하는 데 쓸 수 있다.
+WSS와 달리 $K$를 늘린다고 저절로 좋아지지 않으므로(한 무리를 둘로 쪼개면 바로 옆의 반쪽이 가장 가까운 다른 군집이 되어 $b_i$가 작아지고 실루엣 점수가 떨어진다), 서로 다른 $K$를 비교하는 데 쓸 수 있다.
 
 ### 4.3 Rand 지수와 ARI
 
@@ -194,7 +196,7 @@ ARI도 군집 수가 다른 결과끼리 비교할 수 있고, 두 군집 결과
 $K$는 알고리즘이 정해 주지 않는 하이퍼파라미터다.
 펭귄 데이터에서 $K$를 2부터 6까지 바꿔 보자.
 
-<Figure src={chooseK.src} alt="두 개의 선 그래프. 왼쪽은 K에 따른 평균 실루엣 점수로 K=2에서 0.53으로 가장 높고 K가 커질수록 낮아짐. 오른쪽은 종 라벨과의 ARI로 K=3에서 가장 높고 Ward가 0.92, K-means가 0.79" caption="(a) 실루엣 점수는 K = 2에서 가장 높고, 5겹 교차검증으로 계산해도 같다. (b) 종 라벨과의 일치도는 K = 3에서 가장 높다. 데이터 안의 지표와 도메인 지식이 서로 다른 K를 가리킨다." source="자체 작성 · Palmer Penguins (Horst 등 2020, CC0)" />
+<Figure src={chooseK.src} alt="두 개의 선 그래프. 왼쪽은 K에 따른 평균 실루엣 점수로 K = 2에서 0.53으로 가장 높고 K가 커질수록 낮아짐. 오른쪽은 종 라벨과의 ARI로 K = 3에서 가장 높고 Ward가 0.92, K-means가 0.79" caption="(a) 실루엣 점수는 K = 2에서 가장 높고, 5겹 교차검증으로 계산해도 같다. (b) 종 라벨과의 일치도는 K = 3에서 가장 높다. 데이터 안의 지표와 도메인 지식이 서로 다른 K를 가리킨다." source="자체 작성 · Palmer Penguins (Horst 등 2020, CC0)" />
 
 실루엣 점수만 보면 $K = 2$가 가장 좋다(0.532).
 $K = 2$의 군집은 Gentoo와 나머지 두 종이다.
@@ -244,8 +246,8 @@ $K = 3$ K-means 결과를 종과 성별로 나눠 보면 다음과 같다.
 Gentoo는 완벽하게 한 군집으로 묶였다.
 Adelie와 Chinstrap의 경계에서는 Adelie 24마리가 Chinstrap 군집으로 들어갔는데, 그중 23마리가 수컷이다.
 6주차에 본 대로 수컷은 몸집과 부리가 크다.
-[06b §5](./06b-pca#5-주성분의-해석)의 종·성별 평균 점수로 보면 Adelie 수컷은 PC2에서 Chinstrap 암컷과 거의 같고, 두 종은 분산이 작은 PC3을 함께 볼 때 갈렸다.
-K-means는 군집 내 제곱합을 줄이도록 경계를 그으므로, 퍼짐이 큰 PC1·PC2 방향의 차이를 따라 나누기 쉽다.
+[06b §5](./06b-pca#5-주성분의-해석)의 종·성별 평균 점수로 보면 Adelie 수컷은 둘째 주성분(PC2)에서 Chinstrap 암컷과 거의 같고, 두 종은 분산이 작은 셋째 주성분(PC3)을 함께 볼 때 갈렸다.
+K-means는 군집 내 제곱합을 줄이도록 경계를 그으므로, 퍼짐이 큰 첫째 주성분(PC1)과 PC2 방향의 차이를 따라 나누기 쉽다.
 큰 Adelie 수컷이 그 방향에서 Chinstrap과 비슷해 보여 함께 묶였다고 볼 수 있다.
 
 <Figure src={kmeansScores.src} alt="PC1–PC2 산점도에 K-means 세 군집을 색으로 표시. 오른쪽 군집 C는 Gentoo와 일치하고, 왼쪽에서 군집 A와 B의 경계가 종 경계보다 아래쪽으로 내려와 있음" caption="K-means(K = 3) 군집을 06b의 주성분 공간에 그렸다. 종으로 칠한 06b의 그림과 비교하면, 왼쪽 두 군집의 경계가 종의 경계와 다르다." source="자체 작성 · Palmer Penguins (Horst 등 2020, CC0)" />
@@ -270,9 +272,9 @@ K-means는 군집 내 제곱합을 줄이도록 경계를 그으므로, 퍼짐�
 교재가 외부 데이터에서 WSS를 관측 수로 나누고 실루엣 점수를 비교한 것과 같은 점검이다(교재 §7.8.1).
 
 **도메인 지식.** 종 라벨과의 ARI 0.79는 군집이 종을 상당 부분 재현한다는 뜻이다.
-동시에 §6 첫 표처럼 군집 B는 "Chinstrap과 큰 Adelie 수컷"이라는, 종이 아닌 부리·몸 크기의 경계를 따른다.
-군집에 이름을 붙인다면 "종"보다 "Gentoo / 작은 펭귄 / 부리가 큰 펭귄"에 가깝다.
 다만 $K = 3$은 §5에서 바로 이 종 라벨과의 일치도를 보고 골랐으므로, 종 일치도는 독립된 검증이라기보다 교육용 사후 비교다.
+한편 §6 첫 표처럼 군집 B는 "Chinstrap과 큰 Adelie 수컷"이라는, 종이 아닌 부리·몸 크기의 경계를 따른다.
+군집에 이름을 붙인다면 "종"보다 "Gentoo / 작은 펭귄 / 부리가 큰 펭귄"에 가깝다.
 라벨이 없는 실제 문제라면 이 자리에 §5의 Callout처럼 군집마다 관측을 읽어 본 결과가 들어간다.
 
 ### 6.2 알고리즘과 데이터에 대한 안정성
@@ -339,7 +341,7 @@ for K in range(2, 7):                                   # K에 따른 실루엣�
 
 km3 = KMeans(3, n_init=50, random_state=0).fit(Z)
 ward3 = AgglomerativeClustering(3, linkage="ward").fit_predict(Z)
-print(pd.crosstab(km3.labels_, [df["species"], df["sex"].fillna("미상")]))
+print(pd.crosstab(km3.labels_, [df["species"], df["sex"].fillna("미상")]))  # 행 0·2·1이 본문의 A·B·C(번호는 환경마다 다를 수 있다)
 print(round(ari(km3.labels_, ward3), 3), round(rand_score(km3.labels_, ward3), 3))  # 알고리즘 비교
 print(round(silhouette_score(Z, ward3), 3), round(ari(df["species"], ward3), 3))  # Ward의 실루엣, 종 일치도
 
@@ -355,7 +357,7 @@ print(np.round(np.quantile(boot, [0.05, 0.5]), 2))
 from sklearn.model_selection import KFold              # K 선택을 위한 5겹 교차검증
 for K in range(2, 7):
     s = []
-    for tr, te in KFold(5, shuffle=True, random_state=0).split(X):  # 둥지 단위: GroupKFold(5).split(X, groups=둥지 번호)
+    for tr, te in KFold(5, shuffle=True, random_state=0).split(X):  # 둥지 단위: GroupKFold(5).split(X, groups=df["nest"]), GroupKFold도 import
         sc = StandardScaler().fit(X[tr])                # 표준화 기준도 학습 겹에서만
         km = KMeans(K, n_init=20, random_state=0).fit(sc.transform(X[tr]))
         Zte = sc.transform(X[te])
@@ -363,7 +365,7 @@ for K in range(2, 7):
     print(K, round(np.mean(s), 3))
 ```
 
-연도로 나눈 점검, 전처리 비교, 둥지 번호(`nest`) 만들기는 [06b의 코드](./06b-pca#63-전처리-판단에-대한-안정성)와 같다.
+연도로 나누는 방법, 전처리 대안, 둥지 번호(`nest`) 만들기는 [06b의 코드](./06b-pca#63-전처리-판단에-대한-안정성)와 같다.
 다만 이 코드는 `reset_index`로 줄 번호를 새로 매기므로, 둥지 번호는 `dropna` 전에 원자료와 줄을 맞춰 붙인다.
 
 ```python
@@ -389,24 +391,28 @@ df = full.dropna(subset=cols).reset_index(drop=True)                # 이후 코
 BIC는 모형이 데이터에 얼마나 잘 맞는지와 모형이 얼마나 복잡한지를 함께 따지는 점수로, 후보로 놓은 군집 수 가운데 값이 가장 작은 것을 고른다.
 군집을 늘리면 데이터에는 더 잘 맞지만 복잡성 벌점도 커지므로, WSS와 달리 $K$를 늘린다고 계속 좋아지지 않는다.
 GMM에서는 군집마다 공분산 행렬([06b §2](./06b-pca#2-두-변수로-보는-주성분))이 타원의 기울기와 폭을 정한다.
-밀도 기반의 두 방법 가운데 DBSCAN은 반경 eps 안에 점이 `min_samples`개 이상 있으면 빽빽하다고 보므로 eps를 직접 정해야 한다.
-HDBSCAN은 여러 eps를 두루 살펴 그중 안정적으로 유지되는 군집을 고르므로 eps를 정하지 않고, 대신 군집의 최소 크기를 정한다.
+
+밀도 기반의 두 방법 가운데 DBSCAN은 반경 `eps` 안에 점이 `min_samples`개 이상 있으면 빽빽하다고 보므로 `eps`를 직접 정해야 한다.
+HDBSCAN은 여러 `eps`를 두루 살펴 그중 안정적으로 유지되는 군집을 고르므로 `eps`를 정하지 않고, 대신 군집의 최소 크기를 정한다.
 
 펭귄에 적용하면 두 방법이 서로 다른 답을 낸다.
 공분산에 제한을 두지 않은 GMM은 BIC가 $K = 3$에서 가장 낮았고, 종 라벨과의 ARI가 0.96으로 K-means의 0.79보다 훨씬 높았다.
 Adelie 151마리 중 149마리가 한 군집에 들어가, §6에서 K-means가 Chinstrap 쪽으로 넘긴 큰 Adelie 수컷들도 대부분 Adelie 쪽에 남았다.
 종마다 기울어진 타원 모양인 점구름을 둥근 덩어리로 억지로 나누지 않은 결과로 볼 수 있다.
-한편 HDBSCAN은 최소 군집 크기를 5부터 30까지 바꿔도(밀도를 재는 `min_samples`는 기본값이라 최소 군집 크기를 따라 함께 바뀐다) Gentoo와 나머지 두 종, 두 군집만 찾았다.
+한편 HDBSCAN은 최소 군집 크기를 5부터 30까지 바꿔도(밀도를 재는 `min_samples`를 따로 주지 않으면 최소 군집 크기와 같은 값을 쓴다) Gentoo와 나머지 두 종, 두 군집만 찾았다.
 이 전처리와 설정에서는 Adelie와 Chinstrap이 하나로 이어진 밀도 덩어리로 보인 셈이다.
 §5의 실루엣 점수가 $K = 2$를 고른 것과 같은 이야기다.
 
 방법을 바꿔도 판단은 따라오고, 점검도 똑같이 필요하다.
 GMM의 공분산을 각 군집 안에서 변수끼리 독립이라고 보는 꼴(대각 행렬)로 제한하면 $K = 3$에서 종 라벨과의 ARI가 0.62로 떨어지고, $K$를 2부터 5까지 비교한 BIC는 $K = 5$를 고른다.
 GMM도 K-means처럼 초기값에 따라 다른 해에서 멈출 수 있어 여러 번 실행해야 하고, scikit-learn의 기본값은 한 번이라 `n_init`을 직접 지정한다.
-DBSCAN(`min_samples=5`)은 eps를 0.5에서 0.8로 바꾸는 사이에 군집 4개와 잡음 69마리에서 군집 2개와 잡음 5마리로 결과가 크게 바뀌었다.
+DBSCAN(`min_samples=5`)은 `eps`를 0.5에서 0.8로 바꾸는 사이에 군집 4개와 잡음 69마리에서 군집 2개와 잡음 5마리로 결과가 크게 바뀌었다.
 어느 방법을 쓰든 §6의 PCS 점검을 그대로 한다.
 
 <Details summary="GMM·HDBSCAN·DBSCAN 코드">
+
+§6의 코드에 이어 실행한다.
+scikit-learn 1.9의 HDBSCAN은 `copy` 인자에 관한 경고를 내지만 결과에는 영향이 없다.
 
 ```python
 from sklearn.mixture import GaussianMixture
@@ -430,7 +436,7 @@ for eps in [0.5, 0.6, 0.7, 0.8]:                        # DBSCAN의 eps 민감�
 
 </Details>
 
-[^vds7]: Yu, B., & Barter, R. L. (2024). [Clustering](https://vdsbook.com/07-cluster). *Veridical Data Science*, MIT Press.
+[^vds7]: Yu, B., & Barter, R. L. (2024). [Clustering](https://vdsbook.com/07-cluster). *Veridical Data Science*. MIT Press.
 
 [^sklearn-gmm]: scikit-learn developers. (2026). [Gaussian mixture models](https://scikit-learn.org/1.9/modules/mixture.html). *scikit-learn 1.9 documentation*.
 
