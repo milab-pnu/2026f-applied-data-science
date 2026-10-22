@@ -8,23 +8,18 @@ import billSimpson from "./assets/06-bill-simpson.svg";
 import billStability from "./assets/06-bill-stability.svg";
 import billSex from "./assets/06-bill-sex.svg";
 
-5주차에는 데이터를 분석할 수 있는 상태로 만들었다.
-이번 주에는 그 데이터를 들여다본다.
 탐색적 데이터 분석(exploratory data analysis, EDA)은 그림과 요약 통계로 데이터 속의 패턴, 추세, 관계를 찾는 일이다.
-모델을 세우기 전에 데이터가 무엇을 말하는지 먼저 보고, 우리가 세운 질문에 데이터가 답할 수 있는지 확인한다.
+모델링을 하기 전에 데이터가 무엇을 말하는지 먼저 보고, 우리가 세운 질문에 데이터가 답할 수 있는지 확인한다.
 
-EDA에는 함정이 하나 있다.
-그림을 많이 그리다 보면 우연히 생긴 패턴도 그럴듯해 보인다.
-그래서 이번 노트의 중심은 **탐색에서 찾은 결과를 남에게 보여 주기 전에 PCS로 검토하는 일**이다.
-PCS는 2주차에 배운 predictability, computability, stability의 세 원칙이다([02 §2](./02-team-and-problem-framing#2-답을-믿을-근거를-설계하기-pcs)).
+EDA를 하다보면 우연히 생긴 패턴도 그럴듯해 보인다.
+그래서 이번 노트의 핵심은 **탐색에서 찾은 결과를 남에게 보여 주기 전에 PCS로 검토하는 일**이다.
 기법은 짧게 정리하고, 한 가지 발견을 끝까지 따라가며 predictability와 stability를 직접 점검한 뒤, 검토를 거친 결론을 남에게 보여 줄 그림으로 다듬는 데까지 간다.
 
-**읽기 자료**: 교재 5장 [Exploratory Data Analysis](https://vdsbook.com/05-data_viz) 전체.[^vds5]
-교재는 장기기증 데이터로 탐색을 이어 가고, 이 노트는 Palmer Penguins로 같은 점검을 해 본다.
+**읽기 자료**: 교재 5장 [Exploratory Data Analysis](https://vdsbook.com/05-data_viz).[^vds5]
 
-## 1. 이번 주의 데이터
+## 1. 사용하는 데이터셋
 
-이 노트와 [06b의 PCA](./06b-pca), 7주차 군집화는 **Palmer Penguins** 데이터 하나로 진행한다.[^penguins]
+다음 주 군집화 수업까지 **Palmer Penguins** 데이터 하나로 진행한다.[^penguins]
 남극 파머 군도의 세 섬에서 2007–2009년에 번식하는 펭귄 세 종(Adelie, Chinstrap, Gentoo) 344마리를 측정한 자료다.
 원래는 Gorman 등이 암수의 몸 크기와 먹이 활동이 어떻게 다른지, 그 차이가 해마다 달라지는 서식 환경과 관련되는지 보려고 모았고, 여기서 쓰는 측정값은 그 자료의 일부다.[^gorman]
 공개 라이선스는 CC0이라 누구나 자유롭게 쓸 수 있다.
