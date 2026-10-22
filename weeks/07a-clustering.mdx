@@ -163,7 +163,7 @@ $s_i$가 1에 가까우면 자기 군집에 잘 들어가 있고, 0 근처면 �
 모든 관측의 평균이 그 군집 결과의 실루엣 점수다.
 예를 들어 평면 위의 네 점 (0, 0), (0, 1), (4, 0), (4, 1)을 왼쪽 둘과 오른쪽 둘로 묶으면, 점 (0, 0)의 $a_i = 1$이고 $b_i = (4 + \sqrt{17})/2 \approx 4.06$이라 $s_i = (4.06 - 1)/4.06 \approx 0.75$다.
 네 점이 대칭이라 평균도 0.75다.
-WSS와 달리 $K$를 늘린다고 저절로 좋아지지 않으므로(한 무리를 둘로 쪼개면 바로 옆의 반쪽이 가장 가까운 다른 군집이 되어 $b_i$가 작아지고 실루엣 점수가 떨어진다), 서로 다른 $K$를 비교하는 데 쓸 수 있다.
+WSS와 달리 $K$를 늘린다고 저절로 좋아지지 않으므로(한 무리를 둘로 쪼개면 $a_i$도 줄지만, 바로 옆 반쪽까지의 거리인 $b_i$가 더 크게 줄어 실루엣 점수가 떨어지기 쉽다), 서로 다른 $K$를 비교하는 데 쓸 수 있다.
 
 ### 4.3 Rand 지수와 ARI
 
@@ -357,7 +357,7 @@ print(np.round(np.quantile(boot, [0.05, 0.5]), 2))
 from sklearn.model_selection import KFold              # K 선택을 위한 5겹 교차검증
 for K in range(2, 7):
     s = []
-    for tr, te in KFold(5, shuffle=True, random_state=0).split(X):  # 둥지 단위: GroupKFold(5).split(X, groups=df["nest"]), GroupKFold도 import
+    for tr, te in KFold(5, shuffle=True, random_state=0).split(X):  # 둥지 단위: 아래 코드로 nest를 붙인 뒤 GroupKFold(5).split(X, groups=df["nest"]), GroupKFold도 import
         sc = StandardScaler().fit(X[tr])                # 표준화 기준도 학습 겹에서만
         km = KMeans(K, n_init=20, random_state=0).fit(sc.transform(X[tr]))
         Zte = sc.transform(X[te])
@@ -436,7 +436,7 @@ for eps in [0.5, 0.6, 0.7, 0.8]:                        # DBSCAN의 eps 민감�
 
 </Details>
 
-[^vds7]: Yu, B., & Barter, R. L. (2024). [Clustering](https://vdsbook.com/07-cluster). *Veridical Data Science*. MIT Press.
+[^vds7]: Yu, B., & Barter, R. L. (2024). [Clustering](https://vdsbook.com/07-cluster). *Veridical Data Science*, MIT Press.
 
 [^sklearn-gmm]: scikit-learn developers. (2026). [Gaussian mixture models](https://scikit-learn.org/1.9/modules/mixture.html). *scikit-learn 1.9 documentation*.
 

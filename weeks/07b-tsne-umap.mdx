@@ -83,10 +83,10 @@ $\sigma_i$는 관측마다 따로 정한다.
 주변이 빽빽한 관측은 $\sigma_i$를 작게, 듬성듬성한 관측은 크게 잡아서, 어느 관측이든 "대략 몇 개의 이웃"을 보도록 맞춘다.
 이 개수를 정하는 하이퍼파라미터가 **perplexity**다.
 정확히는 확률 분포 $p_{\cdot|i}$의 엔트로피(entropy) $H = -\sum_j p_{j|i} \log_2 p_{j|i}$로 $2^H$를 계산한 값이다.
-t-SNE는 관측마다 $\sigma_i$를 조절해 이 값이 사용자가 정한 perplexity와 같아지게 한다.
 엔트로피는 확률이 여러 이웃에 고르게 퍼져 있을수록 크다.
 두 이웃에 0.5씩 주면 $H = 1$이라 perplexity는 2이고, 일반적으로 이웃 $k$개에 $1/k$씩 똑같이 나눠 주면 $H = \log_2 k$라서 perplexity가 정확히 $k$가 된다.
 그래서 perplexity 30은 "이웃을 30개쯤 본다"로 읽으면 된다.
+t-SNE는 관측마다 $\sigma_i$를 조절해 이 값이 사용자가 정한 perplexity와 같아지게 한다.
 원논문은 5–50 사이를 흔한 값으로 들었고, scikit-learn의 기본값은 30이다.[^sklearn-tsne]
 
 $\sigma_i$가 관측마다 달라 $p_{j|i}$와 $p_{i|j}$는 다르다.
@@ -104,7 +104,7 @@ $$
 10차원 공간에는 서로 같은 거리에 있는 점 11개를 놓을 수 있지만, 2차원 평면에는 3개까지만 놓을 수 있다.
 원래 공간에서 "적당히 먼" 관측들을 지도에 다 담을 자리가 모자라는 이 문제를 원논문은 crowding problem이라고 불렀다.
 꼬리가 두꺼운 분포에서는 지도 위 거리가 꽤 멀어도 이웃 확률이 천천히 줄어든다.
-예를 들어 정규분포 꼴로 거리 3에서의 값 $e^{-3^2/2} \approx 0.011$을 t 분포 꼴 $1/(1 + d^2)$로 내려면 $d \approx 9.4$까지 떨어져야 한다.
+예를 들어 정규분포 꼴 $e^{-d^2/2}$은 거리 3에서 0.011인데, t 분포 꼴 $1/(1 + d^2)$이 같은 값이 되려면 거리가 9.4쯤 되어야 한다.
 그래서 원래 공간에서 적당히 먼 관측을 지도에서는 훨씬 멀리 놓아도 확률이 맞춰지고, 무리 사이에 넓은 여백이 생긴다.
 t-SNE 지도의 섬들이 또렷하게 떨어져 보이는 이유가 여기에 있다.
 
@@ -121,7 +121,7 @@ $$
 원래 이웃이던 쌍($p_{ij} = 0.01$)을 지도에서 떼어 놓으면($q_{ij} = 0.001$) 그 쌍의 항만으로 $0.01 \times \ln 10 \approx 0.023$이 비용에 더해진다.
 반대로 원래 멀던 쌍은 $p_{ij}$가 작아서, 지도에서 붙여 놓아도 그 쌍의 항이 비용을 늘리지 않는다.
 이때 생기는 손해는 $q$의 합이 1로 정해져 있어 이 쌍에 확률이 몰린 만큼 다른 쌍의 $q$가 줄어드는 데서 간접적으로만 생긴다.
-원논문도 t-SNE의 바탕인 SNE의 비용에 대해, 가까운 데이터를 멀리 떨어진 지도 점으로 나타내면 비용이 크고, 먼 데이터를 가까운 지도 점으로 나타내면 이렇게 확률을 낭비하는 작은 비용만 든다고 설명한다(원논문 §2).
+원논문도 t-SNE의 바탕인 SNE(stochastic neighbor embedding)의 비용에 대해, 가까운 데이터를 멀리 떨어진 지도 점으로 나타내면 비용이 크고, 먼 데이터를 가까운 지도 점으로 나타내면 이렇게 확률을 낭비하는 작은 비용만 든다고 설명한다(원논문 §2).
 그래서 t-SNE는 국소 구조(local structure)를 지키는 데 집중하고 무리 사이의 배치는 덜 신경 쓴다.
 
 이 비용에는 더 내려갈 곳이 없어 보이는 골짜기가 여럿 있어서(비용 함수가 볼록하지 않아서), K-means처럼 출발점에 따라 다른 지도에서 멈출 수 있다.
@@ -181,7 +181,7 @@ t-SNE가 PCA와 비슷하게 높은 것은 PCA 좌표에서 출발했기 때문�
 
 **구조가 없어도 무리가 보인다.**
 64차원 표준정규분포에서 점 1,797개를 뽑았다.
-이 데이터에는 무리가 없고, 실제로 원래 공간에서 [07a §7](./07a-clustering#7-다른-군집화-방법)의 밀도 기반 군집화 HDBSCAN(hierarchical DBSCAN)을 최소 군집 크기 20으로 돌리면 모든 점이 잡음으로 남는다.
+이 데이터에는 무리가 없고, 실제로 원래 공간에서 [07a §7](./07a-clustering#7-다른-군집화-방법)의 밀도 기반 군집화 HDBSCAN(hierarchical density-based spatial clustering of applications with noise)을 최소 군집 크기 20으로 돌리면 모든 점이 잡음으로 남는다.
 그런데 효과를 크게 보이려고 perplexity를 아주 작은 2로 둔 t-SNE 지도에 같은 HDBSCAN을 돌리면 군집 3개가 잡힌다(아래 그림 (b)).
 perplexity 30에서도 2개가 잡혔다.
 지도는 이웃을 지키려다 우연히 조금 더 가까운 점들을 뭉쳐 놓고, 지도 위의 밀도도 고르지 않게 만든다.
@@ -227,7 +227,7 @@ umap-learn 문서도 더 큰 손글씨 데이터(MNIST)에서 원래 공간의 K
 그러나 §5의 잡음 실험에서 보았듯, 지도는 없는 무리도 만들 수 있다.
 같은 문서도 UMAP이 밀도를 완전히 보존하지 않고 군집 안에 실제로는 없는 틈을 만들 수 있어 조심해서 써야 한다고 적는다.
 군집화용으로는 `n_neighbors`를 키우고 `min_dist`를 아주 작게(예제에서는 0) 두라고 권한다.[^umap-clustering]
-이 노트는 기본값(`n_neighbors` 15, `min_dist` 0.1)에서 출발해 §6-2에서 설정을 바꿔 본다.
+이 노트는 기본값(`n_neighbors` 15, `min_dist` 0.1)에서 출발해 §6-2에서 `n_neighbors`를 바꿔 본다(`min_dist`는 0.1로 둔다).
 지도 위의 군집은 07a의 군집보다 더 꼼꼼히 PCS로 검토해야 한다.
 
 ### 6.1 Predictability
@@ -385,7 +385,7 @@ print(round(ari(ytr, km.labels_), 2), round(ari(yte, km.predict(mapper.transform
 06b의 PCA와 이 노트의 t-SNE·UMAP을 애니메이션으로 이어서 정리한 영상이다.
 
 <Video src="https://www.youtube.com/watch?v=o_cAOa5fMhE"
-  caption="Deepia, Latent Space Visualisation: PCA, t-SNE, UMAP (2024). PCA는 0:36, t-SNE는 5:15, UMAP은 13:30부터 다룬다(영어, 약 19분)." />
+  caption="Deepia, Latent Space Visualisation: PCA, t-SNE, UMAP | Deep Learning Animated (2024). PCA는 0:36, t-SNE는 5:15, UMAP은 13:30부터 다룬다(영어, 약 19분)." />
 
 [^vds6]: Yu, B., & Barter, R. L. (2024). [Principal Component Analysis](https://vdsbook.com/06-pca). *Veridical Data Science*, MIT Press.
 
