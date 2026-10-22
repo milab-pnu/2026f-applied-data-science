@@ -1,36 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="종 안에서 부리 길이와 깊이의 관계: 암수를 합칠 때와 나눌 때">
 <title>종 안에서 부리 길이와 깊이의 관계: 암수를 합칠 때와 나눌 때</title>
 <rect width="720" height="420" fill="#ffffff"/>
-<text x="20.0" y="26.0" font-size="16" fill="#0f172a" text-anchor="start" font-weight="600">부리가 길수록 깊다는 관계의 상당 부분은 암수의 몸집 차이에서 온다</text>
+<text x="20.0" y="26.0" font-size="19.2" fill="#0f172a" text-anchor="start" font-weight="600">부리가 길수록 깊다는 관계의 상당 부분은 암수의 몸집 차이에서 온다</text>
 <circle cx="25" cy="47" r="4" fill="#8b5cf6"/>
-<text x="34.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">암컷</text>
+<text x="34.0" y="52.0" font-size="16.8" fill="#0f172a" text-anchor="start">암컷</text>
 <circle cx="90" cy="47" r="4" fill="#334155"/>
-<text x="99.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">수컷</text>
+<text x="99.0" y="52.0" font-size="16.8" fill="#0f172a" text-anchor="start">수컷</text>
 <line x1="155" x2="180" y1="47" y2="47" stroke="#64748b" stroke-width="2" stroke-dasharray="5 4"/>
-<text x="186.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">암수를 합친 추세선</text>
-<text x="345.0" y="52.0" font-size="14" fill="#0f172a" text-anchor="start">실선: 같은 성별 안의 추세선</text>
+<text x="186.0" y="52.0" font-size="16.8" fill="#0f172a" text-anchor="start">암수를 합친 추세선</text>
+<text x="345.0" y="52.0" font-size="16.8" fill="#0f172a" text-anchor="start">실선: 같은 성별 안의 추세선</text>
 <line x1="72" x2="258" y1="320.0" y2="320.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="66.0" y="324.0" font-size="13" fill="#64748b" text-anchor="end">15</text>
+<text x="66.0" y="324.0" font-size="15.6" fill="#64748b" text-anchor="end">15</text>
 <line x1="72" x2="258" y1="286.3" y2="286.3" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="72" x2="258" y1="252.6" y2="252.6" stroke="#e2e8f0" stroke-width="1"/>
-<text x="66.0" y="256.6" font-size="13" fill="#64748b" text-anchor="end">17</text>
+<text x="66.0" y="256.6" font-size="15.6" fill="#64748b" text-anchor="end">17</text>
 <line x1="72" x2="258" y1="218.9" y2="218.9" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="72" x2="258" y1="185.1" y2="185.1" stroke="#e2e8f0" stroke-width="1"/>
-<text x="66.0" y="189.1" font-size="13" fill="#64748b" text-anchor="end">19</text>
+<text x="66.0" y="189.1" font-size="15.6" fill="#64748b" text-anchor="end">19</text>
 <line x1="72" x2="258" y1="151.4" y2="151.4" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="72" x2="258" y1="117.7" y2="117.7" stroke="#e2e8f0" stroke-width="1"/>
-<text x="66.0" y="121.7" font-size="13" fill="#64748b" text-anchor="end">21</text>
+<text x="66.0" y="121.7" font-size="15.6" fill="#64748b" text-anchor="end">21</text>
 <line x1="72" x2="258" y1="84.0" y2="84.0" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="72.0" x2="72.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="72.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">30</text>
+<text x="72.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">30</text>
 <line x1="118.5" x2="118.5" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="118.5" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">35</text>
+<text x="118.5" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">35</text>
 <line x1="165.0" x2="165.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="165.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">40</text>
+<text x="165.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">40</text>
 <line x1="211.5" x2="211.5" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="211.5" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">45</text>
+<text x="211.5" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">45</text>
 <line x1="258.0" x2="258.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="258.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">50</text>
+<text x="258.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">50</text>
 <line x1="72" x2="258" y1="320" y2="320" stroke="#64748b" stroke-width="1"/>
 <circle cx="160.3" cy="239.1" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
 <circle cx="167.8" cy="218.9" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
@@ -181,31 +181,31 @@
 <line x1="91.5" x2="185.5" y1="244.6" y2="219.2" stroke="#8b5cf6" stroke-width="2.5"/>
 <line x1="114.8" x2="220.8" y1="179.4" y2="185.9" stroke="#334155" stroke-width="2.5"/>
 <line x1="91.5" x2="220.8" y1="247.5" y2="163.7" stroke="#64748b" stroke-width="2" stroke-dasharray="5 4"/>
-<text x="72.0" y="78.0" font-size="15" fill="#0f172a" text-anchor="start" font-weight="600">Adelie</text>
-<text x="76.0" y="382.0" font-size="13" fill="#0f172a" text-anchor="start">합쳐서 r = 0.39</text>
-<text x="76.0" y="400.0" font-size="13" fill="#0f172a" text-anchor="start">암 0.16 · 수 −0.04</text>
+<text x="72.0" y="78.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="600">Adelie</text>
+<text x="76.0" y="382.0" font-size="15.6" fill="#0f172a" text-anchor="start">합쳐서 r = 0.39</text>
+<text x="76.0" y="400.0" font-size="15.6" fill="#0f172a" text-anchor="start">암 0.16 · 수 −0.04</text>
 <line x1="298" x2="484" y1="320.0" y2="320.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="292.0" y="324.0" font-size="13" fill="#64748b" text-anchor="end">15</text>
+<text x="292.0" y="324.0" font-size="15.6" fill="#64748b" text-anchor="end">15</text>
 <line x1="298" x2="484" y1="286.3" y2="286.3" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="298" x2="484" y1="252.6" y2="252.6" stroke="#e2e8f0" stroke-width="1"/>
-<text x="292.0" y="256.6" font-size="13" fill="#64748b" text-anchor="end">17</text>
+<text x="292.0" y="256.6" font-size="15.6" fill="#64748b" text-anchor="end">17</text>
 <line x1="298" x2="484" y1="218.9" y2="218.9" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="298" x2="484" y1="185.1" y2="185.1" stroke="#e2e8f0" stroke-width="1"/>
-<text x="292.0" y="189.1" font-size="13" fill="#64748b" text-anchor="end">19</text>
+<text x="292.0" y="189.1" font-size="15.6" fill="#64748b" text-anchor="end">19</text>
 <line x1="298" x2="484" y1="151.4" y2="151.4" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="298" x2="484" y1="117.7" y2="117.7" stroke="#e2e8f0" stroke-width="1"/>
-<text x="292.0" y="121.7" font-size="13" fill="#64748b" text-anchor="end">21</text>
+<text x="292.0" y="121.7" font-size="15.6" fill="#64748b" text-anchor="end">21</text>
 <line x1="298" x2="484" y1="84.0" y2="84.0" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="298.0" x2="298.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="298.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">40</text>
+<text x="298.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">40</text>
 <line x1="344.5" x2="344.5" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="344.5" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">45</text>
+<text x="344.5" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">45</text>
 <line x1="391.0" x2="391.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="391.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">50</text>
+<text x="391.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">50</text>
 <line x1="437.5" x2="437.5" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="437.5" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">55</text>
+<text x="437.5" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">55</text>
 <line x1="484.0" x2="484.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="484.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">60</text>
+<text x="484.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">60</text>
 <line x1="298" x2="484" y1="320" y2="320" stroke="#64748b" stroke-width="1"/>
 <circle cx="358.4" cy="222.2" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
 <circle cx="348.2" cy="195.3" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
@@ -278,31 +278,31 @@
 <line x1="306.4" x2="465.4" y1="245.1" y2="207.9" stroke="#8b5cf6" stroke-width="2.5"/>
 <line x1="377.1" x2="444.9" y1="195.6" y2="142.2" stroke="#334155" stroke-width="2.5"/>
 <line x1="306.4" x2="465.4" y1="264.1" y2="136.0" stroke="#64748b" stroke-width="2" stroke-dasharray="5 4"/>
-<text x="298.0" y="78.0" font-size="15" fill="#0f172a" text-anchor="start" font-weight="600">Chinstrap</text>
-<text x="302.0" y="382.0" font-size="13" fill="#0f172a" text-anchor="start">합쳐서 r = 0.65</text>
-<text x="302.0" y="400.0" font-size="13" fill="#0f172a" text-anchor="start">암 0.26 · 수 0.45</text>
+<text x="298.0" y="78.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="600">Chinstrap</text>
+<text x="302.0" y="382.0" font-size="15.6" fill="#0f172a" text-anchor="start">합쳐서 r = 0.65</text>
+<text x="302.0" y="400.0" font-size="15.6" fill="#0f172a" text-anchor="start">암 0.26 · 수 0.45</text>
 <line x1="524" x2="710" y1="320.0" y2="320.0" stroke="#e2e8f0" stroke-width="1"/>
-<text x="518.0" y="324.0" font-size="13" fill="#64748b" text-anchor="end">12</text>
+<text x="518.0" y="324.0" font-size="15.6" fill="#64748b" text-anchor="end">12</text>
 <line x1="524" x2="710" y1="286.3" y2="286.3" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="524" x2="710" y1="252.6" y2="252.6" stroke="#e2e8f0" stroke-width="1"/>
-<text x="518.0" y="256.6" font-size="13" fill="#64748b" text-anchor="end">14</text>
+<text x="518.0" y="256.6" font-size="15.6" fill="#64748b" text-anchor="end">14</text>
 <line x1="524" x2="710" y1="218.9" y2="218.9" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="524" x2="710" y1="185.1" y2="185.1" stroke="#e2e8f0" stroke-width="1"/>
-<text x="518.0" y="189.1" font-size="13" fill="#64748b" text-anchor="end">16</text>
+<text x="518.0" y="189.1" font-size="15.6" fill="#64748b" text-anchor="end">16</text>
 <line x1="524" x2="710" y1="151.4" y2="151.4" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="524" x2="710" y1="117.7" y2="117.7" stroke="#e2e8f0" stroke-width="1"/>
-<text x="518.0" y="121.7" font-size="13" fill="#64748b" text-anchor="end">18</text>
+<text x="518.0" y="121.7" font-size="15.6" fill="#64748b" text-anchor="end">18</text>
 <line x1="524" x2="710" y1="84.0" y2="84.0" stroke="#e2e8f0" stroke-width="1"/>
 <line x1="524.0" x2="524.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="524.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">40</text>
+<text x="524.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">40</text>
 <line x1="570.5" x2="570.5" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="570.5" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">45</text>
+<text x="570.5" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">45</text>
 <line x1="617.0" x2="617.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="617.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">50</text>
+<text x="617.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">50</text>
 <line x1="663.5" x2="663.5" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="663.5" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">55</text>
+<text x="663.5" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">55</text>
 <line x1="710.0" x2="710.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
-<text x="710.0" y="338.0" font-size="13" fill="#64748b" text-anchor="middle">60</text>
+<text x="710.0" y="338.0" font-size="15.6" fill="#64748b" text-anchor="middle">60</text>
 <line x1="524" x2="710" y1="320" y2="320" stroke="#64748b" stroke-width="1"/>
 <circle cx="580.7" cy="279.5" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
 <circle cx="604.9" cy="249.2" r="3" fill="#8b5cf6" fill-opacity="0.55"/>
@@ -426,9 +426,9 @@
 <line x1="532.4" x2="621.6" y1="262.4" y2="225.7" stroke="#8b5cf6" stroke-width="2.5"/>
 <line x1="564.9" x2="706.3" y1="208.9" y2="166.1" stroke="#334155" stroke-width="2.5"/>
 <line x1="532.4" x2="706.3" y1="265.1" y2="135.9" stroke="#64748b" stroke-width="2" stroke-dasharray="5 4"/>
-<text x="524.0" y="78.0" font-size="15" fill="#0f172a" text-anchor="start" font-weight="600">Gentoo</text>
-<text x="528.0" y="382.0" font-size="13" fill="#0f172a" text-anchor="start">합쳐서 r = 0.64</text>
-<text x="528.0" y="400.0" font-size="13" fill="#0f172a" text-anchor="start">암 0.43 · 수 0.31</text>
-<text x="360.0" y="354.0" font-size="14" fill="#64748b" text-anchor="middle">부리 길이 (mm)</text>
-<text x="18.0" y="202.0" font-size="14" fill="#64748b" text-anchor="middle" transform="rotate(-90 18 202.0)">부리 깊이 (mm)</text>
+<text x="524.0" y="78.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="600">Gentoo</text>
+<text x="528.0" y="382.0" font-size="15.6" fill="#0f172a" text-anchor="start">합쳐서 r = 0.64</text>
+<text x="528.0" y="400.0" font-size="15.6" fill="#0f172a" text-anchor="start">암 0.43 · 수 0.31</text>
+<text x="360.0" y="354.0" font-size="16.8" fill="#64748b" text-anchor="middle">부리 길이 (mm)</text>
+<text x="18.0" y="202.0" font-size="16.8" fill="#64748b" text-anchor="middle" transform="rotate(-90 18 202.0)">부리 깊이 (mm)</text>
 </svg>

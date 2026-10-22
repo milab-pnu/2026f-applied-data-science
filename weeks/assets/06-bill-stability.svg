@@ -1,51 +1,51 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 346" width="720" height="346" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="종 안 상관계수의 안정성 점검: 연도, 성별 분리">
 <title>종 안 상관계수의 안정성 점검: 연도, 성별 분리</title>
 <rect width="720" height="346" fill="#ffffff"/>
-<text x="20" y="26" font-size="16" fill="#0f172a" text-anchor="start" font-weight="600">부리 길이와 깊이의 종 안 상관계수는 어떤 변화에 흔들리는가</text>
+<text x="20" y="26" font-size="19.2" fill="#0f172a" text-anchor="start" font-weight="600">부리 길이와 깊이의 종 안 상관계수는 어떤 변화에 흔들리는가</text>
 <circle cx="140" cy="52" r="5" fill="#2a78d6"/>
-<text x="150" y="57" font-size="14" fill="#0f172a" text-anchor="start">Adelie</text>
+<text x="150" y="57" font-size="16.8" fill="#0f172a" text-anchor="start">Adelie</text>
 <path d="M260,46 L266,57 L254,57 Z" fill="#eb6834"/>
-<text x="270" y="57" font-size="14" fill="#0f172a" text-anchor="start">Chinstrap</text>
+<text x="270" y="57" font-size="16.8" fill="#0f172a" text-anchor="start">Chinstrap</text>
 <rect x="375" y="47" width="10" height="10" fill="#1baf7a"/>
-<text x="390" y="57" font-size="14" fill="#0f172a" text-anchor="start">Gentoo</text>
+<text x="390" y="57" font-size="16.8" fill="#0f172a" text-anchor="start">Gentoo</text>
 <line x1="140.0" x2="140.0" y1="75" y2="285" stroke="#e2e8f0" stroke-width="1"/>
-<text x="140.0" y="303" font-size="14" fill="#64748b" text-anchor="middle">-0.2</text>
+<text x="140.0" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">−0.2</text>
 <line x1="231.7" x2="231.7" y1="75" y2="285" stroke="#94a3b8" stroke-width="2"/>
-<text x="231.7" y="303" font-size="14" fill="#64748b" text-anchor="middle">0.0</text>
+<text x="231.7" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">0.0</text>
 <line x1="323.3" x2="323.3" y1="75" y2="285" stroke="#e2e8f0" stroke-width="1"/>
-<text x="323.3" y="303" font-size="14" fill="#64748b" text-anchor="middle">0.2</text>
+<text x="323.3" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">0.2</text>
 <line x1="415.0" x2="415.0" y1="75" y2="285" stroke="#e2e8f0" stroke-width="1"/>
-<text x="415.0" y="303" font-size="14" fill="#64748b" text-anchor="middle">0.4</text>
+<text x="415.0" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">0.4</text>
 <line x1="506.7" x2="506.7" y1="75" y2="285" stroke="#e2e8f0" stroke-width="1"/>
-<text x="506.7" y="303" font-size="14" fill="#64748b" text-anchor="middle">0.6</text>
+<text x="506.7" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">0.6</text>
 <line x1="598.3" x2="598.3" y1="75" y2="285" stroke="#e2e8f0" stroke-width="1"/>
-<text x="598.3" y="303" font-size="14" fill="#64748b" text-anchor="middle">0.8</text>
+<text x="598.3" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">0.8</text>
 <line x1="690.0" x2="690.0" y1="75" y2="285" stroke="#e2e8f0" stroke-width="1"/>
-<text x="690.0" y="303" font-size="14" fill="#64748b" text-anchor="middle">1.0</text>
-<text x="415" y="323" font-size="15" fill="#64748b" text-anchor="middle">상관계수 r</text>
-<text x="126" y="97" font-size="14" fill="#0f172a" text-anchor="end">종별 전체</text>
+<text x="690.0" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">1.0</text>
+<text x="415" y="323" font-size="18" fill="#64748b" text-anchor="middle">상관계수 r</text>
+<text x="126" y="97" font-size="16.8" fill="#0f172a" text-anchor="end">종별 전체</text>
 <circle cx="411.1" cy="85" r="5" fill="#2a78d6"/>
 <path d="M531.2,86 L537.2,97 L525.2,97 Z" fill="#eb6834"/>
 <rect x="521.6" y="94" width="10" height="10" fill="#1baf7a"/>
 <line x1="20" x2="690" y1="109" y2="109" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="126" y="131" font-size="14" fill="#0f172a" text-anchor="end">2007년만</text>
+<text x="126" y="131" font-size="16.8" fill="#0f172a" text-anchor="end">2007년만</text>
 <circle cx="385.3" cy="119" r="5" fill="#2a78d6"/>
 <path d="M472.5,120 L478.5,131 L466.5,131 Z" fill="#eb6834"/>
 <rect x="559.4" y="128" width="10" height="10" fill="#1baf7a"/>
-<text x="126" y="165" font-size="14" fill="#0f172a" text-anchor="end">2008년만</text>
+<text x="126" y="165" font-size="16.8" fill="#0f172a" text-anchor="end">2008년만</text>
 <circle cx="432.9" cy="153" r="5" fill="#2a78d6"/>
 <path d="M636.7,154 L642.7,165 L630.7,165 Z" fill="#eb6834"/>
 <rect x="478.1" y="162" width="10" height="10" fill="#1baf7a"/>
-<text x="126" y="199" font-size="14" fill="#0f172a" text-anchor="end">2009년만</text>
+<text x="126" y="199" font-size="16.8" fill="#0f172a" text-anchor="end">2009년만</text>
 <circle cx="435.2" cy="187" r="5" fill="#2a78d6"/>
 <path d="M495.2,188 L501.2,199 L489.2,199 Z" fill="#eb6834"/>
 <rect x="518.8" y="196" width="10" height="10" fill="#1baf7a"/>
 <line x1="20" x2="690" y1="211" y2="211" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="126" y="233" font-size="14" fill="#0f172a" text-anchor="end">암컷만</text>
+<text x="126" y="233" font-size="16.8" fill="#0f172a" text-anchor="end">암컷만</text>
 <circle cx="305.3" cy="221" r="5" fill="#2a78d6"/>
 <path d="M349.1,222 L355.1,233 L343.1,233 Z" fill="#eb6834"/>
 <rect x="424.0" y="230" width="10" height="10" fill="#1baf7a"/>
-<text x="126" y="267" font-size="14" fill="#0f172a" text-anchor="end">수컷만</text>
+<text x="126" y="267" font-size="16.8" fill="#0f172a" text-anchor="end">수컷만</text>
 <circle cx="214.1" cy="255" r="5" fill="#2a78d6"/>
 <path d="M436.2,256 L442.2,267 L430.2,267 Z" fill="#eb6834"/>
 <rect x="367.3" y="264" width="10" height="10" fill="#1baf7a"/>
