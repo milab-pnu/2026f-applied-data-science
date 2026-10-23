@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 311" width="480" height="311" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="t-SNE 지도의 두 함정. 퍼짐이 10배 다른 두 무리가 같은 크기로 그려지고, 구조 없는 잡음에서도 군집이 잡힌다">
-<title>t-SNE 지도의 두 함정. 퍼짐이 10배 다른 두 무리가 같은 크기로 그려지고, 구조 없는 잡음에서도 군집이 잡힌다</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 311" width="480" height="311" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="t-SNE 지도의 두 함정. 퍼짐이 10배 다른 두 무리가 같은 크기로 그려지고, 구조 없는 무작위 점에서도 군집이 잡힌다">
+<title>t-SNE 지도의 두 함정. 퍼짐이 10배 다른 두 무리가 같은 크기로 그려지고, 구조 없는 무작위 점에서도 군집이 잡힌다</title>
 <rect width="480" height="311" fill="#ffffff"/>
 <rect x="8" y="32" width="225" height="225" fill="none" stroke="#e2e8f0" stroke-width="1"/>
 <text x="8" y="23" font-size="15" font-weight="600" fill="#0f172a">(a) 두 무리</text>
