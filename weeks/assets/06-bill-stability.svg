@@ -26,27 +26,27 @@
 <text x="126" y="97" font-size="16.8" fill="#0f172a" text-anchor="end">종별 전체</text>
 <circle cx="411.1" cy="85" r="5" fill="#2a78d6"/>
 <path d="M531.2,86 L537.2,97 L525.2,97 Z" fill="#eb6834"/>
-<rect x="521.6" y="94" width="10" height="10" fill="#1baf7a"/>
+<rect x="521.6" y="98" width="10" height="10" fill="#1baf7a"/>
 <line x1="20" x2="690" y1="109" y2="109" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
 <text x="126" y="131" font-size="16.8" fill="#0f172a" text-anchor="end">2007년만</text>
 <circle cx="385.3" cy="119" r="5" fill="#2a78d6"/>
 <path d="M472.5,120 L478.5,131 L466.5,131 Z" fill="#eb6834"/>
-<rect x="559.4" y="128" width="10" height="10" fill="#1baf7a"/>
+<rect x="559.4" y="132" width="10" height="10" fill="#1baf7a"/>
 <text x="126" y="165" font-size="16.8" fill="#0f172a" text-anchor="end">2008년만</text>
 <circle cx="432.9" cy="153" r="5" fill="#2a78d6"/>
 <path d="M636.7,154 L642.7,165 L630.7,165 Z" fill="#eb6834"/>
-<rect x="478.1" y="162" width="10" height="10" fill="#1baf7a"/>
+<rect x="478.1" y="166" width="10" height="10" fill="#1baf7a"/>
 <text x="126" y="199" font-size="16.8" fill="#0f172a" text-anchor="end">2009년만</text>
 <circle cx="435.2" cy="187" r="5" fill="#2a78d6"/>
 <path d="M495.2,188 L501.2,199 L489.2,199 Z" fill="#eb6834"/>
-<rect x="518.8" y="196" width="10" height="10" fill="#1baf7a"/>
+<rect x="518.8" y="200" width="10" height="10" fill="#1baf7a"/>
 <line x1="20" x2="690" y1="211" y2="211" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
 <text x="126" y="233" font-size="16.8" fill="#0f172a" text-anchor="end">암컷만</text>
 <circle cx="305.3" cy="221" r="5" fill="#2a78d6"/>
 <path d="M349.1,222 L355.1,233 L343.1,233 Z" fill="#eb6834"/>
-<rect x="424.0" y="230" width="10" height="10" fill="#1baf7a"/>
+<rect x="424.0" y="234" width="10" height="10" fill="#1baf7a"/>
 <text x="126" y="267" font-size="16.8" fill="#0f172a" text-anchor="end">수컷만</text>
 <circle cx="214.1" cy="255" r="5" fill="#2a78d6"/>
 <path d="M436.2,256 L442.2,267 L430.2,267 Z" fill="#eb6834"/>
-<rect x="367.3" y="264" width="10" height="10" fill="#1baf7a"/>
+<rect x="367.3" y="268" width="10" height="10" fill="#1baf7a"/>
 </svg>
