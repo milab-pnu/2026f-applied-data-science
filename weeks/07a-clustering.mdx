@@ -460,7 +460,7 @@ for K in range(2, 6):                                   # BIC로 K 고르기
     gmm = GaussianMixture(K, covariance_type="full", n_init=10, random_state=0).fit(Z)
     print(K, round(gmm.bic(Z), 1), round(ari(df["species"], gmm.predict(Z)), 3))
 gmm = GaussianMixture(3, covariance_type="diag", n_init=10, random_state=0).fit(Z)
-print(round(ari(df["species"], gmm.predict(Z)), 2))     # 공분산을 대각으로 제한: 0.62
+print(round(ari(df["species"], gmm.predict(Z)), 2))     # 변수끼리 독립인 꼴(대각 공분산)로 제한: 0.62
 
 for m in [5, 10, 15, 20, 30]:                           # HDBSCAN: -1은 잡음
     lab = HDBSCAN(min_cluster_size=m, copy=True).fit_predict(Z)
