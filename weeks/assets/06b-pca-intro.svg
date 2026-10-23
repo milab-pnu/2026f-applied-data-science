@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600" height="300" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="부리 길이·날개 길이·몸무게의 점구름과 세 주성분 축, 그리고 앞의 두 주성분 평면">
-<title>부리 길이·날개 길이·몸무게의 점구름과 세 주성분 축, 그리고 앞의 두 주성분 평면</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600" height="300" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="부리 길이·날개 길이·몸무게의 3차원 산점도와 세 주성분 축, 그리고 PC1–PC2 산점도">
+<title>부리 길이·날개 길이·몸무게의 3차원 산점도와 세 주성분 축, 그리고 PC1–PC2 산점도</title>
 <rect width="600" height="300" fill="#ffffff"/>
 
-<text x="16.0" y="38.0" font-size="15" fill="#0f172a" text-anchor="start" font-weight="600">(a) 세 변수의 점구름과 주성분 축 셋</text>
+<text x="16.0" y="38.0" font-size="15" fill="#0f172a" text-anchor="start" font-weight="600">(a) 세 변수의 3차원 산점도와 주성분 축 셋</text>
 <circle cx="263.4" cy="145.8" r="2.6" fill="#334155" fill-opacity="0.35"/>
 <circle cx="242.3" cy="158.4" r="2.6" fill="#334155" fill-opacity="0.35"/>
 <circle cx="243.9" cy="169.2" r="2.6" fill="#334155" fill-opacity="0.35"/>
@@ -377,7 +377,7 @@
 <rect x="348.0" y="50.0" width="240.0" height="192.0" fill="none" stroke="#e2e8f0" stroke-width="1"/>
 <text x="468.0" y="282.0" font-size="14" fill="#64748b" text-anchor="middle">PC1 (80.7%)</text>
 <text x="322.0" y="146.0" font-size="14" fill="#64748b" text-anchor="middle" transform="rotate(-90 322.0 146.0)">PC2 (15.1%)</text>
-<text x="348.0" y="38.0" font-size="15" fill="#0f172a" text-anchor="start" font-weight="600">(b) PC1–PC2 평면에 내린 점구름</text>
+<text x="348.0" y="38.0" font-size="15" fill="#0f172a" text-anchor="start" font-weight="600">(b) PC1–PC2 산점도</text>
 <circle cx="390.8" cy="148.4" r="2.6" fill="#334155" fill-opacity="0.35"/>
 <circle cx="400.1" cy="150.7" r="2.6" fill="#334155" fill-opacity="0.35"/>
 <circle cx="402.0" cy="142.8" r="2.6" fill="#334155" fill-opacity="0.35"/>
