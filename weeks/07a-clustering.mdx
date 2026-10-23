@@ -28,7 +28,7 @@ K-means나 계층적 군집은 군집 수를 정해 주면 언제나 그만큼�
 | 응집도(tightness) | 같은 군집 안의 관측끼리 가까운가 | 군집 내 제곱합 |
 | 분리도(distinctness) | 다른 군집의 관측과는 먼가 | 실루엣 점수 |
 | Predictability | 새 데이터에서도 같은 군집이 나타나고, 도메인 지식으로 의미가 있는가 | 다른 해의 데이터, 종 라벨과의 비교 |
-| Stability | 데이터·알고리즘·판단을 바꿔도 군집이 유지되는가 | 같은 관측이 같이 묶이는 정도를 재는 수정 Rand 지수(ARI) |
+| Stability | 데이터·알고리즘·판단을 바꿔도 군집이 유지되는가 | 같은 관측이 같이 묶이는 정도를 재는 수정 Rand 지수(adjusted Rand index, ARI) |
 
 앞의 두 성질은 지금 가진 데이터 하나로 계산된다.
 뒤의 두 성질은 새 데이터, 바뀐 판단, 도메인 지식에 비추어 봐야 알 수 있고, PCS의 P와 S에 해당한다.
@@ -77,11 +77,14 @@ $$
 
 <Figure
   src="https://vdsbook.com/Figures-External/clustering/linkage.png"
-  alt="같은 두 군집(위쪽 파란 점들과 아래쪽 보라 점들)을 세 번 그린 그림. (a) 단일 연결은 두 군집에서 가장 가까운 파란 점과 보라 점을 점선으로 잇고, (b) 평균 연결은 파란 점 하나와 보라 점 하나를 예로 이어 모든 쌍의 거리를 평균함을 나타내며, (c) 완전 연결은 가장 먼 두 점을 잇는다"
+  alt="같은 두 군집(위쪽 파란 점들과 아래쪽 보라 점들)을 세 번 그린 그림. (a) 단일 연결은 두 군집에서 가장 가까운 파란 점과 보라 점을 점선으로 잇고, (b) 평균 연결은 테두리를 친 두 군집 중심(실제 관측이 아님)을 점선으로 잇고, (c) 완전 연결은 가장 먼 두 점을 잇는다"
   caption="세 연결 방식이 재는 군집 사이의 거리."
-  source="Bin Yu·Rebecca L. Barter, Veridical Data Science (2024), Figure 7.5"
+  source="Bin Yu·Rebecca L. Barter, Veridical Data Science (2024), Figure 7.5 · © MIT Press · CC BY-NC-ND"
   wide
 />
+
+교재는 (b)처럼 두 군집 중심 사이의 거리를 평균 연결이라고 부른다.
+이 노트와 scikit-learn은 앞의 정의대로 모든 관측 쌍의 거리를 평균한 것을 평균 연결이라고 한다.
 
 수직선 위의 다섯 점 1, 2, 4, 7, 8에 단일 연결을 적용해 보자.
 처음에는 다섯 점이 각자 군집이고, 가장 가까운 두 군집을 차례로 합치면 다음과 같다.
@@ -133,7 +136,7 @@ $$
 이처럼 중심을 조금 옮겨서는 WSS가 더 줄지 않지만 가장 작은 값은 아닌 해를 **국소해**(local optimum)라고 한다.
 
 펭귄 데이터에서도 같은 일이 일어난다.
-$K = 3$ K-means를 출발점만 바꿔 가며 한 번씩 50번 실행하면, 가장 좋은 해와 같은 군집이 나온 것은 34–40%뿐이었다.
+$K = 3$ K-means를 출발점만 바꿔 가며 한 번씩 50번 실행하면, 가장 좋은 해와 같은 군집이 나온 것은 17번(34%)뿐이었다.
 이렇게 출발점만 바꿔 결과가 얼마나 달라지는지 보는 것이 알고리즘의 무작위성에 대한 stability 점검이다.
 실무에서는 출발점을 여러 번 바꿔 실행하고 WSS가 가장 작은 결과를 고른다.
 scikit-learn의 `KMeans`는 기본 설정에서 한 번만 실행하므로, 실행 횟수 `n_init`을 10처럼 직접 지정한다.
@@ -193,7 +196,7 @@ Rand 지수는 3/6 = 0.5다.
 
 Rand 지수는 아무렇게나 묶어도 꽤 높게 나온다.
 크기가 너무 치우치지 않은 군집이 여러 개면 대부분의 쌍은 어차피 따로 묶이기 때문이다.
-**수정 Rand 지수**(adjusted Rand index, ARI)는 무작위로 묶었을 때 기대되는 값을 빼고 다시 척도를 맞춘 것이다.
+**수정 Rand 지수**(ARI)는 무작위로 묶었을 때 기대되는 값을 빼고 다시 척도를 맞춘 것이다.
 1이면 완전히 같고, 0이면 무작위 수준이다.
 예를 들어 펭귄을 K-means와 Ward 계층적 군집으로 각각 세 군집으로 묶은 두 결과는 Rand 지수로는 0.90이지만 ARI로는 0.79다.
 
@@ -214,7 +217,7 @@ $K$를 고를 때는 실루엣 점수 같은 지표를 **교차검증**(cross-va
   src="https://vdsbook.com/Figures-External/clustering/cv.png"
   alt="세 겹 교차검증 도식. 데이터 막대를 세 번 그렸고, 차례마다 Fold 1, Fold 2, Fold 3 가운데 한 겹만 옅은 색으로 남겨 아래 화살표로 평가(Evaluate algorithm)에 쓰고, 나머지 짙은 두 겹은 위 화살표로 학습(Train algorithm)에 쓴다"
   caption="세 겹 교차검증에서 학습과 평가에 쓰는 겹."
-  source="Bin Yu·Rebecca L. Barter, Veridical Data Science (2024), Figure 7.23"
+  source="Bin Yu·Rebecca L. Barter, Veridical Data Science (2024), Figure 7.23 · © MIT Press · CC BY-NC-ND"
   wide
 />
 
@@ -228,7 +231,7 @@ $K$를 고를 때는 실루엣 점수 같은 지표를 **교차검증**(cross-va
 
 $K$를 2부터 6까지 바꿔 가며 K-means와 Ward 계층적 군집의 실루엣 점수, K-means의 교차검증 실루엣 점수, 종 라벨과의 ARI를 그리면 다음과 같다.
 
-<Figure src={chooseK.src} alt="두 개의 선 그래프. 왼쪽은 K에 따른 평균 실루엣 점수로 K = 2에서 0.53으로 가장 높고 K가 커질수록 낮아짐. 5겹 교차검증 실루엣 점수도 K = 2에서 가장 높음. 오른쪽은 종 라벨과의 ARI로 K = 3에서 가장 높고 Ward가 0.92, K-means가 0.79" caption="(a) 실루엣 점수는 K = 2에서 가장 높다. (b) 종 라벨과의 ARI는 K = 3에서 가장 높다." wide />
+<Figure src={chooseK.src} alt="두 개의 선 그래프. 왼쪽은 K에 따른 평균 실루엣 점수로 K = 2에서 0.53으로 가장 높고 K가 커질수록 낮아짐. 5겹 교차검증 실루엣 점수도 K = 2에서 가장 높음. 오른쪽은 종 라벨과의 ARI로 K = 3에서 가장 높고 Ward가 0.92, K-means가 0.79" caption="(a) 군집 수 K에 따른 실루엣 점수와 (b) 종 라벨과의 ARI." wide />
 
 실루엣 점수는 $K = 2$에서 0.53으로 가장 높고, 교차검증으로 계산해도 마찬가지다.
 $K = 2$의 군집은 Gentoo와 나머지 두 종이다.
@@ -263,7 +266,7 @@ Adelie 암컷 73마리는 모두 군집 A에 남았다.
 군집은 표준화한 네 변수 공간에서 묶었고, 주성분은 결과를 그림으로 보여 주는 데만 쓴다.
 세 군집을 06b의 첫째·둘째 주성분(PC1, PC2) 평면에 칠하면 다음과 같다.
 
-<Figure src={kmeansScores.src} alt="PC1–PC2 산점도에 K-means 세 군집을 색으로 표시. 오른쪽 군집 C는 Gentoo와 일치하고, 왼쪽에서 군집 A와 B의 경계가 종 경계보다 아래쪽으로 내려와 있음" caption="K-means(K = 3) 세 군집의 주성분 점수." />
+<Figure src={kmeansScores.src} alt="PC1–PC2 산점도에 K-means 세 군집을 색으로 표시. 오른쪽 군집 C는 Gentoo와 일치하고, 왼쪽의 군집 A(파란 원)와 B(주황 삼각형)는 대각선 하나로 갈림" caption="K-means(K = 3) 세 군집의 주성분 점수." />
 
 <Details summary="종으로 칠한 06b 그림 다시 보기">
 
@@ -271,7 +274,8 @@ Adelie 암컷 73마리는 모두 군집 A에 남았다.
 
 </Details>
 
-종으로 칠한 그림과 비교하면, 군집 A와 B의 경계는 종의 경계보다 아래쪽으로 내려와 있다.
+종으로 칠한 그림과 비교하면, K-means는 두 종이 섞인 영역을 대각선 하나로 곧게 잘랐다.
+그래서 Chinstrap 자리까지 올라가 있던 큰 Adelie는 군집 B로, 왼쪽 아래의 Chinstrap 몇 마리는 군집 A로 들어갔다.
 06b에서 몸집과 부리가 큰 Adelie 수컷은 이 PC1–PC2 평면에서 Chinstrap과 겹쳤다.
 두 종은 분산이 작은 셋째 주성분(PC3)을 PC1과 함께 볼 때에야 갈렸다.
 K-means는 군집 내 제곱합을 줄이도록 경계를 그으므로, 퍼짐이 큰 PC1과 PC2 방향의 차이를 따라 나누기 쉽다.
@@ -326,7 +330,7 @@ Ward는 Gentoo를 똑같이 묶었지만, Adelie 151마리를 모두 한 군집�
 Ward는 종 라벨과의 ARI가 0.92로 더 높지만, 그렇다고 Ward가 "정답"인 것은 아니다.
 **정답이 없는 문제라면 알고리즘에 따라 소속이 바뀌는 경계 부근의 펭귄에 대한 결론은 조심해야 한다.**
 
-**전처리 판단.** 로그 변환과 표준화 여부를 바꿔 같은 $K = 3$ K-means를 다시 돌렸다.
+**전처리 판단.** 로그 변환과 표준화 여부를 바꿔 같은 설정의 $K = 3$ K-means를 다시 돌렸다.
 
 | 판단 | 표준화한 결과와의 ARI | 종 라벨과의 ARI |
 |---|---|---|
@@ -378,6 +382,13 @@ for b in range(200):
     boot.append(ari(km3.labels_, fit.predict(sc.transform(X))))
 print(np.round(np.quantile(boot, [0.05, 0.5]), 2))           # 하위 5%, 중앙값
 
+print(np.mean([ari(km3.labels_, KMeans(3, n_init=1, random_state=s).fit(Z).labels_) == 1
+               for s in range(50)]))                     # 한 번씩 50번 실행: 0.34
+
+for name, A in [("로그 변환 후 표준화", StandardScaler().fit_transform(np.log(X))), ("단위 그대로", X)]:
+    lab = KMeans(3, n_init=50, random_state=0).fit_predict(A)  # 전처리 대안
+    print(name, round(ari(km3.labels_, lab), 2), round(ari(df["species"], lab), 2))
+
 # K 선택을 위한 5겹 교차검증
 for K in range(2, 7):
     s = []
@@ -389,7 +400,7 @@ for K in range(2, 7):
     print(K, round(np.mean(s), 3))
 ```
 
-연도로 나눈 점검, 전처리 대안, 둥지 단위 부트스트랩은 06b의 코드와 같은 방식이다.
+연도로 나눈 점검과 둥지 단위 부트스트랩은 06b의 코드와 같은 방식이다.
 다만 이 코드는 `reset_index`로 줄 번호를 새로 매기므로, 둥지 번호는 `dropna` 전에 원자료와 줄을 맞춰 붙여야 한다.
 
 </Details>

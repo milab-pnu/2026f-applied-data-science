@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 105" width="600" height="105" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="UMAP 지도에서 숫자 1이 나뉜 세 무리의 평균 이미지와 예시">
 <title>UMAP 지도에서 숫자 1이 나뉜 세 무리의 평균 이미지와 예시</title>
 <rect width="600" height="105" fill="#ffffff"/>
-<text x="14" y="20" font-size="15" font-weight="600" fill="#0f172a">(가) 97장</text>
+<text x="14" y="20" font-size="15" font-weight="600" fill="#0f172a">(a) 97장</text>
 <rect x="22.125" y="32" width="8.125" height="8.125" fill="#ffffff" stroke="#ffffff" stroke-width="0.3"/>
 <rect x="30.25" y="32" width="8.125" height="8.125" fill="#d9d9d9" stroke="#d9d9d9" stroke-width="0.3"/>
 <rect x="38.375" y="32" width="8.125" height="8.125" fill="#4b4b4b" stroke="#4b4b4b" stroke-width="0.3"/>
@@ -236,7 +236,7 @@
 <rect x="177" y="93" width="4" height="4" fill="#2c2c2c" stroke="#2c2c2c" stroke-width="0.3"/>
 <rect x="181" y="93" width="4" height="4" fill="#8e8e8e" stroke="#8e8e8e" stroke-width="0.3"/>
 <rect x="157" y="65" width="32" height="32" fill="none" stroke="#e2e8f0"/>
-<text x="212" y="20" font-size="15" font-weight="600" fill="#0f172a">(나) 55장</text>
+<text x="212" y="20" font-size="15" font-weight="600" fill="#0f172a">(b) 55장</text>
 <rect x="228.25" y="32" width="8.125" height="8.125" fill="#ffffff" stroke="#ffffff" stroke-width="0.3"/>
 <rect x="236.375" y="32" width="8.125" height="8.125" fill="#eaeaea" stroke="#eaeaea" stroke-width="0.3"/>
 <rect x="244.5" y="32" width="8.125" height="8.125" fill="#5f5f5f" stroke="#5f5f5f" stroke-width="0.3"/>
@@ -462,7 +462,7 @@
 <rect x="371" y="93" width="4" height="4" fill="#565656" stroke="#565656" stroke-width="0.3"/>
 <rect x="375" y="93" width="4" height="4" fill="#646464" stroke="#646464" stroke-width="0.3"/>
 <rect x="355" y="65" width="32" height="32" fill="none" stroke="#e2e8f0"/>
-<text x="410" y="20" font-size="15" font-weight="600" fill="#0f172a">(다) 27장</text>
+<text x="410" y="20" font-size="15" font-weight="600" fill="#0f172a">(c) 27장</text>
 <rect x="426.25" y="32" width="8.125" height="8.125" fill="#9f9f9f" stroke="#9f9f9f" stroke-width="0.3"/>
 <rect x="434.375" y="32" width="8.125" height="8.125" fill="#4d4d4d" stroke="#4d4d4d" stroke-width="0.3"/>
 <rect x="442.5" y="32" width="8.125" height="8.125" fill="#e5e5e5" stroke="#e5e5e5" stroke-width="0.3"/>
