@@ -23,7 +23,7 @@
 <line x1="690.0" x2="690.0" y1="75" y2="285" stroke="#e2e8f0" stroke-width="1"/>
 <text x="690.0" y="303" font-size="16.8" fill="#64748b" text-anchor="middle">1.0</text>
 <text x="415" y="323" font-size="18" fill="#64748b" text-anchor="middle">상관계수 r</text>
-<text x="126" y="97" font-size="16.8" fill="#0f172a" text-anchor="end">종별 전체</text>
+<text x="126" y="97" font-size="16.8" fill="#0f172a" text-anchor="end">종 전체</text>
 <circle cx="411.1" cy="85" r="5" fill="#2a78d6"/>
 <path d="M531.2,86 L537.2,97 L525.2,97 Z" fill="#eb6834"/>
 <rect x="521.6" y="98" width="10" height="10" fill="#1baf7a"/>

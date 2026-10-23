@@ -29,12 +29,12 @@ import pcaPc3 from "./assets/06b-pca-pc3.svg";
 
 PCA는 계산 자체는 정해져 있지만 그 앞에 판단이 많다.
 어떤 변수를 넣을지, 척도를 맞출지, 변환할지에 따라 결과가 크게 달라질 수 있다.
-이 노트는 부리 깊이까지 네 측정값을 모두 넣어 PCA를 직접 계산하고, 그 판단들이 결과를 얼마나 바꾸는지 PCS로 검토한다.
+이 노트는 부리 깊이까지 네 측정값을 모두 넣어 PCA를 직접 계산하고, 척도와 변환 판단이 결과를 얼마나 바꾸는지 PCS로 검토한다.
 
 **읽기 자료**: 교재 6장 [Principal Component Analysis](https://vdsbook.com/06-pca).[^vds6]
 
 <Video src="https://www.youtube.com/watch?v=FgakZw6K1QQ"
-  caption="StatQuest with Josh Starmer, StatQuest: Principal Component Analysis (PCA), Step-by-Step (2018). 두 변수 예에서 첫 주성분을 찾는 과정부터 적재값, 둘째 주성분, 스크리 그림, 변수가 셋일 때 두 주성분만 남겨 그리는 데까지 한 단계씩 짚는다(영어, 약 22분)." />
+  caption="StatQuest with Josh Starmer, StatQuest: Principal Component Analysis (PCA), Step-by-Step (2018). 두 변수 예에서 첫 주성분을 찾는 과정부터 둘째 주성분, 변수가 셋일 때 두 주성분만 남겨 그리는 데까지 한 단계씩 짚는다(영어, 약 22분)." />
 
 PCA 계산에는 행렬 곱과 고유벡터가 쓰인다.
 선형대수가 낯설다면 3Blue1Brown의 [Essence of linear algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) 시리즈 가운데 3장(선형 변환과 행렬)과 14장(고유벡터와 고유값)을 먼저 보면 좋다.
@@ -343,7 +343,7 @@ PC3은 스크리 그림의 팔꿈치 규칙대로라면 버리는 축이다.
 
 ## 6. PCS 검토
 
-PCA 결과는 넣을 변수와 척도 판단에 따라 달라지므로, 남에게 보이기 전에 PCS로 검토해야 한다.
+PCA 결과는 척도와 변환 같은 전처리 판단에 따라 달라지므로, 남에게 보이기 전에 PCS로 검토해야 한다.
 
 ### 6.1 Predictability
 
