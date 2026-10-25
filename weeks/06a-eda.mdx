@@ -24,7 +24,7 @@ EDA를 하다 보면 우연히 생긴 패턴도 그럴듯해 보인다.
 
 다음 주 군집화 수업까지 **Palmer Penguins** 데이터셋으로 진행한다.[^penguins]
 남극 파머 군도의 세 섬(Biscoe, Dream, Torgersen)에서 펭귄 세 종(Adelie, Chinstrap, Gentoo) 344마리를 측정한 자료이다.
-이 중 측정값이 빠진 펭귄은 2마리, 성별이 빠진 펭귄은 11마리다.
+이 중 측정값이 빠진 펭귄은 2마리다.
 종에 따라 측정값이 뚜렷이 갈려 시각화와 군집화를 연습하기 좋은 데이터셋이다.
 
 | 항목 | 내용 |
@@ -35,7 +35,6 @@ EDA를 하다 보면 우연히 생긴 패턴도 그럴듯해 보인다.
 | 규모 | 344마리. Adelie 152, Chinstrap 68, Gentoo 124 |
 
 부리 길이는 부리 윗면을 따라 깃털이 끝나는 곳에서 부리 끝까지 잰 길이이고, 부리 깊이는 부리의 위아래 두께다.
-원자료에서는 부리 윗면의 등줄기를 가리키는 조류학 용어를 써서 culmen length, culmen depth라고 부른다.
 
 <Figure
   src={penguinBill.src}
@@ -67,7 +66,7 @@ EDA에서는 종·성별에 따른 분포와 변수 사이의 관계를 보고, 
   src="https://vdsbook.com/Figures-External/eda/data_viz_simplified.png"
   alt="'무엇을 하고 싶은가?'에서 시작하는 흐름도. 변수 하나면 범주형은 막대그래프, 수치형은 히스토그램과 상자그림. 변수 둘이면 둘 다 수치형일 때 한쪽이 시간이면 선 그래프, 아니면 산점도이고, 수치형 하나와 범주형 하나면 집단별 상자그림과 막대그래프. 변수 여럿이면 모두 수치형일 때 히트맵, 수치형·시간·범주형이 하나씩이면 여러 선 그래프"
   caption="변수의 개수와 유형에 따라 고르는 그림."
-  source="Bin Yu·Rebecca L. Barter, Veridical Data Science (2024), Figure 5.1 · © MIT Press · CC BY-NC-ND"
+  source="Bin Yu·Rebecca L. Barter, Veridical Data Science (2024), Figure 5.1"
   wide
 />
 
