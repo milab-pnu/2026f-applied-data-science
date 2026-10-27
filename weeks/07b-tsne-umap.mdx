@@ -222,6 +222,55 @@ $$
 `min_dist`는 지도에서 점들이 얼마나 촘촘하게 모일 수 있는지에 영향을 준다.
 다만 두 점 사이에 반드시 지켜야 하는 최소 거리를 직접 지정하는 것은 아니다.
 
+<Details summary="UMAP의 연결 강도를 정하는 방법">
+
+**원래 공간의 연결 강도**
+
+UMAP은 데이터가 놓인 공간을 각 점의 가까운 주변에서는 비교적 평평하게 볼 수 있다고 생각한다.
+이런 국소적인 관계들을 이어 전체 구조를 나타내기 위해, 먼저 관측마다 가까운 이웃을 찾아 연결 강도를 정한다.[^umap]
+관측 $i$에서 이웃 $j$로 향하는 연결의 강도를 $u_{j|i}$라고 쓰면 다음과 같다.
+
+$$
+u_{j|i} = \exp\left(-\frac{\max(0, d(x_i,x_j)-\rho_i)}{\sigma_i}\right)
+$$
+
+$d(x_i,x_j)$는 원래 공간의 두 관측 사이의 거리다.
+umap-learn의 기본 설정에서 거리가 0보다 큰 이웃이 있다면, $\rho_i$는 그중 가장 가까운 이웃까지의 거리다.[^umap-api]
+같은 위치의 중복 관측이 없다면 가장 가까운 이웃까지의 거리다.
+$\sigma_i$는 주변 밀도에 맞춰 연결 강도가 줄어드는 속도를 정한다.
+거리가 $\rho_i$ 이하인 이웃의 강도는 1이고, 그보다 먼 이웃은 멀어질수록 강도가 작아진다.
+$\sigma_i$는 각 관측의 이웃 연결 강도를 더한 값이 $\log_2(\texttt{n\_neighbors})$에 가깝도록 찾는다.
+거리의 중복이나 수치 계산을 위한 하한 때문에 이 목표와 정확히 같지 않을 수도 있다.
+위 식은 $\sigma_i > 0$일 때의 표현이며, 구현에서는 $\sigma_i=0$인 경우 이웃의 강도를 1로 처리한다.
+이웃으로 선택되지 않은 관측에는 $u_{j|i}=0$을 준다.
+
+$i$에서 $j$를 보는 강도와 $j$에서 $i$를 보는 강도는 서로 다를 수 있다.
+UMAP의 기본 설정은 두 방향을 다음처럼 합쳐 대칭인 연결 강도 $w_{ij}$를 만든다.
+
+$$
+w_{ij} = u_{j|i} + u_{i|j} - u_{j|i}u_{i|j}
+$$
+
+예를 들어 두 방향의 강도가 0.5와 0.25이면, 두 점 사이의 연결 강도는 $0.5 + 0.25 - 0.5 \times 0.25 = 0.625$다.
+한쪽 방향에서만 이웃으로 선택되어도 다른 쪽의 값이 0으로 들어가 연결이 남을 수 있다.
+t-SNE의 $p_{ij}$와 달리 이 강도는 모든 쌍에 걸쳐 합이 1이 되도록 다시 나누지 않는다.
+
+**지도의 연결 강도**
+
+지도 위의 좌표를 $y_i$, $y_j$라고 하면 두 점의 연결 강도 $v_{ij}$는 다음과 같다.
+
+$$
+v_{ij} = \frac{1}{1 + a\lVert y_i-y_j\rVert^{2b}}
+$$
+
+양수 $a$와 $b$는 거리에서 연결 강도로 바꾸는 곡선의 모양을 정한다.
+기본적으로 `min_dist`와 `spread`에 맞춰 곡선을 근사해 구하며, 점 사이의 거리가 커질수록 $v_{ij}$는 작아진다.
+예를 들어 $a=b=1$이고 지도의 두 점 사이 거리가 2라면 연결 강도는 $1/(1+2^2)=0.2$다.
+이렇게 원래 공간에서 정한 $w_{ij}$는 고정하고, 지도의 점들을 움직여 $v_{ij}$를 바꾸면서 본문의 비용을 줄이는 방향으로 최적화한다.
+실제 구현에서 표본을 이용한다는 차이는 본문에서 설명했다.
+
+</Details>
+
 ## 5. 지도를 읽을 때의 함정
 
 t-SNE와 UMAP 지도는 보기 좋은 만큼 성급한 결론으로 이어지기 쉽다.
@@ -496,6 +545,8 @@ print(round(ari(y, HDBSCAN(min_cluster_size=20).fit_predict(umap.UMAP(random_sta
 [^tsne]: van der Maaten, L., & Hinton, G. (2008). [Visualizing Data using t-SNE](https://www.jmlr.org/papers/v9/vandermaaten08a.html). *Journal of Machine Learning Research*, 9(86), 2579–2605.
 
 [^umap]: McInnes, L., Healy, J., & Melville, J. (2018). [UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction](https://arxiv.org/abs/1802.03426). *arXiv preprint* arXiv:1802.03426.
+
+[^umap-api]: McInnes, L., et al. (n.d.). [umap.umap_ 소스 코드](https://umap-learn.readthedocs.io/en/latest/_modules/umap/umap_.html). *umap 0.5.8 documentation*.
 
 [^umap-clustering]: McInnes, L. (n.d.). [Using UMAP for Clustering](https://umap-learn.readthedocs.io/en/latest/clustering.html). *umap 0.5.8 documentation*.
 
