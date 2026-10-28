@@ -1,9 +1,9 @@
 # 데이터사이언스응용 — 과목별 작성 규칙
 
 공통 작성·검토 규칙은 [lecture-authoring.md](../../../milab-pnu/docs/lecture-authoring.md)를 따른다.
-아래는 이 과목에서 합의한 규칙이며 다른 과목에 적용하지 않는다. public repo에 둘 수 없는 합의는
-학기 폴더의 `AGENTS.md`(`pnu/lectures/2026-02/AGENTS.md`)에 있다.
-`AGENTS.md`가 정본이고 `CLAUDE.md`는 이를 가리키는 심볼릭 링크다.
+아래는 이 과목에서 합의한 규칙이며 다른 과목에 적용하지 않는다. public repo에 둘 수 없는 합의가 생기면
+학기 폴더의 `AGENTS.md`(`pnu/lectures/2026-02/AGENTS.md`)에 둔다.
+`AGENTS.md`가 정본이고 `CLAUDE.md`는 복사본이다. 정본을 수정하면 복사본도 갱신한다.
 
 - **교재는 vdsbook(Yu & Barter, *Veridical Data Science*)이고 노트는 교재의 다리다.** 해당 장을 지정 읽기로
   링크하고, 교재 사례(장기기증·FNDDS 등)는 근접 모방하지 않는다. 본문 사례는 Palmer Penguins(CC0)처럼
