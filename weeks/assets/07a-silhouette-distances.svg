@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 375" role="img">
+  <rect width="600" height="375" fill="white"/>
+  <g font-family="'Malgun Gothic', 'Noto Sans KR', sans-serif" fill="#172b40">
+    <text x="22" y="29" font-size="16">aᵢ: 같은 군집까지</text><text x="322" y="29" font-size="16">bᵢ: 다른 군집들과 비교</text>
+    <text x="22" y="53" font-size="14">군집 A의 다른 점까지의 거리</text><text x="322" y="53" font-size="14">B와 C 각각의 평균 거리를 비교</text>
+    <g fill="none" stroke-width="1.5" stroke-dasharray="5 4"><rect x="52" y="87" width="36" height="59" rx="10" stroke="#2563a5"/><rect x="152" y="87" width="36" height="59" rx="10" stroke="#c35a20"/><rect x="227" y="87" width="36" height="59" rx="10" stroke="#7b4a9b"/><rect x="332" y="87" width="36" height="59" rx="10" stroke="#2563a5"/><rect x="432" y="87" width="36" height="59" rx="10" stroke="#c35a20"/><rect x="507" y="87" width="36" height="59" rx="10" stroke="#7b4a9b"/></g>
+    <g font-size="14" text-anchor="middle"><text x="70" y="81" fill="#2563a5">A</text><text x="170" y="81" fill="#c35a20">B</text><text x="245" y="81" fill="#7b4a9b">C</text><text x="350" y="81" fill="#2563a5">A</text><text x="450" y="81" fill="#c35a20">B</text><text x="525" y="81" fill="#7b4a9b">C</text></g>
+    <line x1="70" y1="104" x2="70" y2="129" stroke="#176b45" stroke-width="2.5"/>
+    <g stroke-width="2" fill="none"><line x1="350" y1="104" x2="525" y2="104" stroke="#8292a4"/><line x1="350" y1="104" x2="525" y2="129" stroke="#8292a4"/><line x1="350" y1="104" x2="450" y2="104" stroke="#176b45"/><line x1="350" y1="104" x2="450" y2="129" stroke="#176b45"/></g>
+    <g fill="#2563a5"><circle cx="70" cy="104" r="6"/><circle cx="70" cy="129" r="6"/><circle cx="350" cy="104" r="6"/><circle cx="350" cy="129" r="6"/></g>
+    <g fill="#c35a20"><path d="M170 97 l7 13 h-14 Z"/><path d="M170 122 l7 13 h-14 Z"/><path d="M450 97 l7 13 h-14 Z"/><path d="M450 122 l7 13 h-14 Z"/></g>
+    <g fill="#7b4a9b"><path d="M245 97 l7 7 -7 7 -7 -7 Z"/><path d="M245 122 l7 7 -7 7 -7 -7 Z"/><path d="M525 97 l7 7 -7 7 -7 -7 Z"/><path d="M525 122 l7 7 -7 7 -7 -7 Z"/></g>
+    <g font-size="14"><text x="33" y="109" text-anchor="end">i</text><text x="313" y="109" text-anchor="end">i</text><text x="96" y="121" fill="#176b45">1</text></g>
+    <g font-size="14"><text x="22" y="177">A: (0, 0), (0, 1)</text><text x="22" y="200">B: (4, 0), (4, 1)</text><text x="22" y="223">C: (7, 0), (7, 1)</text><text x="322" y="177" fill="#176b45">B까지 평균: (4 + √17) / 2 ≈ 4.06</text><text x="322" y="200" fill="#657487">C까지 평균: (7 + √50) / 2 ≈ 7.04</text></g>
+    <g font-size="15"><text x="22" y="262" fill="#176b45">aᵢ = 1</text><text x="322" y="262" fill="#176b45">bᵢ = min(4.06, 7.04) ≈ 4.06</text><text x="22" y="311">i = (0, 0). 같은 군집에서는 자기 자신을 제외한다.</text><text x="22" y="338">다른 군집 중 평균 거리가 가장 작은 B를 고른다.</text></g>
+  </g>
+</svg>
