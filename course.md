@@ -29,10 +29,10 @@ weeks:
         url: "https://github.com/milab-pnu/2026f-applied-data-science/discussions/3"
       - label: "과제 제출 (금 19시 수업)"
         url: "https://github.com/milab-pnu/2026f-applied-data-science/discussions/4"
-  - { n: 9, topic: "Modeling Methodology 1" }
-  - { n: 10, topic: "Modeling Methodology 2" }
-  - { n: 11, topic: "Modeling Methodology 3" }
-  - { n: 12, topic: "Evaluation Methodology" }
+  - { n: 9, topic: "Methodology 1" }
+  - { n: 10, topic: "Methodology 2" }
+  - { n: 11, topic: "Methodology 3" }
+  - { n: 12, topic: "Methodology 4" }
   - { n: 13, topic: "Result Interpretation" }
   - { n: 14, topic: "Demo" }
   - { n: 15, topic: "Milestone 3 — Final Presentation and Report (Quiz 3)" }

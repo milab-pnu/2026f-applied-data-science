@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 315" role="img" aria-labelledby="title desc">
+<title id="title">한 관측의 SHAP 기여 합</title>
+<desc id="desc">기준 로그 오즈 -1에 날개 길이 1.2, 부리 깊이 -0.4, 나머지 0.2를 더해 예측 로그 오즈 0이 된다.</desc>
+<rect width="750" height="315" fill="#fff"/>
+<g font-family="sans-serif" text-anchor="middle"><text x="375" y="35" font-size="20" fill="#26394a">기준값과 변수 기여를 더해 모델 출력으로</text>
+<g font-size="19" fill="#26394a"><text x="77" y="97">기준값</text><text x="230" y="97">날개 길이</text><text x="375" y="97">부리 깊이</text><text x="520" y="97">나머지</text><text x="672" y="97">예측</text></g>
+<g font-size="25" font-weight="bold"><text x="77" y="148" fill="#26394a">-1.0</text><text x="230" y="148" fill="#b54831">+1.2</text><text x="375" y="148" fill="#1466a3">-0.4</text><text x="520" y="148" fill="#b54831">+0.2</text><text x="672" y="148" fill="#26394a">0.0</text></g>
+<g font-size="24" fill="#6b7e8c"><text x="153" y="148">+</text><text x="303" y="148">+</text><text x="447" y="148">+</text><text x="596" y="148">=</text></g>
+<path d="M80 188H670" stroke="#b7c4cc" stroke-width="2"/>
+<text x="375" y="227" font-size="19" fill="#26394a">단위: 양성의 로그 오즈</text><text x="375" y="263" font-size="19" fill="#26394a">예측 로그 오즈 0 → 양성 확률 0.50</text></g>
+</svg>

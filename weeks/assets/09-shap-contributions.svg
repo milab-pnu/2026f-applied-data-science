@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 245" width="720" height="245" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" role="img" aria-labelledby="title desc">
+<title id="title">선형 모델의 가상 SHAP 기여</title>
+<desc id="desc">기준값 4000에서 특성 1의 기여 100을 더해 4100이 되고 특성 2의 기여 마이너스 100을 더하면 예측값 4000이 된다.</desc>
+<rect width="720" height="245" fill="#fff"/>
+<text x="26" y="38" font-size="20" fill="#334155">기준값</text>
+<text x="26" y="98" font-size="20" fill="#334155">특성 1</text>
+<text x="26" y="158" font-size="20" fill="#334155">특성 2</text>
+<text x="26" y="218" font-size="20" fill="#334155">예측값</text>
+<line x1="270" y1="27" x2="610" y2="27" stroke="#cbd5e1" stroke-width="2"/>
+<line x1="270" y1="207" x2="610" y2="207" stroke="#cbd5e1" stroke-width="2"/>
+<line x1="370" y1="27" x2="370" y2="207" stroke="#94a3b8" stroke-dasharray="5 5"/>
+<line x1="520" y1="87" x2="520" y2="147" stroke="#94a3b8" stroke-dasharray="5 5"/>
+<circle cx="370" cy="27" r="7" fill="#334155"/>
+<path d="M370 87 H508" fill="none" stroke="#d15353" stroke-width="10"/>
+<path d="M520 87 l-17 -10 v20 z" fill="#d15353"/>
+<path d="M520 147 H382" fill="none" stroke="#3678ae" stroke-width="10"/>
+<path d="M370 147 l17 -10 v20 z" fill="#3678ae"/>
+<circle cx="370" cy="207" r="7" fill="#334155"/>
+<text x="392" y="33" font-size="20" fill="#334155">4,000</text>
+<text x="405" y="75" font-size="18" fill="#aa3838">+100</text>
+<text x="527" y="93" font-size="18" fill="#334155">4,100</text>
+<text x="405" y="135" font-size="18" fill="#285f8b">−100</text>
+<text x="392" y="213" font-size="20" fill="#334155">4,000</text>
+<text x="610" y="235" font-size="15" text-anchor="end" fill="#64748b">가상 수치 · 출력 단위</text>
+</svg>

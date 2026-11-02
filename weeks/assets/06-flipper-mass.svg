@@ -372,5 +372,5 @@
 <circle cx="348.5" cy="227.1" r="3.2" fill="#334155" fill-opacity="0.45"/>
 <line x1="108.5" x2="671.5" y1="292.8" y2="95.8" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 4"/>
 <text x="102" y="70" font-size="18" fill="#0f172a" text-anchor="start" font-weight="600">r = 0.871 (342마리)</text>
-<text x="102" y="90" font-size="15.6" fill="#334155" text-anchor="start">점선: 추세선. 날개가 1 mm 길면 몸무게가 평균 50 g 늘어난다</text>
+<text x="102" y="90" font-size="15.6" fill="#334155" text-anchor="start">점선: 선형 추세. 날개 길이 1 mm당 예측 몸무게 약 50 g 차이</text>
 </svg>
