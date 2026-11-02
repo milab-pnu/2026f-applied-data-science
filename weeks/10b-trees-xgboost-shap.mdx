@@ -134,6 +134,8 @@ XGBoost는 손실의 1차·2차 미분과 트리 복잡도에 대한 규제를 �
 
 ## 4. 트리 모델의 SHAP
 
+### 4.1 SHAP의 출력 척도
+
 9주차에 본 SHAP(SHapley Additive exPlanations)은 하나의 예측을 기준값과 변수별 기여의 합으로 표현한다.
 트리 앙상블에 맞춘 Tree SHAP은 정한 변수 의존성 가정 아래에서 이러한 기여를 계산한다.[^treeshap]
 이 값은 관측의 모델 출력을 설명하며 모델이 데이터에서 학습한 관계에 의존한다.
@@ -149,6 +151,8 @@ XGBoost는 손실의 1차·2차 미분과 트리 복잡도에 대한 규제를 �
 TreeExplainer의 기본 `raw` 출력은 모델마다 의미가 다르며 이진 XGBoost에서는 로그 오즈다.[^shapdocs]
 
 <Figure src={shapSum.src} alt="기준 로그 오즈 -1에 날개 길이 기여 1.2, 부리 깊이 기여 -0.4, 나머지 기여 0.2를 더해 로그 오즈 0과 확률 0.5를 얻는다" caption="한 관측의 가상 SHAP 설명. 더하는 값은 같은 출력 척도인 로그 오즈다." wide />
+
+### 4.2 개별 예측과 전체 분포
 
 waterfall 그림은 한 관측에서 기준값에 기여가 더해져 예측이 되는 과정을 보여 준다.
 beeswarm 그림은 여러 관측에 대해 변수마다 SHAP 값을 점으로 표시한다.
@@ -186,7 +190,7 @@ SHAP 값은 모델 예측에 대한 기여이지 개입의 인과효과가 아�
 설명할 클래스와 출력 척도, 배경 데이터와 설명 대상 표본을 기록하고 합이 모델 출력과 일치하는지 확인한다.
 </Callout>
 
-### 4.1 XGBoost와 SHAP
+### 4.3 XGBoost 예측 설명 예제
 
 9주차에서 SHAP 패키지로 선형 모델을 설명했듯이, 이번에는 같은 Palmer Penguins 공개 자료로 젠투 여부를 예측하는 XGBoost 모델을 설명한다.[^penguins]
 먼저 `python -m pip install xgboost shap scikit-learn pandas matplotlib`으로 필요한 패키지를 설치한다.
