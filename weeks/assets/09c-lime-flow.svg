@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 285" width="960" height="285" role="img" aria-labelledby="title desc">
+  <title id="title">LIME의 국소 설명 흐름</title>
+  <desc id="desc">리뷰에서 단어를 가린 여러 변형을 원래 모델에 넣어 점수를 얻고, 원본에 가까운 변형에 더 큰 가중치를 주어 단어별 계수로 설명한다.</desc>
+  <rect width="960" height="285" fill="#ffffff"/>
+  <g font-family="Arial, 'Malgun Gothic', sans-serif" fill="#172b4d">
+    <rect x="12" y="46" width="217" height="184" rx="12" fill="#edf4ff" stroke="#b4c9ec"/>
+    <text x="28" y="77" font-size="20" font-weight="700">1. 리뷰 변형</text>
+    <text x="28" y="112" font-size="16">연기는 좋았지만</text>
+    <text x="28" y="137" font-size="16">이야기는 지루했다</text>
+    <text x="28" y="173" font-size="16">연기는 좋았지만</text>
+    <text x="28" y="198" font-size="16">이야기는 □</text>
+    <path d="M238 137h37m-9-8 9 8-9 8" fill="none" stroke="#61728d" stroke-width="3"/>
+    <rect x="286" y="46" width="193" height="184" rx="12" fill="#f3f6fa" stroke="#c3cedd"/>
+    <text x="302" y="77" font-size="20" font-weight="700">2. 원래 모델</text>
+    <text x="302" y="115" font-size="16">각 리뷰를 입력하고</text>
+    <text x="302" y="142" font-size="16">긍정 점수를 얻는다</text>
+    <text x="302" y="194" font-size="15" fill="#51647e">모델의 예측 함수 f</text>
+    <path d="M489 137h37m-9-8 9 8-9 8" fill="none" stroke="#61728d" stroke-width="3"/>
+    <rect x="537" y="46" width="183" height="184" rx="12" fill="#fff6e5" stroke="#ead099"/>
+    <text x="553" y="77" font-size="20" font-weight="700">3. 가중치</text>
+    <text x="553" y="115" font-size="16">원본에 가까운</text>
+    <text x="553" y="142" font-size="16">변형을 더 반영</text>
+    <path d="M730 137h37m-9-8 9 8-9 8" fill="none" stroke="#61728d" stroke-width="3"/>
+    <rect x="778" y="46" width="170" height="184" rx="12" fill="#e9f7f0" stroke="#abd6c0"/>
+    <text x="794" y="77" font-size="20" font-weight="700">4. 설명 모델</text>
+    <text x="794" y="115" font-size="16">단어별 계수로</text>
+    <text x="794" y="142" font-size="16">점수를 근사</text>
+    <text x="794" y="194" font-size="15" fill="#51647e">국소 선형 모델 g</text>
+    <text x="12" y="263" font-size="15" fill="#51647e">□: 가린 단어 · 변형과 가중치는 설명할 원본 리뷰에 맞춰 정한다</text>
+  </g>
+</svg>
