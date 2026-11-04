@@ -172,9 +172,9 @@ GPT-4o의 '질문만'은 바로 확률을 묻고, '추론 지시'는 단계별�
 
 57개 중 '예'는 26%뿐이다.
 결과를 미리 알고 모든 질문에 0.26을 냈다면 Brier 점수는 0.194로, 항상 0.50을 내는 기준보다 엄격하다.
-GPT-4o(질문만)의 0.176은 이 값보다 조금 낮지만, 질문을 부트스트랩으로 다시 뽑은 차이의 95% 구간이 −0.086에서 0.049까지라 57개로는 우열을 가리기 어렵다.
+GPT-4o(질문만)의 0.176은 이 값보다 조금 낮지만, 같은 사건을 묻는 질문을 한 묶음으로 두고 부트스트랩으로 다시 뽑은 차이의 95% 구간이 −0.090에서 0.052까지라 57개로는 우열을 가리기 어렵다.
 추론 지시를 주면 0.157로 낮아졌고, 여기에 뉴스를 더해도 0.159로 거의 같았다.
-낮아진 몫은 뉴스보다 추론 지시 쪽에서 왔지만, 추론 지시의 효과(−0.019)도 95% 구간이 −0.051에서 0.012까지라 57개로는 확정할 수 없다.
+낮아진 몫은 뉴스보다 추론 지시 쪽에서 왔지만, 추론 지시의 효과(−0.019)도 95% 구간이 −0.050에서 0.013까지라 57개로는 확정할 수 없다.
 표의 차이에는 정보의 차이도 섞여 있다.
 사람은 7월 12일 질문 공개부터 마감일까지 예측을 고칠 수 있었고, 마감일인 7월 21일에 바이든이 사퇴하자 "바이든이 민주당 대선 후보가 될까?"에 슈퍼포캐스터 중앙값은 0.00을 냈지만 GPT-4o는 세 조건 모두 0.80–0.85를 냈다.
 
@@ -182,7 +182,9 @@ GPT-4o(질문만)의 0.176은 이 값보다 조금 낮지만, 질문을 부트�
 
 ForecastBench [자료 페이지](https://www.forecastbench.org/datasets/)의 processed_forecast_sets.tar.gz에서 2024-07-21 라운드 파일을 썼다.
 Manifold, Polymarket, Metaculus, INFER 질문 가운데 판정이 끝났고 대체값(imputed)이 아닌 예측만 남긴 뒤, 질문 식별자·출처·판정일·방향(direction)이 모두 같은 행끼리 결합했다.
-부트스트랩은 57개 질문을 복원추출로 10,000번 다시 뽑아 질문별 Brier 점수 차이의 평균을 구했다.
+질문 원문은 [question_sets](https://github.com/forecastingresearch/forecastbench-datasets/tree/main/datasets/question_sets)의 2024-07-21-human.json에서 가져왔다.
+대서양 폭풍 수의 네 구간, 2024년 기온 두 질문, 민주당 후보 지명 두 질문처럼 같은 사건을 묻는 질문은 결과가 함께 정해지므로 한 묶음으로 두어 57개를 49개 묶음으로 나눴다.
+부트스트랩은 이 묶음을 복원추출로 10,000번 다시 뽑아 질문별 Brier 점수 차이의 평균을 구했다.
 
 ```python
 import json, numpy as np, pandas as pd
@@ -207,8 +209,18 @@ for name in [*files, "market_value_on_due_date"]:
 rate = y.mean()  # 결과를 알고 모두에 낸 기준율
 print("기준율", round(rate, 2), round(np.mean((rate - y) ** 2), 3))
 
-def boot(d, rng):  # 질문별 Brier 차이의 평균과 95% 구간
-    m = [d[rng.integers(0, len(d), len(d))].mean() for _ in range(10000)]
+text = df.id.map({str(q["id"]): q["question"] for q in json.load(open("2024-07-21-human.json"))["questions"]})
+events = ["named storms", "temperature in 2024|hottest year", "Belichick", "James Bond",
+          "cat memecoin|POPCAT", "Democratic Nominee|Democratic presidential nomination"]
+group = np.arange(len(df))  # 질문마다 따로 두되
+for k, p in enumerate(events):  # 같은 사건을 묻는 질문은 한 묶음으로
+    group[text.str.contains(p).to_numpy()] = len(df) + k
+groups = [np.flatnonzero(group == g) for g in np.unique(group)]
+print(len(groups), "개 묶음")
+
+def boot(d, rng):  # 묶음을 복원추출해 질문별 Brier 차이의 평균과 95% 구간
+    pick = lambda: np.concatenate([groups[i] for i in rng.integers(0, len(groups), len(groups))])
+    m = [d[pick()].mean() for _ in range(10000)]
     return round(d.mean(), 3), np.percentile(m, [2.5, 97.5]).round(3)
 rng = np.random.default_rng(0)
 sq = lambda p: (np.asarray(p) - y) ** 2
