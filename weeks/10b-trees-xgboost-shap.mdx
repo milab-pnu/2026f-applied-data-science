@@ -192,7 +192,7 @@ XGBoost 분류기의 기본 출력은 §3.2의 로그 오즈 점수다.
 
 계산 방식도 기록해야 한다.
 트리 모델에는 트리 구조를 따라 Shapley value를 빠르게 정확히 계산하는 Tree SHAP이 있다.[^lundberg2020]
-배경 자료를 주면 가린 특성을 배경 펭귄의 값으로 바꿔 넣는 interventional 방식, 즉 [09c §2.3](/lecture/2026f-applied-data-science/09c-shapley-and-shap#23-가린-특성의-의미)의 독립형 대체로 계산한다.[^lundberg2020]
+배경 자료를 주면 가린 특성을 배경 펭귄의 값으로 바꿔 넣는 interventional 방식, 즉 [09c §2.2](/lecture/2026f-applied-data-science/09c-shapley-and-shap#22-가린-특성의-의미)의 독립형 대체로 계산한다.[^lundberg2020]
 배경을 주지 않으면 학습 때 각 분기로 내려간 훈련 펭귄의 비율로 가린 특성을 처리하는 `tree_path_dependent` 방식을 쓰며, 같은 펭귄이라도 기준값과 배분이 달라진다.[^treeshap]
 
 ### 4.3 개별 예측과 전체 분포
