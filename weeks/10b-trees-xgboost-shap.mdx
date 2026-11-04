@@ -105,7 +105,7 @@ scikit-learn은 트리들의 확률을 평균하므로, 세 트리가 0.7, 0.8, 
 관측 하나의 제곱 손실을 $L=(y-\hat y)^2/2$로 두면 $\partial L/\partial\hat y=-(y-\hat y)$이므로, 음의 그래디언트가 바로 잔차 $y-\hat y$다.
 잔차를 맞추는 트리는 곧 손실이 가장 빨리 줄어드는 방향을 맞추는 트리이고, 이렇게 보면 제곱 손실이 아닌 다른 손실에도 같은 방법을 쓸 수 있다.
 
-<Video src="https://www.youtube.com/watch?v=3CC4N4z3GJc" caption="StatQuest, Gradient Boost Part 1: Regression Main Ideas (2019). 평균에서 출발해 잔차를 맞추는 트리를 학습률만큼 더해 가는 과정을 그림으로 보여 준다." />
+<Video src="https://www.youtube.com/watch?v=3CC4N4z3GJc" caption="StatQuest, Gradient Boost Part 1: Regression Main Ideas (2019). 평균에서 출발해 잔차를 맞추는 트리를 학습률만큼 더해 가는 과정을 그림으로 보여 준다." start="5:50" end="13:50" />
 
 ### 3.2 분류에서의 부스팅
 
@@ -192,7 +192,7 @@ XGBoost 분류기의 기본 출력은 §3.2의 로그 오즈 점수다.
 배경 자료를 주면 가린 특성을 배경 펭귄의 값으로 바꿔 넣는 interventional 방식, 즉 [09c §2.3](/lecture/2026f-applied-data-science/09c-shapley-and-shap#23-가린-특성의-의미)의 독립형 대체로 계산한다.[^lundberg2020]
 배경을 주지 않으면 학습 때 각 분기로 내려간 훈련 펭귄의 비율로 가린 특성을 처리하는 `tree_path_dependent` 방식을 쓰며, 같은 펭귄이라도 기준값과 배분이 달라진다.[^treeshap]
 
-<Video src="https://www.youtube.com/watch?v=MQ6fFDwjuco" caption="A Data Odyssey, SHAP values for beginners (2023). waterfall 그림의 기준값·막대 읽는 법과, 분류 모델의 SHAP 값이 로그 오즈 단위라는 점(1:42–3:57), beeswarm 그림까지 짧게 정리한다." />
+<Video src="https://www.youtube.com/watch?v=MQ6fFDwjuco" caption="A Data Odyssey, SHAP values for beginners (2023). waterfall 그림의 기준값·막대 읽는 법과, 분류 모델의 SHAP 값이 로그 오즈 단위라는 점을 짧게 정리한다." start="1:42" end="3:57" />
 
 ### 4.3 개별 예측과 전체 분포
 
