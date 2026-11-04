@@ -198,7 +198,7 @@ data = pd.read_csv(url).dropna(subset=["species", *columns])
 X = data[columns]
 y = (data["species"] == "Chinstrap").astype(int)  # Chinstrap은 1, 나머지는 0
 
-# 테스트 20%는 떼어 두고, 양성 비율이 같도록 층화한다.
+# 테스트 20%는 떼어 두고, 양쪽의 양성 비율이 비슷하도록 층화한다.
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
