@@ -117,7 +117,7 @@ d = pd.read_csv(url).dropna(subset=cols + ["body_mass_g"])
 train, test = train_test_split(d, test_size=0.3, random_state=0)
 X, y = train[cols], train["body_mass_g"]  # 종은 문자열 그대로
 
-model = TabPFNRegressor.create_default_for_version(ModelVersion.V2, random_state=0)
+model = TabPFNRegressor.create_default_for_version(ModelVersion.V2, random_state=0, device="cpu")
 cv = KFold(5, shuffle=True, random_state=0)
 mae = -cross_val_score(model, X, y, cv=cv, scoring="neg_mean_absolute_error")
 print(mae.round(0), mae.mean().round(1))  # 폴드별 MAE와 평균

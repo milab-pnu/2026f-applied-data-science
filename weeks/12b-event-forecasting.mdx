@@ -155,7 +155,7 @@ Brier 점수는 자기가 믿는 확률을 그대로 내는 것이 가장 유리
 ForecastBench의 2024년 7월 21일 라운드에서는 사람과 LLM이 같은 질문에 같은 마감일까지 확률을 냈다.[^forecastbench-data]
 사람 예측이 함께 있고 판정이 끝난 질문이 많은 편인 라운드라 이 라운드를 골랐고, LLM은 당시 널리 쓰인 GPT-4o를 중심으로 본다.
 **슈퍼포캐스터**(superforecaster)는 예측 성적이 꾸준히 좋았던 사람들이고, 사람 쪽은 질문마다 중앙값을 쓴다.[^forecastbench]
-GPT-4o의 '질문만'은 바로 확률을 묻고, '추론 지시+뉴스'는 단계별로 따져 보라는 지시와 §2.1처럼 검색한 기사 요약을 더한다.
+GPT-4o의 '질문만'은 바로 확률을 묻고, '추론 지시'는 단계별로 따져 보라는 지시를, '추론 지시+뉴스'는 여기에 §2.1처럼 검색한 기사 요약을 더한다.
 이 라운드의 예측 플랫폼 질문 중 2026년 11월 2일 자료 기준으로 판정이 끝난 57개('예' 15개)에서 Brier 점수와 [10a §2.2](/lecture/2026f-applied-data-science/10a-binary-classification#22-roc와-auc)의 AUC를 직접 계산했다.<Sidenote>최근 모델의 성적은 [ForecastBench 리더보드](https://www.forecastbench.org/leaderboards/)에서 볼 수 있다. 리더보드는 판정 전 질문도 그날의 플랫폼 확률로 채점하는 등 방식이 달라 숫자가 이 표와 다르다.</Sidenote>
 
 | 예측자 | Brier 점수 | AUC |
@@ -164,6 +164,7 @@ GPT-4o의 '질문만'은 바로 확률을 묻고, '추론 지시+뉴스'는 단�
 | 마감일의 공동체 예측·시장 가격 | 0.100 | 0.93 |
 | 일반인 중앙값 | 0.120 | 0.90 |
 | GPT-4o, 추론 지시+뉴스 | 0.159 | 0.81 |
+| GPT-4o, 추론 지시 | 0.157 | 0.85 |
 | GPT-4o, 질문만 | 0.176 | 0.76 |
 | 항상 0.50 | 0.250 | 0.50 |
 | GPT-3.5 Turbo, 질문만 | 0.259 | 0.72 |
@@ -171,8 +172,8 @@ GPT-4o의 '질문만'은 바로 확률을 묻고, '추론 지시+뉴스'는 단�
 57개 중 '예'는 26%뿐이다.
 결과를 미리 알고 모든 질문에 0.26을 냈다면 Brier 점수는 0.194로, 항상 0.50을 내는 기준보다 엄격하다.
 GPT-4o(질문만)의 0.176은 이 값보다 조금 낮지만, 질문을 부트스트랩으로 다시 뽑은 차이의 95% 구간이 −0.086에서 0.049까지라 57개로는 우열을 가리기 어렵다.
-추론 지시와 뉴스를 함께 주면 0.159로 낮아졌는데, 같은 라운드에서 추론 지시만 준 조건도 0.157이라 낮아진 몫은 뉴스보다 추론 지시 쪽에서 왔다.
-이 차이 역시 95% 구간이 −0.050에서 0.012까지라 57개로는 확정할 수 없다.
+추론 지시를 주면 0.157로 낮아졌고, 여기에 뉴스를 더해도 0.159로 거의 같았다.
+낮아진 몫은 뉴스보다 추론 지시 쪽에서 왔지만, 추론 지시의 효과(−0.019)도 95% 구간이 −0.051에서 0.012까지라 57개로는 확정할 수 없다.
 표의 차이에는 정보의 차이도 섞여 있다.
 사람은 7월 12일 질문 공개부터 마감일까지 예측을 고칠 수 있었고, 마감일인 7월 21일에 바이든이 사퇴하자 "바이든이 민주당 대선 후보가 될까?"에 슈퍼포캐스터 중앙값은 0.00을 냈지만 GPT-4o는 두 조건 모두 0.85를 냈다.
 
@@ -180,7 +181,7 @@ GPT-4o(질문만)의 0.176은 이 값보다 조금 낮지만, 질문을 부트�
 
 ForecastBench [자료 페이지](https://www.forecastbench.org/datasets/)의 processed_forecast_sets.tar.gz에서 2024-07-21 라운드 파일을 썼다.
 Manifold, Polymarket, Metaculus, INFER 질문 가운데 판정이 끝났고 대체값(imputed)이 아닌 예측만 남긴 뒤, 질문 식별자·출처·판정일·방향(direction)이 모두 같은 행끼리 결합했다.
-부트스트랩은 57개 질문을 복원추출로 10,000번 다시 뽑았다.
+부트스트랩은 57개 질문을 복원추출로 10,000번 다시 뽑아 질문별 Brier 점수 차이의 평균을 구했다.
 
 ```python
 import json, numpy as np, pandas as pd
@@ -188,8 +189,8 @@ from sklearn.metrics import roc_auc_score
 
 root = "forecastbench-processed-forecast-sets/2024-07-21/2024-07-21."
 files = {"슈퍼포캐스터": "ForecastBench.human_super", "일반인": "ForecastBench.human_public",
-         "GPT-4o 뉴스": "OpenAI.gpt_4o_scratchpad_with_news", "GPT-4o 질문만": "OpenAI.gpt_4o_zero_shot",
-         "GPT-3.5 질문만": "OpenAI.gpt_3p5_turbo_0125_zero_shot"}
+         "GPT-4o 추론+뉴스": "OpenAI.gpt_4o_scratchpad_with_news", "GPT-4o 추론": "OpenAI.gpt_4o_scratchpad",
+         "GPT-4o 질문만": "OpenAI.gpt_4o_zero_shot", "GPT-3.5 질문만": "OpenAI.gpt_3p5_turbo_0125_zero_shot"}
 key = ["id", "source", "resolution_date", "direction"]
 df = None
 for name, f in files.items():
@@ -197,15 +198,22 @@ for name, f in files.items():
     x = x[x.source.isin(["manifold", "polymarket", "metaculus", "infer"]) & x.resolved & ~x.imputed]
     x = x.assign(id=x.id.map(str), direction=x.direction.map(str))  # 목록 값을 결합 키로 쓰려고 문자열로
     x = x[key + ["resolved_to", "market_value_on_due_date", "forecast"]].rename(columns={"forecast": name})
-    df = x if df is None else df.merge(x[key + [name]], on=key)  # 다섯 예측자가 모두 낸 질문만
+    df = x if df is None else df.merge(x[key + [name]], on=key)  # 모든 예측자가 낸 질문만
 y = df.resolved_to.to_numpy()
 print(len(df), "개 질문, '예'", int(y.sum()))
 for name in [*files, "market_value_on_due_date"]:
     print(name, round(np.mean((df[name] - y) ** 2), 3), round(roc_auc_score(y, df[name]), 2))
-d = (df["GPT-4o 뉴스"] - y) ** 2 - (df["GPT-4o 질문만"] - y) ** 2  # 질문별 Brier 점수 차이
+rate = y.mean()  # 결과를 알고 모두에 낸 기준율
+print("기준율", round(rate, 2), round(np.mean((rate - y) ** 2), 3))
+
+def boot(d, rng):  # 질문별 Brier 차이의 평균과 95% 구간
+    m = [d[rng.integers(0, len(d), len(d))].mean() for _ in range(10000)]
+    return round(d.mean(), 3), np.percentile(m, [2.5, 97.5]).round(3)
 rng = np.random.default_rng(0)
-boot = [d.to_numpy()[rng.integers(0, len(d), len(d))].mean() for _ in range(10000)]
-print(round(d.mean(), 3), np.percentile(boot, [2.5, 97.5]).round(3))
+sq = lambda p: (np.asarray(p) - y) ** 2
+print("질문만 - 기준율", boot(sq(df["GPT-4o 질문만"]) - sq(rate), rng))
+print("추론 - 질문만", boot(sq(df["GPT-4o 추론"]) - sq(df["GPT-4o 질문만"]), rng))
+print("추론+뉴스 - 추론", boot(sq(df["GPT-4o 추론+뉴스"]) - sq(df["GPT-4o 추론"]), rng))
 ```
 
 </Details>

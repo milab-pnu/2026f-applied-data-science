@@ -179,12 +179,10 @@ AUC는 점수의 순서만 본다.
 양 끝 구간은 잘 맞지만, 0.3–0.9 구간에서는 실제 비율이 예측보다 높아 애매한 펭귄의 확률을 낮게 말하는 경향이 있다.
 어긋남이 크면 검증 확률과 실제 정답으로 점수를 실제 비율로 옮기는 단조 함수를 맞추고, 이후 예측 확률을 그 함수에 통과시키는 보정 단계를 더한다.[^calibration]
 
-## 3. 프로젝트에 맞는 검증
+## 3. 재현 코드
 
-훈련·검증·테스트의 역할, 그룹·시간 단위 분할, 전처리를 훈련 부분에서만 학습하는 원칙은 [09a §1.2](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#12-훈련-검증-테스트)와 같다.
-코드에서는 테스트 분할에 `stratify=y`를, 교차검증에 `StratifiedKFold`를 써서 §2의 층화를 구현한다.
-
-§2의 숫자는 다음 코드로 재현할 수 있다(`LogisticRegression`은 기본으로 Ridge와 같은 약한 벌점을 건다).
+§2의 숫자는 다음 코드로 재현할 수 있다.
+테스트 분할의 `stratify=y`와 교차검증의 `StratifiedKFold`가 §2의 층화를 맡고, `LogisticRegression`은 기본으로 Ridge와 같은 약한 벌점을 건다.
 
 ```python
 import pandas as pd
