@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="마우나로아 월평균 이산화탄소 농도의 추세와 계절성, 계절 naive 예측의 오차">
+<title>마우나로아 월평균 이산화탄소 농도의 추세와 계절성, 계절 naive 예측의 오차</title>
+<rect width="720" height="400" fill="#ffffff"/>
+<line x1="90" x2="690" y1="285.0" y2="285.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="84" y="289.0" font-size="16.8" fill="#64748b" text-anchor="end">415</text>
+<line x1="90" x2="690" y1="226.7" y2="226.7" stroke="#e2e8f0" stroke-width="1"/>
+<text x="84" y="230.7" font-size="16.8" fill="#64748b" text-anchor="end">420</text>
+<line x1="90" x2="690" y1="168.3" y2="168.3" stroke="#e2e8f0" stroke-width="1"/>
+<text x="84" y="172.3" font-size="16.8" fill="#64748b" text-anchor="end">425</text>
+<line x1="90" x2="690" y1="110.0" y2="110.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="84" y="114.0" font-size="16.8" fill="#64748b" text-anchor="end">430</text>
+<line x1="90" x2="690" y1="51.7" y2="51.7" stroke="#e2e8f0" stroke-width="1"/>
+<text x="84" y="55.7" font-size="16.8" fill="#64748b" text-anchor="end">435</text>
+<line x1="90.0" x2="90.0" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
+<text x="143.6" y="339" font-size="16.8" fill="#64748b" text-anchor="middle">2022</text>
+<line x1="197.1" x2="197.1" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
+<text x="250.7" y="339" font-size="16.8" fill="#64748b" text-anchor="middle">2023</text>
+<line x1="304.3" x2="304.3" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
+<text x="357.9" y="339" font-size="16.8" fill="#64748b" text-anchor="middle">2024</text>
+<line x1="411.4" x2="411.4" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
+<text x="465.0" y="339" font-size="16.8" fill="#64748b" text-anchor="middle">2025</text>
+<line x1="518.6" x2="518.6" y1="320" y2="324" stroke="#64748b" stroke-width="1"/>
+<text x="572.1" y="339" font-size="16.8" fill="#64748b" text-anchor="middle">2026</text>
+<line x1="90" x2="690" y1="320" y2="320" stroke="#64748b" stroke-width="1"/>
+<text x="390" y="364" font-size="18" fill="#64748b" text-anchor="middle">연도</text>
+<text x="30" y="180" font-size="18" fill="#64748b" text-anchor="middle" transform="rotate(-90 30 180)">CO₂ 농도 (ppm)</text>
+<polyline points="94.5,251.6 103.4,246.3 112.3,258.0 121.3,253.8 130.2,253.5 139.1,244.5 148.0,245.2 157.0,238.0 165.9,234.8 174.8,238.7 183.8,232.4 192.7,229.1 201.6,236.1 210.5,234.4 219.5,232.0 228.4,217.0 237.3,218.4 246.2,212.1 255.2,209.8 264.1,207.9 273.0,203.6 282.0,202.5 290.9,198.5 299.8,196.5 308.8,197.4 317.7,184.8 326.6,180.8 335.5,180.1 344.5,184.5 353.4,174.4 362.3,166.3 371.3,169.3 380.2,162.4 389.1,161.0 398.0,159.0 407.0,155.0 415.9,152.5 424.8,155.3 433.7,148.6 442.7,143.6 451.6,142.4 460.5,142.9 469.5,139.3 478.4,140.2 487.3,135.1 496.3,131.9 505.2,128.7 514.1,130.8 523.0,129.6 532.0,128.8 540.9,125.3 549.8,126.3 558.8,121.1 567.7,121.7 576.6,124.7 585.5,116.1 594.5,115.2" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+<polyline points="94.5,248.5 103.4,235.5 112.3,241.1 121.3,224.5 130.2,215.3 139.1,215.7 148.0,240.1 157.0,259.9 165.9,274.4 174.8,276.4 183.8,256.2 192.7,238.4 201.6,232.7 210.5,223.0 219.5,215.1 228.4,187.6 237.3,180.0 246.2,183.7 255.2,205.3 264.1,230.4 273.0,244.2 282.0,240.4 290.9,221.3 299.8,205.0 308.8,194.0 317.7,173.6 326.6,163.9 335.5,150.7 344.5,146.2 353.4,146.0 362.3,161.9 371.3,191.8 380.2,203.0 389.1,198.9 398.0,181.7 407.0,163.7 415.9,149.1 424.8,144.0 433.7,131.6 442.7,114.2 451.6,104.1 460.5,114.5 469.5,134.8 478.4,162.7 487.3,175.7 496.3,169.8 505.2,151.3 514.1,139.3 523.0,126.1 532.0,117.6 540.9,108.3 549.8,96.9 558.8,82.7 567.7,93.3 576.6,120.2 585.5,138.6 594.5,155.9" fill="none" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="94.5" cy="248.5" r="2.4" fill="#2a78d6"/>
+<circle cx="103.4" cy="235.5" r="2.4" fill="#2a78d6"/>
+<circle cx="112.3" cy="241.1" r="2.4" fill="#2a78d6"/>
+<circle cx="121.3" cy="224.5" r="2.4" fill="#2a78d6"/>
+<circle cx="130.2" cy="215.3" r="2.4" fill="#2a78d6"/>
+<circle cx="139.1" cy="215.7" r="2.4" fill="#2a78d6"/>
+<circle cx="148.0" cy="240.1" r="2.4" fill="#2a78d6"/>
+<circle cx="157.0" cy="259.9" r="2.4" fill="#2a78d6"/>
+<circle cx="165.9" cy="274.4" r="2.4" fill="#2a78d6"/>
+<circle cx="174.8" cy="276.4" r="2.4" fill="#2a78d6"/>
+<circle cx="183.8" cy="256.2" r="2.4" fill="#2a78d6"/>
+<circle cx="192.7" cy="238.4" r="2.4" fill="#2a78d6"/>
+<circle cx="201.6" cy="232.7" r="2.4" fill="#2a78d6"/>
+<circle cx="210.5" cy="223.0" r="2.4" fill="#2a78d6"/>
+<circle cx="219.5" cy="215.1" r="2.4" fill="#2a78d6"/>
+<circle cx="228.4" cy="187.6" r="2.4" fill="#2a78d6"/>
+<circle cx="237.3" cy="180.0" r="2.4" fill="#2a78d6"/>
+<circle cx="246.2" cy="183.7" r="2.4" fill="#2a78d6"/>
+<circle cx="255.2" cy="205.3" r="2.4" fill="#2a78d6"/>
+<circle cx="264.1" cy="230.4" r="2.4" fill="#2a78d6"/>
+<circle cx="273.0" cy="244.2" r="2.4" fill="#2a78d6"/>
+<circle cx="282.0" cy="240.4" r="2.4" fill="#2a78d6"/>
+<circle cx="290.9" cy="221.3" r="2.4" fill="#2a78d6"/>
+<circle cx="299.8" cy="205.0" r="2.4" fill="#2a78d6"/>
+<circle cx="308.8" cy="194.0" r="2.4" fill="#2a78d6"/>
+<circle cx="317.7" cy="173.6" r="2.4" fill="#2a78d6"/>
+<circle cx="326.6" cy="163.9" r="2.4" fill="#2a78d6"/>
+<circle cx="335.5" cy="150.7" r="2.4" fill="#2a78d6"/>
+<circle cx="344.5" cy="146.2" r="2.4" fill="#2a78d6"/>
+<circle cx="353.4" cy="146.0" r="2.4" fill="#2a78d6"/>
+<circle cx="362.3" cy="161.9" r="2.4" fill="#2a78d6"/>
+<circle cx="371.3" cy="191.8" r="2.4" fill="#2a78d6"/>
+<circle cx="380.2" cy="203.0" r="2.4" fill="#2a78d6"/>
+<circle cx="389.1" cy="198.9" r="2.4" fill="#2a78d6"/>
+<circle cx="398.0" cy="181.7" r="2.4" fill="#2a78d6"/>
+<circle cx="407.0" cy="163.7" r="2.4" fill="#2a78d6"/>
+<circle cx="415.9" cy="149.1" r="2.4" fill="#2a78d6"/>
+<circle cx="424.8" cy="144.0" r="2.4" fill="#2a78d6"/>
+<circle cx="433.7" cy="131.6" r="2.4" fill="#2a78d6"/>
+<circle cx="442.7" cy="114.2" r="2.4" fill="#2a78d6"/>
+<circle cx="451.6" cy="104.1" r="2.4" fill="#2a78d6"/>
+<circle cx="460.5" cy="114.5" r="2.4" fill="#2a78d6"/>
+<circle cx="469.5" cy="134.8" r="2.4" fill="#2a78d6"/>
+<circle cx="478.4" cy="162.7" r="2.4" fill="#2a78d6"/>
+<circle cx="487.3" cy="175.7" r="2.4" fill="#2a78d6"/>
+<circle cx="496.3" cy="169.8" r="2.4" fill="#2a78d6"/>
+<circle cx="505.2" cy="151.3" r="2.4" fill="#2a78d6"/>
+<circle cx="514.1" cy="139.3" r="2.4" fill="#2a78d6"/>
+<circle cx="523.0" cy="126.1" r="2.4" fill="#2a78d6"/>
+<circle cx="532.0" cy="117.6" r="2.4" fill="#2a78d6"/>
+<circle cx="540.9" cy="108.3" r="2.4" fill="#2a78d6"/>
+<circle cx="549.8" cy="96.9" r="2.4" fill="#2a78d6"/>
+<circle cx="558.8" cy="82.7" r="2.4" fill="#2a78d6"/>
+<circle cx="567.7" cy="93.3" r="2.4" fill="#2a78d6"/>
+<circle cx="576.6" cy="120.2" r="2.4" fill="#2a78d6"/>
+<circle cx="585.5" cy="138.6" r="2.4" fill="#2a78d6"/>
+<circle cx="594.5" cy="155.9" r="2.4" fill="#2a78d6"/>
+<line x1="478.4" x2="585.5" y1="162.7" y2="162.7" stroke="#eb6834" stroke-width="2" stroke-dasharray="5 4"/>
+<circle cx="585.5" cy="162.7" r="5" fill="#ffffff" stroke="#eb6834" stroke-width="2"/>
+<circle cx="478.4" cy="162.7" r="5" fill="#eb6834"/>
+<circle cx="585.5" cy="138.6" r="5" fill="#eb6834"/>
+<line x1="597.5" x2="597.5" y1="138.6" y2="162.7" stroke="#0f172a" stroke-width="1.5"/>
+<line x1="593.5" x2="601.5" y1="138.6" y2="138.6" stroke="#0f172a" stroke-width="1.5"/>
+<line x1="593.5" x2="601.5" y1="162.7" y2="162.7" stroke="#0f172a" stroke-width="1.5"/>
+<text x="605.5" y="143.6" font-size="16.8" fill="#eb6834">실제 427.55</text>
+<text x="605.5" y="167.7" font-size="16.8" fill="#eb6834">예측 425.48</text>
+<text x="605.5" y="190.7" font-size="16.8" fill="#0f172a">오차 2.07</text>
+<rect x="98" y="42" width="290" height="86" fill="#ffffff" stroke="#e2e8f0"/>
+<line x1="106" x2="136" y1="58" y2="58" stroke="#2a78d6" stroke-width="2"/>
+<text x="146" y="63" font-size="16.8" fill="#0f172a">월평균</text>
+<line x1="106" x2="136" y1="84" y2="84" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="146" y="89" font-size="16.8" fill="#0f172a">계절 주기를 뺀 값</text>
+<line x1="106" x2="136" y1="110" y2="110" stroke="#eb6834" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="146" y="115" font-size="16.8" fill="#0f172a">계절 naive 예측 (작년 같은 달)</text>
+</svg>

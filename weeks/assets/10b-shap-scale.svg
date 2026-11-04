@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="같은 펭귄의 SHAP 설명을 로그 오즈 척도와 확률 척도로 비교">
+<title>같은 펭귄의 SHAP 설명을 로그 오즈 척도와 확률 척도로 비교</title>
+<rect width="720" height="300" fill="#ffffff"/>
+<text x="136.0" y="86.0" font-size="16.8" fill="#0f172a" text-anchor="end" font-weight="600">기준값</text>
+<text x="136.0" y="130.0" font-size="16.8" fill="#0f172a" text-anchor="end">부리 길이</text>
+<text x="136.0" y="174.0" font-size="16.8" fill="#0f172a" text-anchor="end">부리 깊이</text>
+<text x="136.0" y="218.0" font-size="16.8" fill="#0f172a" text-anchor="end">날개 길이</text>
+<text x="136.0" y="262.0" font-size="16.8" fill="#0f172a" text-anchor="end" font-weight="600">예측</text>
+<text x="275.0" y="34.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="600">(a) 로그 오즈 척도</text>
+<line x1="150.0" x2="150.0" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="150.0" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">−3</text>
+<line x1="191.7" x2="191.7" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="191.7" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">−2</text>
+<line x1="233.3" x2="233.3" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="233.3" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">−1</text>
+<line x1="275.0" x2="275.0" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="275.0" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">0</text>
+<line x1="316.7" x2="316.7" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="316.7" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">1</text>
+<line x1="358.3" x2="358.3" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="358.3" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">2</text>
+<line x1="400.0" x2="400.0" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="400.0" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">3</text>
+<line x1="171.7" x2="171.7" y1="66" y2="94" stroke="#0f172a" stroke-width="3"/>
+<text x="179.7" y="86.0" font-size="15.6" fill="#0f172a" text-anchor="start">−2.48</text>
+<line x1="171.7" x2="171.7" y1="94" y2="110" stroke="#94a3b8" stroke-dasharray="3 3"/>
+<rect x="171.7" y="112" width="82.6" height="24" rx="3" fill="#eb6834"/>
+<text x="260.4" y="130.0" font-size="15.6" fill="#0f172a" text-anchor="start">+1.98</text>
+<line x1="254.4" x2="254.4" y1="138" y2="154" stroke="#94a3b8" stroke-dasharray="3 3"/>
+<rect x="254.4" y="156" width="54.1" height="24" rx="3" fill="#eb6834"/>
+<text x="314.5" y="174.0" font-size="15.6" fill="#0f172a" text-anchor="start">+1.30</text>
+<line x1="308.5" x2="308.5" y1="182" y2="198" stroke="#94a3b8" stroke-dasharray="3 3"/>
+<rect x="308.5" y="200" width="56.5" height="24" rx="3" fill="#eb6834"/>
+<text x="302.5" y="218.0" font-size="15.6" fill="#0f172a" text-anchor="end">+1.36</text>
+<line x1="365.0" x2="365.0" y1="226" y2="270" stroke="#0f172a" stroke-width="3"/>
+<text x="357.0" y="262.0" font-size="15.6" fill="#0f172a" text-anchor="end" font-weight="600">2.16 (확률 0.897)</text>
+<text x="575.0" y="34.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="600">(b) 확률 척도</text>
+<line x1="450.0" x2="450.0" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="450.0" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">0</text>
+<line x1="512.5" x2="512.5" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="512.5" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">0.25</text>
+<line x1="575.0" x2="575.0" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="575.0" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">0.5</text>
+<line x1="637.5" x2="637.5" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="637.5" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">0.75</text>
+<line x1="700.0" x2="700.0" y1="58" y2="276" stroke="#e2e8f0"/>
+<text x="700.0" y="298.0" font-size="15.6" fill="#64748b" text-anchor="middle">1</text>
+<line x1="500.8" x2="500.8" y1="66" y2="94" stroke="#0f172a" stroke-width="3"/>
+<text x="508.8" y="86.0" font-size="15.6" fill="#0f172a" text-anchor="start">0.203</text>
+<line x1="500.8" x2="500.8" y1="94" y2="110" stroke="#94a3b8" stroke-dasharray="3 3"/>
+<rect x="500.8" y="112" width="76.1" height="24" rx="3" fill="#eb6834"/>
+<text x="582.9" y="130.0" font-size="15.6" fill="#0f172a" text-anchor="start">+0.304</text>
+<line x1="576.9" x2="576.9" y1="138" y2="154" stroke="#94a3b8" stroke-dasharray="3 3"/>
+<rect x="576.9" y="156" width="47.4" height="24" rx="3" fill="#eb6834"/>
+<text x="630.3" y="174.0" font-size="15.6" fill="#0f172a" text-anchor="start">+0.189</text>
+<line x1="624.3" x2="624.3" y1="182" y2="198" stroke="#94a3b8" stroke-dasharray="3 3"/>
+<rect x="624.3" y="200" width="49.8" height="24" rx="3" fill="#eb6834"/>
+<text x="618.3" y="218.0" font-size="15.6" fill="#0f172a" text-anchor="end">+0.199</text>
+<line x1="674.1" x2="674.1" y1="226" y2="270" stroke="#0f172a" stroke-width="3"/>
+<text x="666.1" y="262.0" font-size="15.6" fill="#0f172a" text-anchor="end" font-weight="600">0.897</text>
+</svg>

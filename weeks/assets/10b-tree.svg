@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 390" width="720" height="390" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="턱끈펭귄을 가르는 깊이 2 결정트리">
+<title>턱끈펭귄을 가르는 깊이 2 결정트리</title>
+<rect width="720" height="390" fill="#ffffff"/>
+<line x1="360" y1="82" x2="185" y2="135" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="262.5" y="108.5" font-size="15.6" fill="#64748b" text-anchor="end">예</text>
+<line x1="360" y1="82" x2="535" y2="135" stroke="#0f172a" stroke-width="2.5"/>
+<text x="457.5" y="108.5" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">아니오</text>
+<line x1="185" y1="195" x2="95" y2="268" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="130.0" y="231.5" font-size="15.6" fill="#64748b" text-anchor="end">예</text>
+<line x1="185" y1="195" x2="275" y2="268" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="240.0" y="231.5" font-size="15.6" fill="#64748b" text-anchor="start">아니오</text>
+<line x1="535" y1="195" x2="445" y2="268" stroke="#0f172a" stroke-width="2.5"/>
+<text x="480.0" y="231.5" font-size="15.6" fill="#0f172a" text-anchor="end" font-weight="600">예</text>
+<line x1="535" y1="195" x2="625" y2="268" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="590.0" y="231.5" font-size="15.6" fill="#64748b" text-anchor="start">아니오</text>
+<rect x="235.0" y="22.0" width="250" height="60" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="360.0" y="46.0" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">부리 길이 ≤ 45.15 mm?</text>
+<text x="360.0" y="68.0" font-size="15.6" fill="#64748b" text-anchor="middle">273마리 · 턱끈 54</text>
+<rect x="60.0" y="135.0" width="250" height="60" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="185.0" y="159.0" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">부리 길이 ≤ 42.30 mm?</text>
+<text x="185.0" y="181.0" font-size="15.6" fill="#64748b" text-anchor="middle">141마리 · 턱끈 4</text>
+<rect x="410.0" y="135.0" width="250" height="60" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="535.0" y="159.0" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">날개 길이 ≤ 207 mm?</text>
+<text x="535.0" y="181.0" font-size="15.6" fill="#64748b" text-anchor="middle">132마리 · 턱끈 50</text>
+<rect x="15.0" y="268.0" width="160" height="64" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="95.0" y="294.0" font-size="15.6" fill="#64748b" text-anchor="middle">음성 113 · 턱끈 1</text>
+<text x="95.0" y="316.0" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">p̂ = 1/114 ≈ 0.01</text>
+<rect x="195.0" y="268.0" width="160" height="64" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="275.0" y="294.0" font-size="15.6" fill="#64748b" text-anchor="middle">음성 24 · 턱끈 3</text>
+<text x="275.0" y="316.0" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">p̂ = 3/27 ≈ 0.11</text>
+<rect x="365.0" y="268.0" width="160" height="64" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="445.0" y="294.0" font-size="15.6" fill="#64748b" text-anchor="middle">음성 3 · 턱끈 48</text>
+<text x="445.0" y="316.0" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">p̂ = 48/51 ≈ 0.94</text>
+<rect x="545.0" y="268.0" width="160" height="64" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="625.0" y="294.0" font-size="15.6" fill="#64748b" text-anchor="middle">음성 79 · 턱끈 2</text>
+<text x="625.0" y="316.0" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">p̂ = 2/81 ≈ 0.02</text>
+<text x="360.0" y="368.0" font-size="16.8" fill="#0f172a" text-anchor="middle">굵은 경로: 부리 길이 50.8 mm, 날개 길이 201 mm인 펭귄 → 턱끈펭귄 확률 0.94</text>
+</svg>
