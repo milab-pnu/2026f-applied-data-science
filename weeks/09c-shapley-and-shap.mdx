@@ -255,7 +255,8 @@ Consistency는 §2.1의 예로 보자.
 
 </Details>
 
-논문은 설명할 입력과 가림 방식, 곧 값 함수 $v$를 정하면 세 성질을 모두 만족하는 가산적 기여가 Shapley value 하나뿐임을 보였다.
+논문은 설명할 입력과 가림 방식, 곧 값 함수 $v$를 정하면 세 성질을 모두 만족하는 가산적 기여가 Shapley value 하나뿐이라고 정리했다.
+다만 §2.1에서 A → B 한 순서만 쓰는 배분(100, 100)도 세 성질은 만족하므로, 유일하려면 어느 조합에 더해도 출력을 똑같이 바꾸는 두 특성은 같은 몫을 받는다는 대칭성(symmetry)이 함께 필요하다.[^young]
 이 유일성은 정해진 게임 안의 결론이라, 배경이나 가림 방식을 바꾸면 값이 달라지고(§5.2) 모델의 예측 성능이나 인과관계를 보증하지도 않는다.
 
 ## 4. SHAP 계산 방법
@@ -408,6 +409,7 @@ SHAP 값은 모델이 그 관측을 어떻게 예측했는지 설명한다.
 예측할 것이 몸무게 같은 값이 아니라 "Chinstrap인가"처럼 둘 중 하나일 때는 확률과 판정을 따로 따져야 하므로, 10주차에는 분류 모델과 그 평가로 넘어간다.
 
 [^shapley]: Shapley, L. S. (1952). *A Value for N-Person Games*. RAND Corporation, P-295. [무료 원문](https://www.rand.org/pubs/papers/P295.html).
+[^young]: Young, H. P. (1985). Monotonic solutions of cooperative games. *International Journal of Game Theory*, 14, 65–72. [DOI:10.1007/BF01769885](https://doi.org/10.1007/BF01769885).
 [^shap]: Lundberg, S. M., & Lee, S.-I. (2017). A Unified Approach to Interpreting Model Predictions. *Advances in Neural Information Processing Systems*, 30. [논문 PDF](https://papers.nips.cc/paper_files/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf).
 [^lime]: Ribeiro, M. T., Singh, S., & Guestrin, C. (2016). “Why Should I Trust You?”: Explaining the Predictions of Any Classifier. *Proceedings of KDD*, 1135–1144. [arXiv:1602.04938](https://arxiv.org/abs/1602.04938).
 [^janzing]: Janzing, D., Minorics, L., & Blöbaum, P. (2020). Feature relevance quantification in explainable AI: A causal problem. *Proceedings of AISTATS*, PMLR 108, 2907–2916. [논문](https://proceedings.mlr.press/v108/janzing20a.html).
