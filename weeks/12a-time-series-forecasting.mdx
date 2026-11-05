@@ -148,9 +148,7 @@ TabPFN이 합성 표로만 사전학습한 것과 달리, Chronos 원논문은 �
 
 §3.3의 비교에 쓰는 Amazon의 Chronos-Bolt는 연속된 값 몇 개를 묶은 **패치**(patch)를 한 단위로 읽고, 앞으로 여러 시점의 분위수(§3.2)를 한꺼번에 낸다.[^chronosbolt]
 값을 구간별 토큰으로 바꿔 언어 모델처럼 다음 토큰을 맞히던 원래 Chronos의 후속 모델이다.[^chronos]
-패치를 단위로 사전학습한 초기 모델로는 Google의 TimesFM이 있고,[^timesfm] 최신 TimesFM-3(2026)는 다른 건물의 사용량이나 공휴일 여부(§1.3의 공변량)까지 함께 받는 다변량 모델이다.[^timesfm3]
-다만 내려받아 쓰는 TimesFM-3 가중치는 비상업·비운영 용도로만 쓸 수 있다.[^timesfmrepo]
-같은 Chronos 계열의 최신 모델인 Chronos-2(2025년 10월)도 공변량과 여러 시계열을 함께 받으며, 가중치는 Apache-2.0이다.[^chronos2]
+패치를 단위로 사전학습한 초기 모델로는 Google의 TimesFM이 있고,[^timesfm] 공변량(§1.3)까지 함께 받는 후속 모델(TimesFM-3, Chronos-2)도 나왔다.[^timesfm3][^chronos2]
 §3.3은 CO₂ 시계열 하나만 예측하고 예측 시점을 모델 공개 뒤로 잡아야 하므로, 공개가 더 이른 Chronos-Bolt를 쓴다.
 
 ### 3.2 분위수 예측과 구간
@@ -218,11 +216,9 @@ Chronos-Bolt는 이 자료에 추가로 적합하지 않고도 두 예측 기간
 
 Chronos-Bolt의 명목 80% 구간(10–90백분위)은 두 예측 기간 모두 10개 달을 다 담았지만(포함률 100%), 평균 폭이 1개월 앞 5.96 ppm, 12개월 앞 5.43 ppm이었다.
 점 예측의 MAE(0.30, 0.42 ppm)보다 약 13–20배 넓으므로, 포함률 100%는 보정이 잘된 결과라기보다 구간이 지나치게 넓은 결과에 가깝다.
-다만 대상이 10개뿐이라 보정이 맞는 80% 구간도 10개를 모두 담을 확률이 $0.8^{10}\approx0.11$이므로, 프로젝트에서는 더 많은 예측 시점에서 포함률과 폭을 함께 센다.
+다만 대상이 10개뿐이라, 프로젝트에서는 더 많은 예측 시점에서 포함률과 폭을 함께 센다.
 
-폭은 설정에도 크게 좌우되었다.
-보통은 먼 미래일수록 구간이 넓은데, 전체 문맥에서는 1개월 앞 구간이 오히려 12개월 앞보다 넓었다.
-최근 10년만 문맥으로 주면 폭이 2.62, 4.80 ppm으로 예측 기간에 따라 넓어졌다.
+폭도 설정에 좌우되어, 최근 10년만 문맥으로 주면 2.62, 4.80 ppm으로 예측 기간에 따라 넓어졌지만 전체 문맥에서는 1개월 앞 구간이 오히려 12개월 앞보다 넓었다.
 
 <Figure
   src={intervalPlot.src}
@@ -287,6 +283,5 @@ print("80% 구간 포함률, 평균 폭:", np.mean(interval, axis=0).round(2))
 [^chronosbolt]: Amazon. (2024). chronos-bolt-small. *Hugging Face*. [모델 카드](https://huggingface.co/amazon/chronos-bolt-small).
 [^timesfm]: Das, A., Kong, W., Sen, R., & Zhou, Y. (2024). A decoder-only foundation model for time-series forecasting. *International Conference on Machine Learning*. [arXiv:2310.10688](https://arxiv.org/abs/2310.10688).
 [^timesfm3]: Jain, A., & Sen, R. (2026). TimesFM-3: A zero-shot foundation model for multivariate forecasting. *Google Research Blog*. [공식 소개](https://research.google/blog/timesfm-3-a-zero-shot-foundation-model-for-multivariate-forecasting/).
-[^timesfmrepo]: Google Research. (2026). TimesFM (v3.0). *GitHub*. [가중치 라이선스 고지](https://github.com/google-research/timesfm#license-notice-for-pretrained-weights).
 [^chronos2]: Ansari, A. F., et al. (2025). Chronos-2: From Univariate to Universal Forecasting. *arXiv*. [arXiv:2510.15821](https://arxiv.org/abs/2510.15821).
 [^benchmark]: Meyer, M., Kaltenpoth, S., Zalipski, K., & Müller, O. (2025). Rethinking Evaluation in the Era of Time Series Foundation Models: (Un)known Information Leakage Challenges. *arXiv*. [arXiv:2510.13654](https://arxiv.org/abs/2510.13654).

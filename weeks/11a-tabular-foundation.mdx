@@ -141,7 +141,7 @@ TabPFN은 기본 설정 그대로 쓰고 가중치 버전만 v2로 지정했다(
 
 XGBoost는 깊이(2, 3, 4), 트리 수(50, 100, 200, 400), 학습률(0.03, 0.1)의 조합 24개 가운데 MAE가 가장 작은 것을 골랐다.
 이 선택도 폴드마다 그 훈련 부분 안에서 다시 5폴드 교차검증으로 했는데, 이렇게 교차검증 안에 교차검증을 한 겹 더 두는 것을 **중첩 교차검증**(nested cross-validation)이라 한다.
-코드로는 `GridSearchCV(XGBRegressor(random_state=0), grid, cv=KFold(5, shuffle=True, random_state=0))`를 바깥 `cross_val_score`에 넣었다.
+코드로는 `GridSearchCV(XGBRegressor(random_state=0), grid, cv=KFold(5, shuffle=True, random_state=0), scoring="neg_mean_absolute_error")`를 바깥 `cross_val_score`에 넣었다.
 시간은 같은 노트북(Apple M3) CPU에서 쟀고, TabPFN은 tabpfn 9.2.0 패키지와 v2 가중치를 썼다.
 결과는 다음과 같다.
 
