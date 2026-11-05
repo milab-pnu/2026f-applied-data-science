@@ -9,7 +9,9 @@ import rocSteps from "./assets/10a-roc-steps.svg";
 
 지난주에는 몸무게처럼 연속적인 값을 예측했다.
 이번에는 측정값을 보고 펭귄이 Chinstrap인지 아닌지를 예측한다.
-답이 둘 중 하나인 이런 문제를 **이진 분류**(binary classification)라 하고, Chinstrap을 양성(1), Adelie와 Gentoo를 음성(0)으로 둔다.
+답이 둘 중 하나인 이런 문제를 **이진 분류**(binary classification)라 한다.
+몸무게 같은 연속값도 "4,500 g 이상인가"처럼 기준을 정하면 이진 분류 문제가 된다.
+여기서는 Chinstrap을 양성(positive, 1), Adelie와 Gentoo를 음성(negative, 0)으로 둔다.
 Chinstrap은 342마리 중 68마리(20%)로 드물고, 부리가 길다는 특징은 Gentoo와 겹친다.
 모델은 양성일 확률을 내고, 그 확률을 어디서 끊을지 정해야 판정이 나온다.
 
@@ -30,7 +32,7 @@ $$
 $\hat p$는 모델이 추정한 양성 확률이다.
 $z=0$이면 $\hat p=0.5$이고, $z$가 커질수록 1에, 작아질수록 0에 가까워진다.
 
-부리 길이 $x$(mm) 하나만 쓰는 모델을 훈련용 펭귄 273마리(나누는 방법은 §2)로 적합하면 $z=-14.07+0.276x$를 얻는다.
+부리 길이 $x$(mm) 하나만 쓰는 모델을 훈련용 펭귄 273마리(나누는 방법은 §2)로 규제 벌점 없이(§3) 적합하면 $z=-14.07+0.276x$를 얻는다.
 부리 길이가 52 mm인 펭귄은 $z=-14.07+0.276\times52\approx0.28$이다.
 $e^{-0.28}\approx0.76$이므로 $\hat p=1/(1+0.76)\approx0.57$이다.
 **임계값**(threshold)을 0.5로 두면 이 펭귄은 Chinstrap으로 판정되고, 0.8로 두면 음성으로 판정된다.
@@ -67,6 +69,7 @@ $$
 
 계수는 어떻게 정할까?
 **로그 손실**(log loss)은 정답에 준 확률의 로그에 음의 부호를 붙인 값이다.
+딥러닝에서는 이진 교차 엔트로피(binary cross-entropy)라고도 부른다.
 정답 $y$를 양성 1, 음성 0으로 쓰면 두 경우를 한 식으로 묶을 수 있다.
 
 $$
@@ -75,21 +78,41 @@ $$
 
 $y=1$이면 첫 항만, $y=0$이면 둘째 항만 남는다.
 정답에 준 확률이 0에 가까울수록 이 값은 한없이 커져 확신한 오답을 강하게 벌한다.
-실제로는 Chinstrap인데 0.01을 준 가상의 실수는 $-\log0.01\approx4.6$, 음성에 0.9를 준 실수는 $-\log(1-0.9)\approx2.30$이다.
-확률의 제곱오차라면 같은 실수가 $(1-0.01)^2\approx0.98$이고 어떤 실수도 1을 넘지 않는다는 점이 다르다.
+실제로는 Chinstrap인데 Chinstrap 확률 0.01을 준 가상의 실수는 $-\log0.01\approx4.6$, 실제로는 다른 종인데 Chinstrap 확률 0.9를 준 실수는 $-\log(1-0.9)\approx2.30$이다.
+확률의 제곱오차로 재면 앞의 실수도 $(1-0.01)^2\approx0.98$에 그치고, 어떤 실수도 1을 넘지 않는다.
 
-학습은 훈련 펭귄 전체의 평균 로그 손실이 가장 작은 계수, 곧 관측된 정답의 확률(가능도)이 가장 큰 계수를 찾는 일이다.
+학습은 훈련 펭귄 전체의 평균 로그 손실이 가장 작은 계수, 곧 관측된 정답의 확률인 가능도(likelihood)가 가장 큰 계수를 찾는 일이다.
+
+<Details summary="로그 손실과 가능도">
+펭귄들이 서로 독립이라고 보면, 관측된 정답이 모두 나올 확률은 $\prod_i \hat p_i^{\,y_i}(1-\hat p_i)^{1-y_i}$다.
+$y_i=1$인 펭귄은 $\hat p_i$, $y_i=0$인 펭귄은 $1-\hat p_i$만 곱해진다.
+로그를 취하면 곱이 합이 되고, 부호를 바꾸면 $\sum_i L(y_i,\hat p_i)$가 된다.
+그래서 가능도를 가장 크게 하는 계수와 평균 로그 손실을 가장 작게 하는 계수는 같다.
+</Details>
+
 선형회귀와 달리 한 번에 풀리는 공식이 없으므로, 손실이 줄어드는 방향으로 계수를 조금씩 옮기기를 반복한다.
 이런 반복의 기본형을 **경사하강법**(gradient descent)이라 한다.
-[10b의 그래디언트 부스팅](/lecture/2026f-applied-data-science/10b-trees-xgboost-shap#31-잔차를-맞추는-트리)은 같은 이동을 계수가 아니라 예측값에 적용한다.
+펭귄 하나의 로그 손실을 $z$로 미분하면 $\hat p-y$이고, 경사하강법은 이 기울기의 반대쪽으로 움직인다.
+정답이 1인데 0.57을 받은 펭귄이라면 $\hat p-y=-0.43$이므로, 그 펭귄의 $z$가 오르도록 절편과 부리 길이 계수를 키우는 쪽으로 민다.
+
+가능도에는 특성이 주어졌을 때 정답이 나올 확률만 들어간다.
+그래서 로지스틱 회귀는 특성 자체가 정규분포를 따른다고 가정하지 않는다.
+다만 한쪽으로 크게 치우친 특성은 로그 변환처럼 대칭에 가깝게 바꾸면 예측이 나아지기도 한다.
 
 ## 2. 분류의 평가
 
 이제 세 측정값(부리 길이, 부리 깊이, 날개 길이)을 모두 쓴 로지스틱 회귀를 평가한다.
-분류 문제라 자료를 새로 나눠, 20%인 테스트 69마리(Chinstrap 14마리)는 10b에서 쓰려고 떼어 두고 나머지 273마리(Chinstrap 54마리)로 작업한다.
+몸무게 회귀([09a](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#32-기준-모델과-테스트-평가))의 239/103 분할은 Chinstrap 비율을 따로 맞추지 않았으므로, 양성 비율이 지켜지도록 자료를 새로 나눈다.
+20%인 테스트 69마리(Chinstrap 14마리)는 10b에서 쓰려고 떼어 두고 나머지 273마리(Chinstrap 54마리)로 작업한다.
 나눌 때는 **층화 분할**(stratified split)을 써서, 양성이 한쪽에 우연히 적게 들어가는 일을 막고 양쪽의 양성 비율을 전체의 20%에 가깝게 지켰다.
+
+세 측정값을 표준화해 훈련 273마리로 맞추면(§3) 계수는 부리 길이 +3.52, 부리 깊이 +0.39, 날개 길이 −2.81이다.
+표준편차 하나만큼 늘 때 로그 오즈가 바뀌는 양이라, 단위가 달라도 크기를 견줄 수 있다.
+날개 길이 계수가 음수라서 부리 길이가 같으면 날개가 짧을수록 Chinstrap 쪽으로 간다.
+부리는 길지만 날개도 긴 Gentoo가 이 계수로 갈려서, 부리 길이만 쓴 §1의 모델보다 Chinstrap을 훨씬 잘 가려낸다(§2.2의 AUC).
+
 임계값도 테스트가 아니라 학습에 쓰이지 않은 훈련 펭귄의 확률로 골라야 하므로, 273마리로 5폴드 교차검증([09b §2.2](/lecture/2026f-applied-data-science/09b-features-and-regularization#22-교차검증과-선택))을 해 펭귄마다 자기가 빠진 모델의 확률을 받는다.
-이 절의 숫자는 모두 이 검증 확률로 계산했다(코드는 §3).
+§2.1부터의 평가 숫자는 모두 이 검증 확률로 계산했다(코드는 §3).
 
 ### 2.1 혼동행렬과 비용
 
@@ -107,21 +130,23 @@ FP(false positive)는 음성을 양성으로 잘못 경보한 수, FN(false nega
 | 지표 | 계산 | 값 | 뜻 |
 | --- | --- | --- | --- |
 | 정확도(accuracy) | $(TP+TN)/$전체 | 259/273 ≈ 0.95 | 전체 중 맞힌 비율 |
-| 재현율(recall) | $TP/(TP+FN)$ | 44/54 ≈ 0.81 | 실제 양성 중 찾아낸 비율, 민감도(sensitivity)라고도 한다 |
+| 재현율(recall) | $TP/(TP+FN)$ | 44/54 ≈ 0.81 | 실제 양성 중 찾아낸 비율. 참 양성률(true positive rate, TPR) 또는 민감도(sensitivity)라고도 한다 |
 | 정밀도(precision) | $TP/(TP+FP)$ | 44/48 ≈ 0.92 | 양성 판정 중 실제 양성의 비율 |
-| 거짓 양성률(FPR) | $FP/(FP+TN)$ | 4/219 ≈ 0.02 | 실제 음성 중 잘못 경보한 비율 |
+| 거짓 양성률(false positive rate, FPR) | $FP/(FP+TN)$ | 4/219 ≈ 0.02 | 실제 음성 중 잘못 경보한 비율 |
+| 특이도(specificity) | $TN/(FP+TN)$ | 215/219 ≈ 0.98 | 실제 음성 중 음성으로 맞힌 비율(참 음성률), 1−FPR |
 
 정확도 0.95는 좋아 보이지만, 모든 펭귄을 음성이라고 해 Chinstrap을 하나도 찾지 못하는 모델도 정확도가 219/273 ≈ 0.80이다.
+이 값은 평가한 펭귄 가운데 음성의 비율이라, Chinstrap이 절반인 자료에서 평가하면 같은 모델의 정확도가 0.5로 떨어진다.
 
 양성이 드물 때는 정확도 대신 재현율과 정밀도, 그리고 두 오류의 비용을 본다.
 임계값을 내리면 양성 판정이 늘어 재현율이 오르고 거짓 경보(FP)도 는다.
 Chinstrap 하나를 놓치는 비용을 5, 다른 종을 Chinstrap으로 잘못 경보하는 비용을 1로 두자.
-현업이라면 불량품을 놓쳐 출하하는 비용과 정상품을 한 번 더 검사하는 비용 같은 관계다.
+현업에 빗대면 불량품을 놓쳐 출하하는 비용(FN)과 정상품을 한 번 더 검사하는 비용(FP)의 관계와 같다.
 
 확률 $\hat p$를 받은 펭귄을 양성으로 판정하면 기대 비용이 $(1-\hat p)\times1$, 음성으로 두면 $\hat p\times5$이므로 $\hat p>1/6$이면 양성 판정이 싸다.
 단, 확률이 실제 비율과 맞을 때의 이야기다(§2.3).
 흔히 쓰는 0.5는 두 오류의 비용이 같을 때의 기준이다.
-검증 확률에 후보 임계값 셋을 적용해 보면 1/6에 가장 가까운 0.2가 가장 싸다.
+검증 확률에 후보 임계값 셋을 적용하면 0.2가 가장 싸다.
 
 | 임계값 | TP | FP | FN | 재현율 | 정밀도 | 정확도 | 비용(5FN+FP) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -131,13 +156,18 @@ Chinstrap 하나를 놓치는 비용을 5, 다른 종을 Chinstrap으로 잘못 
 
 0.2는 정확도가 셋 중 가장 낮지만 놓친 Chinstrap이 한 마리뿐이다.
 
+임계값을 1/6에 정확히 두면 오히려 FP가 22로 늘어 비용이 27이 된다.
+이 모델은 1/6 근처에서 확률을 실제보다 높게 말하므로(§2.3), 이론 기준보다 조금 위의 임계값이 더 싸다.
+0.2는 훈련 자료의 양성 비율(54/273 ≈ 0.20)과도 거의 같다.
+교재는 양성이 드문 문제에서 0.5 대신 훈련 자료의 양성 비율을 임계값으로 쓰는 간단한 방법을 권한다.
+비용을 숫자로 정하기 어려울 때 출발점으로 삼을 만하다.
+
 ### 2.2 ROC와 AUC
 
 표의 각 행은 임계값 하나에서 (거짓 양성률, 재현율)이라는 점 하나다.
 임계값 0.2는 (18/219, 53/54) ≈ (0.08, 0.98), 0.3은 (0.04, 0.91), 0.5는 (0.02, 0.81)이다.
 임계값을 1에서 0까지 내리며 이런 점을 모두 이으면 **ROC 곡선**(receiver operating characteristic curve)이 된다.
-
-<Video src="https://www.youtube.com/watch?v=n7EoYT5kDO4" caption="공돌이의 수학정리노트, ROC 커브 소개 (2020). 한국어. 양성과 음성의 점수 분포 위에서 임계값을 옮길 때 재현율과 거짓 양성률이 함께 바뀌며 ROC 곡선의 점이 움직이는 과정을 그림으로 보여 준다." />
+교재처럼 가로축을 1−참 음성률(1−특이도), 세로축을 TPR로 적기도 하는데 같은 그림이다.<Sidenote>양성과 음성의 점수 분포 위에서 임계값을 옮길 때 ROC 곡선의 점이 움직이는 모습은 [공돌이의 수학정리노트, ROC 커브 소개](https://www.youtube.com/watch?v=n7EoYT5kDO4)(2020, 한국어 영상)가 그림으로 보여 준다.</Sidenote>
 
 곡선이 그려지는 과정은 점수 네 개짜리 가상 예로 보는 편이 쉽다.
 양성 둘의 점수가 0.8, 0.6이고 음성 둘의 점수가 0.7, 0.2라고 하자.
@@ -176,15 +206,39 @@ AUC는 점수의 순서만 본다.
 | 0.7–0.9 | 14 | 0.81 | 0.93 (13마리) |
 | 0.9–1 | 22 | 0.96 | 0.95 (21마리) |
 
-양 끝 구간은 잘 맞지만, 0.3–0.9 구간에서는 실제 비율이 예측보다 높아 애매한 펭귄의 확률을 낮게 말하는 경향이 있다.
+양 끝 구간은 잘 맞는다.
+0.1–0.3 구간은 확률을 조금 높게 말하고, 0.3–0.9 구간은 실제 비율이 예측보다 높아 애매한 펭귄의 확률을 낮게 말한다.
+다만 가운데 구간은 펭귄이 수십 마리뿐이라 우연한 들쭉날쭉함도 섞여 있다.
+
 어긋남이 크면 검증 확률과 실제 정답으로 점수를 실제 비율로 옮기는 단조 함수를 맞추고, 이후 예측 확률을 그 함수에 통과시키는 보정 단계를 더한다.[^calibration]
+점수에 시그모이드 곡선을 맞추는 Platt scaling과 계단 모양 단조 함수를 맞추는 isotonic regression이 대표적이고, scikit-learn은 `CalibratedClassifierCV`로 둘 다 제공한다.
+보정 상태는 모델 종류마다 다르다.
+각주 문서는 같은 자료에 맞춘 로지스틱 회귀, 나이브 베이즈, 랜덤 포레스트 등의 reliability diagram을 나란히 그려 이 차이를 보여 준다.
+
+### 2.4 평가의 안정성
+
+지금까지의 평가 숫자는 펭귄을 다섯 폴드에 나누는 한 가지 방식에서 나왔다.
+[09a §3.3](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#33-predictability와-stability)에서 회귀 예측의 stability를 보았듯, 이 숫자도 자료를 조금 흔들었을 때 유지되는지 본다.
+폴드별로 따로 재면 검증 AUC는 0.969에서 1.000까지 퍼진다.
+교차검증 시드를 0–4로 바꿔 다섯 번 다시 나누면 임계값 0.2의 비용은 22–28, 0.3은 28–40, 0.5는 54–59 사이에서 움직인다.
+0.2는 다섯 번 모두 가장 싸지만, 한 시드에서는 0.3과의 차이가 1뿐이다.
+"0.2가 0.5보다 낫다"는 결론은 안정적이고, "0.2가 0.3보다 낫다"는 결론은 그보다 약하다.
+
+정답이 0과 1뿐이어도 stability 점검의 방식은 회귀와 같다.
+훈련 273마리를 부트스트랩으로 100번 다시 뽑아 세 변수 모델을 맞추면, 계수의 가운데 90%(5–95백분위)는 부리 길이가 3.32에서 3.82, 날개 길이가 −3.14에서 −2.52 사이에 들어 크기와 부호가 유지된다.
+부리 깊이 계수는 0.01에서 0.78까지 움직여 0에 닿을 만큼 흔들리므로, 앞의 +0.39에는 의미를 싣지 않는 편이 낫다.
+로그 변환이나 극단적인 세션 제거 같은 전처리 판단을 바꿔 다시 학습하는 점검까지, 교재 11장의 PCS 점검 절(11.5)이 구매 예측 사례로 밟는다.
 
 ## 3. 재현 코드
 
-§2의 숫자는 다음 코드로 재현할 수 있다.
-테스트 분할의 `stratify=y`와 교차검증의 `StratifiedKFold`가 §2의 층화를 맡고, `LogisticRegression`은 기본으로 Ridge와 같은 약한 벌점을 건다.
+§1의 부리 길이 모델과 §2의 숫자는 다음 코드로 재현할 수 있다.
+테스트 분할의 `stratify=y`와 교차검증의 `StratifiedKFold`가 §2의 층화를 맡는다.
+`LogisticRegression`은 기본으로 Ridge와 같은 벌점(`C=1`)을 걸어 계수를 0 쪽으로 줄이므로, §1.3의 로그 손실만 최소화하려면 `C=np.inf`로 벌점을 끈다.
+§2의 세 변수 모델은 기본 벌점을 그대로 썼고, 벌점을 끄면 부리 길이와 날개 길이의 표준화 계수가 두 배 가까이 커진다.
+표준화는 특성의 단위를 맞춰 벌점이 특성마다 공평하게 걸리게 하려는 것이고([09b §2.1](/lecture/2026f-applied-data-science/09b-features-and-regularization#21-ridge와-lasso)), 분포의 모양은 바꾸지 않는다.
 
 ```python
+import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, roc_auc_score
@@ -202,23 +256,57 @@ y = (data["species"] == "Chinstrap").astype(int)  # Chinstrap은 1, 나머지는
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
-# 표준화가 각 학습 폴드 안에서만 맞춰지도록 파이프라인으로 묶는다.
+
+# §1: 부리 길이만 쓰고 벌점을 끈 모델
+one = LogisticRegression(C=np.inf).fit(X_train[["bill_length_mm"]], y_train)
+print("부리 길이 모델:", one.intercept_.round(2), one.coef_.round(3))
+
+# §2: 표준화가 각 학습 폴드 안에서만 맞춰지도록 파이프라인으로 묶는다.
 model = make_pipeline(StandardScaler(), LogisticRegression())
+print("표준화 계수:", model.fit(X_train, y_train)[-1].coef_.round(2))
 folds = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
 p_val = cross_val_predict(
     model, X_train, y_train, cv=folds, method="predict_proba"
 )[:, 1]
-
+p_bill = cross_val_predict(
+    model, X_train[["bill_length_mm"]], y_train, cv=folds, method="predict_proba"
+)[:, 1]
 print("검증 AUC:", round(roc_auc_score(y_train, p_val), 3))
-for t in [0.2, 0.3, 0.5]:
-    tn, fp, fn, tp = confusion_matrix(y_train, p_val >= t).ravel()
-    print(f"임계값 {t}: TP {tp}, FP {fp}, FN {fn}, 비용 {5 * fn + fp}")
+print("부리 길이만 쓴 검증 AUC:", round(roc_auc_score(y_train, p_bill), 3))
+
+
+def cost(p, t):
+    tn, fp, fn, tp = confusion_matrix(y_train, p >= t).ravel()
+    return int(tp), int(fp), int(fn), int(5 * fn + fp)
+
+
+for t in [0.2, 0.3, 0.5, 1 / 6]:
+    print(f"임계값 {t:.3f}: TP, FP, FN, 비용 =", cost(p_val, t))
+
+# §2.3: 확률 구간별 평균 예측과 실제 비율
+bins = pd.cut(p_val, [0, 0.1, 0.3, 0.7, 0.9, 1], right=False)
+table = pd.DataFrame({"예측": p_val, "실제": y_train.to_numpy()})
+print(table.groupby(bins, observed=True).agg(["count", "mean"]).round(2))
+
+# §2.4: 폴드별 AUC, 시드별 비용, 부트스트랩 계수
+for k, (_, va) in enumerate(folds.split(X_train, y_train)):
+    print(f"폴드 {k} AUC:", round(roc_auc_score(y_train.iloc[va], p_val[va]), 3))
+for seed in range(5):
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    p = cross_val_predict(model, X_train, y_train, cv=cv, method="predict_proba")[:, 1]
+    print(f"시드 {seed} 비용:", [cost(p, t)[3] for t in [0.2, 0.3, 0.5]])
+rng = np.random.default_rng(0)
+boot = []
+for _ in range(100):
+    i = rng.integers(0, len(X_train), len(X_train))
+    boot.append(model.fit(X_train.iloc[i], y_train.iloc[i])[-1].coef_[0].copy())
+print("부트스트랩 계수 5·95백분위:\n", np.percentile(boot, [5, 95], axis=0).round(2))
 ```
 
-출력은 검증 AUC 0.987과 §2.1 표의 세 행이다.
+출력은 차례로 §1.1의 계수, §2 첫머리의 표준화 계수, 검증 AUC 0.987과 부리 길이 모델의 0.823, §2.1 표의 세 행과 1/6의 비용, §2.3의 보정 표, §2.4의 폴드별 AUC·시드별 비용·부트스트랩 계수 범위다.
 
 변수마다 기울기 하나로는 한 변수의 효과가 다른 변수에 따라 달라지는 관계를 스스로 담지 못해, [10b](/lecture/2026f-applied-data-science/10b-trees-xgboost-shap)에서는 질문으로 자료를 나누는 트리를 쓴다.
 
 [^vds11]: Yu, B., & Barter, R. L. (2024). *Veridical Data Science*. MIT Press. [11장](https://vdsbook.com/11-ls_binary).
 [^penguins]: Horst, A. M., Hill, A. P., & Gorman, K. B. (2020). *palmerpenguins: Palmer Archipelago (Antarctica) penguin data*. [원자료 CSV](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv). CC0.
-[^calibration]: scikit-learn developers. Probability calibration. *scikit-learn documentation*. [공식 문서](https://scikit-learn.org/stable/modules/calibration.html).
+[^calibration]: scikit-learn developers. (v1.9). Probability calibration. *scikit-learn documentation*. [공식 문서](https://scikit-learn.org/1.9/modules/calibration.html).

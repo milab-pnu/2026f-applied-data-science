@@ -6,17 +6,18 @@ order: 1
 
 import flipperMass from "./assets/06-flipper-mass.svg";
 import leastSquares from "./assets/09a-least-squares.svg";
+import bootStability from "./assets/09a-bootstrap-stability.svg";
 
 8주차 Milestone 2까지는 이미 가진 데이터의 구조를 탐색했고, 이제부터는 아직 모르는 값을 예측한다.
-정답이 있는 과거 자료로 입력과 정답의 관계를 학습해 새 관측의 정답을 맞히는 방식을 지도학습(supervised learning)이라고 한다.
+정답이 붙은 과거 자료로 입력과 정답의 관계를 학습해 새 관측의 값을 맞히는 방식을 지도학습(supervised learning)이라고 한다.
 학습에 쓴 데이터에 잘 맞는 모델도 새 데이터에서는 빗나갈 수 있으므로, 예측은 실제로 쓸 상황을 닮은 새 데이터에서 평가한다.
 펭귄의 날개 길이로 몸무게를 예측하는 문제로 이 과정을 따라가 보자.
 
-**읽기 자료**: 교재 8장 [An Introduction to Prediction Problems](https://vdsbook.com/08-prediction_intro), 9장 [Continuous Responses and Least Squares](https://vdsbook.com/09-ls), 10장 [Extending the Least Squares Algorithm](https://vdsbook.com/10-ls_continued).[^vds]
+**읽기 자료**: 교재 8장 [An Introduction to Prediction Problems](https://vdsbook.com/08-prediction_intro), 9장 [Continuous Responses and Least Squares](https://vdsbook.com/09-ls).[^vds]
 
 ## 1. 예측 문제의 설계
 
-### 1.1 관측 단위와 시점
+### 1.1 관측 단위, 시점, 변수
 
 Palmer Penguins 자료에는 펭귄의 종, 섬, 부리와 날개 치수, 몸무게가 있다.[^penguins]
 몸무게를 직접 재기 어렵다고 가정하고, 날개 길이로 성체 펭귄의 몸무게를 예측해 보자.
@@ -31,7 +32,7 @@ Palmer Penguins 자료에는 펭귄의 종, 섬, 부리와 날개 치수, 몸무
 | 평가 | 나중에 실제 몸무게를 측정하여 예측 오차 계산 |
 
 **반응변수**(response)는 예측하려는 값이고 **예측변수**(predictor)는 예측에 쓰는 입력이다.
-예측변수는 머신러닝에서 흔히 **특성**(feature)이라고 부르며, 다음 노트부터는 주로 이 말을 쓴다.
+예측변수는 머신러닝에서 흔히 **특성**(feature), 통계에서는 공변량(covariate)이라고도 부르며, 다음 노트부터는 주로 특성이라는 말을 쓴다.
 같은 자료라도 목표는 달리 정할 수 있다.
 몸무게처럼 연속값을 맞히면 회귀(regression) 문제이고, 어떤 펭귄이 Chinstrap인지 아닌지를 맞히면 분류 문제가 된다(10주차).
 
@@ -71,9 +72,9 @@ Palmer Penguins 자료에는 펭귄의 종, 섬, 부리와 날개 치수, 몸무
 ### 2.1 직선으로 예측
 
 [06a §3.2](/lecture/2026f-applied-data-science/06a-eda#32-상관과-산점도)의 산점도에서 보았듯 날개 길이와 몸무게는 대체로 함께 커진다.
-같은 날개 길이에서도 몸무게가 제각각이므로, 직선은 점을 모두 지나기보다 전체 관계를 요약한다.
+같은 날개 길이에서도 몸무게가 제각각이므로, 직선은 점을 모두 지나기보다 전체 관계를 요약한다.<Sidenote>[06b](/lecture/2026f-applied-data-science/06b-pca)의 PCA(principal component analysis) 첫 주성분도 산점도에 직선을 긋지만, 두 변수를 대등하게 보고 변동을 요약하는 방향이라 몸무게의 세로 오차만 줄이는 회귀 직선과 다르다. 두 변수를 표준화하면 첫 주성분의 기울기는 1이고 회귀 직선의 기울기는 r = 0.871이다.</Sidenote>
 
-<Figure src={flipperMass.src} alt="날개 길이와 몸무게의 산점도. 342개의 점이 왼쪽 아래에서 오른쪽 위로 이어지는 띠를 이루며 점선 직선 주위에 퍼져 있다" caption="Palmer Penguins 342마리의 날개 길이와 몸무게. 점선은 342마리 전체에 맞춘 최소제곱 직선이라 성능 평가에는 쓰지 않는다(평가는 §3.1)." source="Palmer Penguins 데이터 · CC0" wide />
+<Figure src={flipperMass.src} alt="날개 길이와 몸무게의 산점도. 342개의 점이 왼쪽 아래에서 오른쪽 위로 이어지는 띠를 이루며 점선 직선 주위에 퍼져 있다" caption="Palmer Penguins 342마리의 날개 길이와 몸무게. 점선은 342마리 전체에 맞춘 최소제곱 직선이라 성능 평가에는 쓰지 않는다(평가는 §3.2)." wide />
 
 날개 길이를 $x$, 몸무게를 $y$라고 하면 하나의 예측 모델은 다음과 같다.
 
@@ -90,7 +91,7 @@ $$
 직선을 쓴다는 것은 날개 길이가 어디에 있든 1 mm 차이에 대응하는 예측 변화가 같다고 가정하는 것이다.
 산점도에 뚜렷한 곡선이나 종별로 다른 패턴이 보이면 이 가정이 부족할 수 있다.
 관측 범위 밖으로 직선을 연장하는 외삽(extrapolation)도 조심한다.
-날개 300 mm를 넣으면 약 9,126 g이 나오지만, 관측된 가장 무거운 펭귄은 6,300 g이고 그 범위 밖에서 직선이 맞는다는 근거는 없다.<Sidenote>[06b](/lecture/2026f-applied-data-science/06b-pca)의 PCA 첫 주성분도 산점도에 직선을 긋지만, 두 변수를 대등하게 보고 변동을 요약하는 방향이라 몸무게의 세로 오차만 줄이는 회귀 직선과 대체로 일치하지 않는다.</Sidenote>
+날개 300 mm를 넣으면 약 9,126 g이 나오지만, 관측된 가장 무거운 펭귄은 6,300 g이고 그 범위 밖에서 직선이 맞는다는 근거는 없다.
 
 ### 2.2 손실 함수와 적합
 
@@ -107,7 +108,13 @@ $$
 합 기호 $\sum_{i=1}^{n}$은 첫 관측부터 $n$번째 관측까지 더하라는 뜻이고, $n$으로 나누면 관측 하나당 평균이 된다.
 
 잔차를 제곱하므로 LS는 큰 잔차에 민감하다(잔차 4의 제곱 손실은 잔차 1의 16배).
-대신 잔차 절댓값의 평균을 최소화하는 최소절대편차(least absolute deviation, LAD)도 있으며, 같은 차이를 §3.1의 평가 지표 MAE와 RMSE에서 다시 본다.
+잔차 절댓값의 평균을 최소화하는 최소절대편차(least absolute deviation, LAD)는 큰 잔차에 덜 끌려가서 이상치에 더 견고하다.
+입력 없이 상수 하나로 예측한다면 LS의 답은 평균이고 LAD의 답은 중앙값이니, 두 방법의 차이는 평균과 중앙값의 차이와 닮았다.
+대신 LAD에는 §2.3의 LS 공식처럼 데이터를 넣으면 계수가 바로 나오는 일반 공식이 없어 선형계획법 같은 수치 최적화로 풀고, 최소점이 하나로 정해지지 않을 때도 있다.
+두 손실의 차이는 §3.1의 평가 지표 MAE와 RMSE에서 다시 본다.
+
+선형 모델을 LS로 맞추는 일을 흔히 **선형회귀**(linear regression)라 하고, 입력이 하나뿐이면 단순 선형회귀라 한다.
+통계학의 선형회귀는 보통 오차의 분포를 가정하고 계수의 불확실성을 추론하는 데까지 나아가지만, LS 자체는 그런 가정 없이도 예측에 쓸 수 있고 이 노트는 예측 성능만 본다(교재 9.3.2.2절).
 
 <Video src="https://www.youtube.com/watch?v=PaFPbb66DxQ" caption="StatQuest, The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.) (2017). 직선을 옮기고 돌려 가며 잔차 제곱합이 어떻게 변하는지 그려, 그 합이 가장 작은 직선을 고르는 과정을 보여 준다. 영어 자막이 있다." />
 
@@ -118,9 +125,9 @@ $$
 
 | 펭귄 | 날개 길이 $x_i$ (mm) | 실제 몸무게 $y_i$ (g) |
 |---|---|---|
-| A | 180 | 3600 |
-| B | 190 | 4000 |
-| C | 200 | 4600 |
+| A | 180 | 3,600 |
+| B | 190 | 4,000 |
+| C | 200 | 4,600 |
 
 날개 길이의 평균은 $\bar x=190$, 몸무게의 평균은 $\bar y\approx4066.67$이다.
 절편이 있는 단순 선형회귀에서 최소제곱 기울기와 절편은 다음 공식으로 구한다($x$가 모두 같으면 기울기를 정할 수 없다).
@@ -131,25 +138,37 @@ b_1=\frac{\sum_i(x_i-\bar x)(y_i-\bar y)}{\sum_i(x_i-\bar x)^2},
 $$
 
 분자는 날개 길이와 몸무게가 각자의 평균에서 같은 방향으로 벗어난 정도를 더한 값으로, $n-1$로 나누면 [06a §3.2](/lecture/2026f-applied-data-science/06a-eda#32-상관과-산점도)의 공분산이다.
-분모는 날개 길이가 흩어진 정도다.
-이 자료에서 분자는 10,000, 분모는 200이므로 $b_1=50$ g/mm이고, 절편은 $4066.67-50\times190\approx-5433.33$ g이다.
+분모는 날개 길이가 흩어진 정도로, $n-1$로 나누면 날개 길이의 분산 $s_x^2$이다.
+공분산은 상관계수와 두 표준편차의 곱 $r\,s_x s_y$이므로 기울기는 $b_1=r\,s_y/s_x$로도 쓸 수 있다.
+342마리의 $r=0.871$, $s_y\approx802$ g, $s_x\approx14.06$ mm를 넣으면 약 49.7로, §2.1 점선의 기울기와 같다.
+
+세 펭귄 자료에서는 분자가 10,000, 분모가 200이므로 $b_1=50$ g/mm이고, 절편은 $4066.67-50\times190\approx-5433.33$ g이다.
 예측식 $\hat y\approx-5433.33+50x$는 평균점 $(190,\ 4066.67)$을 지난다.
 
 | 펭귄 | 예측 몸무게 | 잔차: 실제 − 예측 | 잔차의 제곱 |
 |---|---|---|---|
-| A | 약 3566.67 g | 약 33.33 g | 약 1111.11 g² |
-| B | 약 4066.67 g | 약 −66.67 g | 약 4444.44 g² |
-| C | 약 4566.67 g | 약 33.33 g | 약 1111.11 g² |
+| A | 약 3,566.67 g | 약 33.33 g | 약 1,111.11 g² |
+| B | 약 4,066.67 g | 약 −66.67 g | 약 4,444.44 g² |
+| C | 약 4,566.67 g | 약 33.33 g | 약 1,111.11 g² |
 
-<Figure src={leastSquares.src} alt="세 점 A(180, 3600), B(190, 4000), C(200, 4600)과 최소제곱 직선. 각 점에서 직선까지 세로 점선으로 잔차 +33, −67, +33이 표시되어 있다" caption="가상의 세 펭귄(파란 점)과 최소제곱 직선. 주황 점선이 잔차 e = y − ŷ이고, 최소제곱은 이 세로 길이의 제곱합을 가장 작게 만드는 직선을 고른다." />
+<Figure src={leastSquares.src} alt="세 점 A(180, 3600), B(190, 4000), C(200, 4600)과 최소제곱 직선. 각 점에서 직선까지 세로 주황 선으로 잔차 +33, −67, +33이 표시되어 있다" caption="가상의 세 펭귄(파란 점)과 최소제곱 직선. 각 점에서 직선까지의 세로 주황 선이 잔차 e = y − ŷ이고, 최소제곱은 이 세로 길이의 제곱합을 가장 작게 만드는 직선을 고른다." />
 
 훈련 MSE는 $(1111.11+4444.44+1111.11)/3\approx2222.22$ g²다.
 직선은 세 점 가운데 어느 것도 정확히 지나지 않지만, 절편과 기울기를 어떻게 바꿔도 이보다 작은 MSE는 나오지 않는다.
 날개 길이 195 mm인 새 펭귄에는 약 4,316.67 g을 예측하며, 이 값이 맞는지는 그 펭귄의 실제 몸무게를 재 봐야 안다.
 
+<Details summary="최소제곱 공식이 나오는 과정">
+
+MSE를 절편 $b_0$로 미분해 0으로 두면 $\sum_i(y_i-b_0-b_1x_i)=0$, 곧 $b_0=\bar y-b_1\bar x$이다.
+이를 넣으면 $\operatorname{MSE}=\frac{1}{n}\sum_i\{(y_i-\bar y)-b_1(x_i-\bar x)\}^2$이 되고, 다시 $b_1$로 미분해 0으로 두면 $\sum_i(x_i-\bar x)(y_i-\bar y)=b_1\sum_i(x_i-\bar x)^2$이라 위의 기울기 공식이 나온다.
+$x$가 모두 같지 않으면 MSE는 $b_0$, $b_1$에 대해 아래로 볼록한 이차식이므로, 기울기가 0인 이 점이 최소다.
+세 펭귄에서 기울기를 49나 51로 바꾸고 절편을 다시 맞추면 MSE는 2,222.22 g²에서 2,288.89 g²로 커진다.
+
+</Details>
+
 ## 3. 새로운 데이터의 성능
 
-### 3.1 오차 지표의 선택
+### 3.1 오차 지표
 
 새 데이터의 오차는 보통 두 지표로 잰다.
 평균절대오차(mean absolute error, MAE)는 오차 절댓값의 평균이고, 평균제곱근오차(root mean squared error, RMSE)는 MSE의 제곱근이다.
@@ -160,27 +179,37 @@ $$
 \operatorname{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\hat y_i)^2}.
 $$
 
+여기서 $n$은 평가하는 데이터의 관측 수다(§3.2의 테스트라면 103).
+차이를 계산하는 방식은 §2.2의 잔차와 같지만, 훈련 데이터에서의 차이는 잔차, 새 데이터에서의 차이는 예측 오차라고 부른다.
+
 RMSE는 큰 오차를 더 크게 반영한다.
 같은 두 관측에서 모델 A의 오차가 0 g, 400 g이고 모델 B의 오차가 250 g, 250 g이라면, MAE는 A가 200 g으로 B의 250 g보다 작지만 RMSE는 A가 약 283 g으로 B의 250 g보다 크다.
 평균적인 오차를 줄이는 것이 중요한지 큰 실수를 피하는 것이 중요한지에 따라 고르는 모델이 달라지므로, 지표는 결과를 보기 전에 사용 목적에 맞춰 정해 둔다.
 학습에 쓴 손실(LS라면 MSE)과 평가 지표가 같을 필요는 없다.
+LAD도 훈련 데이터의 MAE를 가장 작게 만들 뿐이라, 새 데이터의 MAE에서 언제나 LS보다 낮다는 보장은 없다.
+
+### 3.2 기준 모델과 테스트 평가
 
 지표의 숫자만으로는 좋은지 나쁜지 알기 어렵다.
 그래서 입력을 전혀 쓰지 않고 훈련 데이터의 평균 몸무게를 언제나 내놓는 **기준 모델**(baseline)과 비교해, 특성이 실제로 도움이 되었는지 본다.
 
-**결정계수** $R^2$(coefficient of determination)는 이 비교를 제곱오차로 한 숫자에 담는다.
+**결정계수**(coefficient of determination) $R^2$는 이와 거의 같은 비교를 제곱오차로 한 숫자에 담는다.
 
 $$
 R^2=1-\frac{\sum_i(y_i-\hat y_i)^2}{\sum_i(y_i-\bar y)^2}
 $$
 
-분모는 모든 관측에 평균 $\bar y$를 예측했을 때의 제곱오차 합이고, 분자는 모델의 제곱오차 합이다.
+분모는 평가하는 데이터의 모든 관측에 그 데이터의 평균 $\bar y$를 예측했을 때의 제곱오차 합이고, 분자는 모델의 제곱오차 합이다.
 그래서 $R^2$는 "평균만 예측할 때보다 제곱오차를 몇 퍼센트 줄였나"로 읽는다.
 1이면 완벽한 예측, 0이면 평균과 같은 수준이고, 평가 데이터에서 평균보다 못하면 음수도 나온다.
-상관계수는 예측이 모두 200 g씩 높게 빗나가도 1이 될 수 있으므로 예측 오차의 지표로 쓰지 않는다.
+
+교재 9장은 $R^2$를 훈련 데이터에서 관측값과 예측값의 상관계수를 제곱한 값으로 정의하고, 검증 데이터에서는 $R^2$ 대신 그 상관계수를 본다.
+절편이 있는 LS를 훈련 데이터에서 평가하면 두 정의의 값이 같다.
+이 노트처럼 scikit-learn의 `r2_score`로 새 데이터에서 계산하면 위 식의 값과 상관계수의 제곱이 달라지고, 위 식만 음수가 될 수 있다.
+상관계수는 예측이 모두 200 g씩 높게 빗나가도 1이 될 수 있어 오차의 크기를 알려 주지 않으므로, 교재도 상관계수를 RMSE나 MAE와 함께 보라고 한다.
 
 이제 실제 자료에서 날개 길이 직선을 기준 모델과 비교해 보자.
-결측을 뺀 펭귄 342마리를 무작위로 7:3으로 나눠(scikit-learn의 `train_test_split(test_size=0.3, random_state=0)`) 훈련 239마리와 테스트 103마리를 얻었다.
+날개 길이나 몸무게가 빠진 2마리를 뺀 펭귄 342마리를 무작위로 7:3으로 나눠(scikit-learn의 `train_test_split(test_size=0.3, random_state=0)`) 훈련 239마리와 테스트 103마리를 얻었다.
 기준 모델의 평균과 직선의 계수는 훈련 239마리로만 구하고, 오차는 테스트 103마리에서 쟀다.
 여기서는 미리 정한 모델 하나를 평가해 보이는 시연이라 검증 없이 바로 테스트했고, 이 결과는 뒤에서 모델을 고르는 데 쓰지 않는다.
 
@@ -189,31 +218,89 @@ $$
 | 기준 모델 | 평균 4,211 g | 647 g | 772 g | 약 0 |
 | 날개 길이 직선 | $b_0\approx-5831$, $b_1\approx49.95$ | 309 g | 391 g | 0.74 |
 
-날개 길이 하나로 평균 절대오차가 647 g에서 309 g으로 절반 넘게 줄었다.
-R² 0.74는 테스트 펭귄에서 평균만 예측할 때보다 제곱오차를 74% 줄였다는 뜻이다.<Sidenote>R² 분모의 $\bar y$는 테스트 103마리의 평균이다. 이 값은 테스트 정답을 봐야 알 수 있어 실제로 배포할 수 있는 예측이 아니므로, 기준 모델은 훈련 평균을 쓴다. 이 분할에서는 두 평균이 가까워 기준 모델의 R²가 0에 가깝다.</Sidenote>
+날개 길이 하나로 MAE가 647 g에서 309 g으로 절반 넘게 줄었다.
+R² 0.74는 테스트 펭귄에서 평균만 예측할 때보다 제곱오차를 74% 줄였다는 뜻이다.<Sidenote>기준 모델은 테스트 정답을 보기 전에 정해야 하므로 훈련 평균(4,211 g)을 쓰고, R² 분모의 $\bar y$는 테스트 103마리의 평균(4,180 g)이다. 이 분할에서는 두 평균이 가까워 기준 모델의 R²가 0에 가깝다.</Sidenote>
 그래도 한 마리당 평균 300 g 정도는 빗나간다.
-훈련 부분으로만 맞춘 기울기 49.95는 342마리 전체의 기울기 49.69와 거의 같다.
 
-### 3.2 Predictability와 stability
+### 3.3 Predictability와 stability
 
-[03주차 §1](/lecture/2026f-applied-data-science/03-project-setup-and-feasibility#1-pcs와-dslc-복습)의 PCS 가운데 predictability와 stability를 이 예측에 적용해 보자.
+[03 §1](/lecture/2026f-applied-data-science/03-project-setup-and-feasibility#1-pcs와-dslc-복습)의 PCS(predictability, computability, stability) 가운데 predictability와 stability를 이 예측에 적용해 보자.
 테스트 오차는 **predictability**, 곧 예측이 현실과 맞는지의 근거다.
 다만 이 근거는 테스트 자료와 비슷한 펭귄에만 해당하고, 다른 해나 다른 섬의 펭귄이라면 다시 확인해야 한다.
 
 **Stability**는 데이터나 분석 선택에 타당한 변화를 주어도 결과가 유지되는지 묻는다.
 예측 모델에서는 훈련 데이터를 다시 뽑거나 결측 처리 같은 선택을 바꿔 다시 학습한 뒤, 같은 펭귄에 대한 예측이 얼마나 달라지는지 본다.
-훈련 239마리에서 같은 수를 복원 추출(같은 펭귄이 여러 번 뽑힐 수 있게 뽑는 방식)하는 **부트스트랩**(bootstrap)으로 직선을 100번 다시 맞추면, 날개 200 mm 펭귄의 예측은 대부분(5–95백분위) 4,114–4,194 g 안에 들어온다.
-훈련 표본이 바뀌어도 예측은 80 g 안에서 움직이니 안정적이다.
+훈련 239마리로만 맞춘 기울기 49.95는 342마리 전체의 기울기 49.69와 거의 같다.
+이는 훈련 표본을 한 번 바꿔 본 결과이고, 여러 번 다시 뽑으면 흔들림의 폭을 잴 수 있다.
+훈련 239마리에서 같은 수만큼 복원 추출해(같은 펭귄이 여러 번 뽑힐 수 있다) 새 훈련 표본을 만드는 방법을 **부트스트랩**(bootstrap)이라 한다.
+이렇게 뽑은 표본 1,000개마다 직선을 다시 맞추면 날개 200 mm 펭귄의 예측은 대부분(5–95백분위) 약 4,120–4,200 g 안에 들어온다.
+훈련 표본이 바뀌어도 예측은 100 g이 안 되는 폭에서 움직이니 안정적이다.
 
-그런데 훈련 펭귄 가운데 날개가 198–202 mm인 13마리의 실제 몸무게는 3,325–4,450 g으로 넓게 퍼져 있고, 그중 10마리는 예측 범위의 하한 4,114 g보다 가볍다.
-4,114–4,194 g은 예측이 흔들리는 폭이고, 새 펭귄의 실제 몸무게는 이보다 훨씬 넓게 흩어진다.
+<Figure src={bootStability.src} alt="훈련 펭귄 239마리의 날개 길이와 몸무게 산점도. 점은 종별로 파랑(Adelie), 주황(Chinstrap), 초록(Gentoo)이고, 부트스트랩 직선 100개가 거의 한 줄로 겹쳐 있다. 날개 198–202 mm 구간이 회색 띠로 칠해져 있고, 띠 안의 13마리는 3,325–4,450 g에 퍼져 있으며 대부분 주황색으로 직선 아래에 있다" caption="훈련 펭귄 239마리와 부트스트랩 직선 100개(1,000번 가운데 처음 100번). 직선 다발은 날개 200 mm에서 약 110 g 폭 안에 모이지만, 회색 띠(198–202 mm) 안 13마리의 실제 몸무게는 3,325–4,450 g에 퍼지고 그 가운데 Chinstrap(주황)은 대부분 직선 아래에 있다." wide />
+
+그런데 훈련 펭귄 가운데 날개가 198–202 mm인 13마리의 실제 몸무게는 3,325–4,450 g으로 넓게 퍼져 있고, 그중 10마리는 예측 범위의 하한(약 4,120 g)보다 가볍다.
+약 4,120–4,200 g은 예측이 흔들리는 폭이고, 새 펭귄의 실제 몸무게는 이보다 훨씬 넓게 흩어진다.
+훈련 펭귄을 더 모으면 부트스트랩 폭처럼 학습한 관계의 흔들림은 줄지만, 날개 길이만으로 설명되지 않는 개체 차이는 그대로 남는다.
+다른 섬이나 다른 측정 방식처럼 적용할 펭귄과 다른 자료를 더하면 오히려 예측이 나빠질 수도 있다.
 예측이 안정적이어도 틀릴 수 있으니 predictability와 stability는 따로 본다.
 
-이 13마리는 Chinstrap 10마리와 Adelie 3마리다.
-훈련 239마리를 다섯 부분으로 나눠 번갈아 예측한 오차(교차검증, 09b §2.2)를 종별로 보면 Chinstrap은 평균 202 g 과대 예측되어, 날개 길이가 같아도 종에 따라 몸무게가 다르다는 신호가 보인다.
+회색 띠의 13마리 가운데 10마리가 Chinstrap이고, 하한보다 가벼운 10마리 중 8마리도 Chinstrap이다.
+훈련 239마리를 다섯 부분으로 나눠(`KFold(5, shuffle=True, random_state=0)`) 번갈아 예측한 오차(교차검증, [09b §2.2](/lecture/2026f-applied-data-science/09b-features-and-regularization#22-교차검증과-선택))를 종별로 보면 Chinstrap은 평균 202 g 과대 예측되어, 날개 길이가 같아도 종에 따라 몸무게가 다르다는 신호가 보인다.
 테스트 오차로 이런 진단을 하면 테스트가 다음 모델을 고르는 데 쓰이므로, 진단은 훈련 데이터 안에서 한다.
 이 오차를 줄이려고 [09b](/lecture/2026f-applied-data-science/09b-features-and-regularization)에서 종과 부리 치수를 특성으로 더한다.
 
-[^vds]: Yu, B., & Barter, R. L. (2024). *Veridical Data Science*. MIT Press. [8장](https://vdsbook.com/08-prediction_intro), [9장](https://vdsbook.com/09-ls), [10장](https://vdsbook.com/10-ls_continued).
-[^penguins]: Horst, A. M., Hill, A. P., & Gorman, K. B. (2020). *palmerpenguins: Palmer Archipelago (Antarctica) penguin data*. [데이터와 문서](https://allisonhorst.github.io/palmerpenguins/).
-[^pitfalls]: scikit-learn developers. *Common pitfalls and recommended practices*. [공식 문서](https://scikit-learn.org/stable/common_pitfalls.html).
+<Details summary="§3의 수치를 재현하는 코드">
+
+§3.2의 표, 부트스트랩 구간, 종별 교차검증 오차를 차례로 계산한다.
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_error
+from sklearn.model_selection import KFold, cross_val_predict, train_test_split
+
+url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv"
+data = pd.read_csv(url).dropna(subset=["flipper_length_mm", "body_mass_g"])  # 342마리
+train, test = train_test_split(data, test_size=0.3, random_state=0)       # 239, 103
+X, y = train[["flipper_length_mm"]], train["body_mass_g"]
+
+line = LinearRegression().fit(X, y)
+preds = {"기준 모델": np.full(len(test), y.mean()), "날개 길이 직선": line.predict(test[["flipper_length_mm"]])}
+for name, p in preds.items():
+    t = test["body_mass_g"]
+    print(name, round(mean_absolute_error(t, p)), round(root_mean_squared_error(t, p)), round(r2_score(t, p), 2))
+
+rng = np.random.default_rng(0)  # 부트스트랩 1,000번, 날개 200 mm의 예측
+boot = [LinearRegression().fit(X.iloc[i], y.iloc[i]).predict(pd.DataFrame({"flipper_length_mm": [200]}))[0]
+        for i in (rng.integers(0, len(train), len(train)) for _ in range(1000))]
+print(np.percentile(boot, [5, 95]).round())  # 약 4,120–4,202 g
+
+cv = KFold(5, shuffle=True, random_state=0)  # 훈련 데이터 안의 교차검증 오차를 종별로
+error = cross_val_predict(LinearRegression(), X, y, cv=cv) - y
+print(error.groupby(train["species"]).mean().round())  # Chinstrap 약 +202 g
+```
+
+</Details>
+
+## 4. 프로젝트의 예측 설계
+
+M2에서 발표한 모델링 계획(입력과 타겟, 기준 모델, 평가 지표)을 이 노트의 틀로 다시 쓴다.
+모델은 9–12주차에 걸쳐 바뀌지만, 무엇을 언제 예측하고 어떻게 평가할지는 결과를 보기 전에 정해 두어야 후보끼리 공정하게 비교할 수 있다.
+
+1. **설계 표.** §1.1의 여섯 항목(관측 단위, 예측 시점, 반응변수, 예측변수, 적용 대상, 평가)을 팀 주제로 채운다.
+   예측변수마다 예측 시점에 실제로 얻을 수 있는 값인지 확인한다.
+2. **분할 단위.** 무작위, 개체, 시간 가운데 어느 단위로 나눌지와 그 근거를 적는다(§1.2).
+   테스트 데이터는 이때 떼어 두고 모델을 고르는 데 쓰지 않는다.
+3. **기준 모델과 주 지표.** 입력을 쓰지 않는 기준 모델 하나와 사용 목적에 맞는 주 지표 하나를 정한다(§3.1, §3.2).
+
+반응변수의 형태에 따라 이어서 볼 노트가 다르다.
+연속값이면 이 노트와 [09b](/lecture/2026f-applied-data-science/09b-features-and-regularization)의 회귀에서 시작해 11주차의 최종 예측까지 펭귄 사례를 따라가고, 범주이면 10주차의 분류를 따른다.
+시간 순서로 쌓이는 값을 미래로 내다본다면 12주차의 시계열 예측, 미래 사건이 일어날 확률을 낸다면 12주차의 이벤트 포캐스팅을 본다.
+
+이번 주에는 팀이 쓰는 공개·제공 데이터로 설계 표 한 장을 채우고, 정한 분할의 훈련 데이터 안에서(검증 데이터나 교차검증으로) 기준 모델의 주 지표를 계산해 둔다.
+이 값이 앞으로 모든 후보 모델이 넘어야 할 기준선이 된다.
+
+[^vds]: Yu, B., & Barter, R. L. (2024). *Veridical Data Science*. MIT Press. [8장](https://vdsbook.com/08-prediction_intro), [9장](https://vdsbook.com/09-ls).
+[^penguins]: Horst, A. M., Hill, A. P., & Gorman, K. B. (2020). [palmerpenguins: Palmer Archipelago (Antarctica) penguin data](https://doi.org/10.5281/zenodo.3960218). R package version 0.1.0. CC0.
+[^pitfalls]: scikit-learn developers. (v1.9). Common pitfalls and recommended practices. *scikit-learn documentation*. [공식 문서](https://scikit-learn.org/1.9/common_pitfalls.html).
