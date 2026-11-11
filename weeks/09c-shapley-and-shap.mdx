@@ -273,7 +273,7 @@ Consistency는 §2.1의 예로 보자.
 </Details>
 
 논문은 설명할 입력과 가림 방식, 곧 값 함수 $v$를 정하면 세 성질을 모두 만족하는 가산적 기여가 Shapley value 하나뿐임을 정리(Theorem 1)로 제시했다.
-근거로 Young (1985)[^young]의 유일성 정리를 들면서, 거기 쓰인 세 번째 성질인 대칭성(symmetry)은 이 설정에서 불필요하다고 썼다.[^shap]
+근거로 Young (1985)[^young]의 유일성 정리를 들면서, 거기 쓰인 세 번째 성질인 대칭성(symmetry)은 이 설정에서 중복이라(redundant) 필요 없다고 썼다.[^shap]
 그런데 §2.1에서 A → B 한 순서만 쓰는 배분(100, 100)도 세 성질을 모두 만족하므로, 배분이 하나로 정해지려면 어느 조합에 더해도 출력을 똑같이 바꾸는 두 특성은 같은 몫을 받는다는 대칭성도 필요하다.
 이 유일성은 정해진 게임 안의 결론이라, 배경이나 가림 방식을 바꾸면 값이 달라지고(§5.2) 모델의 예측 성능이나 인과관계를 보증하지도 않는다.
 
@@ -358,6 +358,8 @@ $E[X_i]$는 배경 집단에서 $i$번째 특성의 평균이며, 도입의 표�
 
 트리 모델에는 트리 구조를 이용하는 Tree SHAP이 있다.[^tree]
 $2^M$개 조합을 하나씩 계산하지 않고 트리의 분기 경로를 따라가며, 표본 근사 없이 트리 출력의 Shapley value를 다항 시간에 정확히 구한다.
+정확한 값은 트리가 직접 내는 출력에 대한 것이다.
+10주차의 XGBoost 분류기처럼 트리가 로그 오즈를 내고 마지막에 확률로 바꾸는 모델에서는, 로그 오즈의 설명은 정확하지만 확률 척도의 설명에는 근사를 쓴다.
 
 ## 5. 펭귄 예측의 설명
 
@@ -405,7 +407,7 @@ shap.plots.waterfall(explanation[0])
 `maskers.Independent`는 §2.2의 독립형 대체로 가린 특성을 채운다.
 `shap.Explainer`는 모델과 배경 데이터를 보고 설명기를 고르며, 여기서는 선형 모델용 `LinearExplainer`를 골라 §4.2의 식으로 계산한다.[^explainer][^linear]
 트리 모델에는 `TreeExplainer`가 선택된다.
-예측 함수만 주면 특성이 10개 이하일 때 모든 조합을 직접 계산하는 exact 방식이, 그보다 많으면 §2.1의 순서를 무작위로 뽑아 추가 기여를 평균하는 permutation 방식이 선택된다.
+예측 함수만 주면 특성이 10개 이하일 때 모든 조합을 직접 계산하는 exact 방식이, 그보다 많으면 §2.1의 순서를 무작위로 뽑아 추가 기여를 평균하는 permutation 방식이 선택된다.[^explainer-src]
 §4.1의 Kernel SHAP은 `KernelExplainer`로 직접 지정한다.
 
 마지막 줄은 같은 덧셈을 shap 형식의 waterfall 그림으로 그린다.[^waterfall]
@@ -445,5 +447,6 @@ SHAP 값은 모델이 그 관측을 어떻게 예측했는지 설명한다.
 [^penguins]: Horst, A. M., Hill, A. P., & Gorman, K. B. (2020). *palmerpenguins: Palmer Archipelago (Antarctica) penguin data*. [원자료 CSV](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv). CC0.
 [^package]: SHAP. (v0.54.1). *shap*. [GitHub 저장소](https://github.com/shap/shap/tree/v0.54.1).
 [^explainer]: SHAP. (v0.54.1). shap.Explainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.Explainer.html).
+[^explainer-src]: SHAP. (v0.54.1). shap/explainers/_explainer.py. *shap*. [GitHub 저장소](https://github.com/shap/shap/blob/v0.54.1/shap/explainers/_explainer.py).
 [^waterfall]: SHAP. (v0.54.1). shap.plots.waterfall. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.plots.waterfall.html).
 [^causal]: Dillon, E., LaRiviere, J., Lundberg, S., Roth, J., & Syrgkanis, V. (v0.54.1). Be careful when interpreting predictive models in search of causal insights. *SHAP documentation*. [공식 예제](https://shap.readthedocs.io/en/stable/example_notebooks/overviews/Be%20careful%20when%20interpreting%20predictive%20models%20in%20search%20of%20causal%20insights.html).
