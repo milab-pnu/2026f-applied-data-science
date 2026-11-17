@@ -7,7 +7,7 @@ order: 1
 import tabpfnOverview from "./assets/14a-tabpfn-fig1a.png";
 
 9주차에는 선형회귀로 펭귄 몸무게를, 10주차에는 로지스틱 회귀와 트리 앙상블로 Chinstrap 여부를 예측했다.
-XGBoost는 [10b §3.1](/lecture/2026f-applied-data-science/10b-trees-xgboost-shap#31-잔차를-맞추는-트리)에서 본 것처럼 잔차를 맞추는 트리를 쌓으므로 몸무게 같은 연속값에도 그대로 쓸 수 있다.
+XGBoost는 [10b §3.1](/lecture/2026f-applied-data-science/10b-trees-and-xgboost#31-잔차를-맞추는-트리)에서 본 것처럼 잔차를 맞추는 트리를 쌓으므로 몸무게 같은 연속값에도 그대로 쓸 수 있다.
 그래서 이번 주는 몸무게 예측으로 돌아와 선형회귀와 XGBoost를 한자리에 모은다.
 이 후보들은 모두 지금 가진 훈련 데이터만 보고 매개변수를 맞추고, XGBoost라면 트리의 깊이와 개수 같은 초매개변수(학습 전에 사람이 정하는 값)도 검증으로 골라야 한다.
 
@@ -169,7 +169,7 @@ XGBoost가 뒤진 까닭을 따로 확인하지는 않았지만, 이 자료에�
 더 큰 표는 GPU를 쓰거나, `ignore_pretraining_limits=True` 또는 환경변수 `TABPFN_ALLOW_CPU_LARGE_DATASET=1`로 제한을 푼다.
 
 SHAP으로 설명할 때는 이 비용이 더 커진다.
-트리 구조를 이용하는 빠른 계산을 쓸 수 없어 Kernel SHAP 같은 모델 무관 방법([09c §4.1](/lecture/2026f-applied-data-science/09c-shapley-and-shap#41-kernel-shap))으로 특성을 가린 조합마다 예측을 다시 해야 하므로, 설명할 펭귄 수와 배경 데이터 크기를 작게 잡는다.
+트리 구조를 이용하는 빠른 계산을 쓸 수 없어 Kernel SHAP 같은 모델 무관 방법([10c §4.1](/lecture/2026f-applied-data-science/10c-shapley-and-shap#41-kernel-shap))으로 특성을 가린 조합마다 예측을 다시 해야 하므로, 설명할 펭귄 수와 배경 데이터 크기를 작게 잡는다.
 
 ## 4. 버전과 이용 조건
 

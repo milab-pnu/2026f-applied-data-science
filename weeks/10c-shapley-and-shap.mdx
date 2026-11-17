@@ -1,12 +1,18 @@
 ---
 title: "Shapley value와 SHAP"
-week: 9
+week: 10
 order: 3
 ---
 
-import penguinWaterfall from "./assets/09c-penguin-waterfall.svg";
+import penguinWaterfall from "./assets/10c-penguin-waterfall.svg";
+import shapScale from "./assets/10c-shap-scale.svg";
+import beeswarm from "./assets/10c-beeswarm.svg";
 
-[09b](/lecture/2026f-applied-data-science/09b-features-and-regularization)처럼 여러 특성으로 펭귄의 몸무게를 예측하는 선형 모델을 하나 정하자.
+[10b](/lecture/2026f-applied-data-science/10b-trees-and-xgboost)의 XGBoost는 테스트 펭귄 한 마리에 Chinstrap 확률 0.897을 주었지만, 트리 30개의 합에는 [10a](/lecture/2026f-applied-data-science/10a-binary-classification)의 로지스틱 회귀처럼 읽을 계수가 없다.
+10b의 변수 중요도는 모델 전체의 요약이라, 이 펭귄의 예측이 왜 그렇게 나왔는지는 말하지 않는다.
+예측 하나를 특성별 기여로 나누는 방법을, 답을 확인할 수 있는 선형 모델에서 먼저 보자.
+
+[09b](/lecture/2026f-applied-data-science/09b-features-and-regularization)처럼 여러 특성으로 펭귄의 몸무게를 예측하는 선형 모델을 하나 정한다.
 [09a](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression)와 같이 342마리를 훈련 239마리와 테스트 103마리로 나누고, 훈련 데이터로 날개 길이, 부리 길이, 종을 쓰는 최소제곱 모델을 맞춘다(설명을 단순하게 하려고 09b의 모델에서 부리 깊이는 뺐다).[^penguins]
 종은 09b에서처럼 Adelie를 기준으로 Chinstrap 표시 변수와 Gentoo 표시 변수 두 개로 바꾼다.
 맞춘 모델은 다음과 같다.
@@ -15,7 +21,7 @@ $$
 \hat y=-3883.8+28.16\,x_{\text{날개}}+57.17\,x_{\text{부리}}-665.44\,x_{\text{Chinstrap}}+144.16\,x_{\text{Gentoo}}
 $$
 
-종 계수는 [09b §1.2](/lecture/2026f-applied-data-science/09b-features-and-regularization#12-범주형-변수)의 Chinstrap −448 g, Gentoo +955 g과 다르다.
+종 계수는 09b의 Chinstrap −448 g, Gentoo +955 g과 다르다.
 부리 깊이를 빼면 그 정보 일부가 다른 계수로 옮겨 간다.
 특히 Gentoo는 부리가 얕은 종이라, 얕은 부리가 예측을 낮추던 몫이 Gentoo 계수에 섞여 계수가 크게 줄었다.
 
@@ -46,7 +52,7 @@ Adelie는 두 표시 변수가 모두 0이므로, 두 몫을 더한 +86.1 g이 "
 <Figure src={penguinWaterfall.src} alt="기준값 4211에서 날개 길이 기여 마이너스 423, 부리 길이 기여 마이너스 257, Chinstrap 표시 기여 플러스 139, Gentoo 표시 기여 마이너스 53을 차례로 더해 예측 3618에 이르는 막대 그림" caption="위 표를 그린 waterfall 그림. 기준값 4,211 g에서 특성별 기여를 막대로 하나씩 이어 붙여 이 펭귄의 예측 3,618 g에 닿는다. 파랑은 예측을 내린 기여, 주황은 올린 기여이며, 종의 두 막대를 합친 몫은 +86 g이다." wide />
 
 이 나눔은 모델이 계수 × 특성의 합이라서 가능했다.
-다음 주의 트리 모델처럼 계수가 없는 모델에서도, 예측을 받아 볼 수만 있으면 "예측 − 평균 예측"을 특성별로 나눌 수 있을까?
+10b의 트리 앙상블처럼 계수가 없는 모델에서도, 예측을 받아 볼 수만 있으면 "예측 − 평균 예측"을 특성별로 나눌 수 있을까?
 LIME(local interpretable model-agnostic explanations)은 설명할 관측 주변에서 단순한 선형 모델을 맞춰 그 계수를 읽고, SHAP(SHapley Additive exPlanations)은 Shapley value라는 배분 규칙으로 나눈다.
 
 **읽기 자료**: Lundberg와 Lee의 [A Unified Approach to Interpreting Model Predictions](https://papers.nips.cc/paper_files/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf).[^shap]
@@ -95,7 +101,7 @@ $M$은 특성의 수(여기서는 3)이고, $z'_i$가 1이면 그 계수를 더�
 
 SHAP 논문은 LIME처럼 기준값에 특성별 기여를 더해 설명하는 방법을 **가산적 특성 기여 방법**(additive feature attribution methods)으로 묶는다.[^shap]
 가산적이라는 말은 설명 모델 $g$의 형식을 가리키며, 원래 모델 $f$는 트리든 신경망이든 상관없다.
-그런데 원래 모델에서 특성끼리 상호작용이 있으면 더하기만 하는 $g$로는 모든 가상 입력을 맞출 수 없어, 표본을 아무리 늘려도 커널이 어느 입력을 중시하느냐에 따라 계수가 달라진다(§4.1에서 숫자로 본다).
+그런데 원래 모델에서 특성끼리 상호작용이 있으면 더하기만 하는 $g$로는 모든 가상 입력을 맞출 수 없어, 표본을 아무리 늘려도 커널이 어느 입력을 중시하느냐에 따라 계수가 달라진다(Kernel SHAP에서 숫자로 본다).
 같은 "예측 − 기준" 차이를 하나의 답으로 나누는 규칙이 필요하다.
 
 ## 2. Shapley value와 기여의 배분
@@ -175,7 +181,7 @@ $$
 위 표를 대입하면 $\phi_A=\tfrac12(100)+\tfrac12(250)=175$ g이다.
 B도 $\phi_B=\tfrac12(-50)+\tfrac12(100)=25$ g으로 계산한다.
 
-<Video src="https://www.youtube.com/watch?v=f2XqxOny3NA" caption="김성범(고려대), [핵심 머신러닝] Shapley Value (Explainable AI) (2021). 한국어 강의. 특성 3개의 조합 표로 가중치 1/3, 1/6을 손으로 계산하고, 기여의 합이 예측과 기준값의 차이가 됨을 확인한다. 특성을 가릴 때 배경 데이터로 채우는 방법은 §2.2에서 다룬다." start="5:19" end="14:28" />
+<Video src="https://www.youtube.com/watch?v=f2XqxOny3NA" caption="김성범(고려대), [핵심 머신러닝] Shapley Value (Explainable AI) (2021). 한국어 강의. 특성 3개의 조합 표로 가중치 1/3, 1/6을 손으로 계산하고, 기여의 합이 예측과 기준값의 차이가 됨을 확인한다. 특성을 가릴 때 배경 데이터로 채우는 방법은 이어서 다룬다." start="5:19" end="14:28" />
 
 </Details>
 
@@ -185,7 +191,7 @@ B도 $\phi_B=\tfrac12(-50)+\tfrac12(100)=25$ g으로 계산한다.
 
 **SHAP**은 특성을 가리는 규칙으로 값 $v(S)$를 정하고, 그 Shapley value를 특성별 기여로 쓰는 방법이다.[^shap]
 모델 $f$는 모든 입력을 요구하므로 "일부 특성을 모른다"를 계산하려면 가린 특성을 어떤 **배경 데이터**(background data)로 어떻게 채울지 정해야 한다.
-§2.1에서는 배경 관측 하나로 채웠고, 도입과 §1에서는 훈련 펭귄 전체를 배경으로 썼다.
+앞의 A, B 예에서는 배경 관측 하나로 채웠고, 도입과 LIME에서는 훈련 펭귄 전체를 배경으로 썼다.
 
 배경이 여러 행일 때 먼저 **독립형 대체**(interventional 또는 marginal 방식)를 보자.
 포함한 특성은 설명할 관측의 값으로 고정하고, 가린 특성은 배경 관측의 값으로 채운 뒤 모델 출력을 평균한다.
@@ -201,7 +207,7 @@ B도 $\phi_B=\tfrac12(-50)+\tfrac12(100)=25$ g으로 계산한다.
 
 예를 들어 $x_1$만 포함할 때는 그 값을 110으로 고정하고 $x_2$는 배경의 두 값으로 대체해, 두 출력 4,200과 4,000을 평균한 4,100을 얻는다.
 $(110,105)$처럼 서로 다른 행을 조합한 입력은 계산을 위한 대체 입력이며 실제 관측이 아니다.
-§2.1처럼 두 순서의 추가 기여를 평균하면 $x_1$은 $((4100-4000)+(4000-3900))/2=100$ g, $x_2$는 $((3900-4000)+(4000-4100))/2=-100$ g이다.
+앞에서처럼 두 순서의 추가 기여를 평균하면 $x_1$은 $((4100-4000)+(4000-3900))/2=100$ g, $x_2$는 $((3900-4000)+(4000-4100))/2=-100$ g이다.
 기준값과 예측이 모두 4,000 g이라고 기여가 0인 것은 아니며, 여기서는 +100과 −100이 서로 상쇄됐다.
 
 원논문은 SHAP 값을 조건부 기댓값으로 정의하고, 위의 독립형 대체는 특성들이 서로 독립이라고 보고 계산을 쉽게 한 근사로 소개한다.[^shap]
@@ -260,12 +266,12 @@ Chen 등은 이 차이를 데이터에 충실한 설명(true to the data)과 모
    설명할 관측의 특성이 모두 있는 표 데이터에서는 저절로 만족한다.
 3. **Consistency**: 모델을 바꿨을 때 어떤 특성을 더해서 생기는 출력 변화가 어느 조합에서도 줄지 않았다면, 그 특성의 SHAP 값도 줄지 않는다.
 
-Local accuracy는 §2.1에서 $4000+175+25=4200$, 도입의 펭귄에서 $4211.0-593.4\approx3618$이라는 덧셈이다.
-§1의 LIME 설명은 $4201-500-142+59=3618$로 이번에는 맞았지만, 이 합을 맞추라는 조건이 없어 표본에 따라 어긋난다.
+Local accuracy는 A, B 예에서 $4000+175+25=4200$, 도입의 펭귄에서 $4211.0-593.4\approx3618$이라는 덧셈이다.
+앞의 LIME 설명은 $4201-500-142+59=3618$로 이번에는 맞았지만, 이 합을 맞추라는 조건이 없어 표본에 따라 어긋난다.
 
 <Details summary="Consistency의 예">
 
-Consistency는 §2.1의 예로 보자.
+Consistency는 A, B 예로 보자.
 모델을 $f_{\mathrm{new}}(A,B)=f(A,B)+40A$로 바꾸면, A를 추가했을 때의 변화가 B가 없을 때 100에서 140으로, B가 있을 때 250에서 290으로 각각 40 g씩 커진다.
 가능한 두 상황 모두에서 A의 추가 기여가 커졌으므로 A에 배분할 값은 줄어들어서는 안 된다.
 실제로 새 Shapley value는 $(140+290)/2=215$ g으로 원래의 175 g보다 크다.
@@ -274,8 +280,8 @@ Consistency는 §2.1의 예로 보자.
 
 논문은 설명할 입력과 가림 방식, 곧 값 함수 $v$를 정하면 세 성질을 모두 만족하는 가산적 기여가 Shapley value 하나뿐임을 정리(Theorem 1)로 제시했다.
 근거로 Young (1985)[^young]의 유일성 정리를 들면서, 거기 쓰인 나머지 한 성질(Young의 정리에서는 대칭성, symmetry)은 이 설정에서 중복이라(redundant) 필요 없다고 썼다.[^shap]
-그런데 §2.1에서 A → B 한 순서만 쓰는 배분(100, 100)도 세 성질을 모두 만족하므로, 배분이 하나로 정해지려면 어느 조합에 더해도 출력을 똑같이 바꾸는 두 특성은 같은 몫을 받는다는 대칭성도 필요하다.
-이 유일성은 정해진 게임 안의 결론이라, 배경이나 가림 방식을 바꾸면 값이 달라지고(§5.2) 모델의 예측 성능이나 인과관계를 보증하지도 않는다.
+그런데 A, B 예에서 A → B 한 순서만 쓰는 배분(100, 100)도 세 성질을 모두 만족하므로, 배분이 하나로 정해지려면 어느 조합에 더해도 출력을 똑같이 바꾸는 두 특성은 같은 몫을 받는다는 대칭성도 필요하다.
+이 유일성은 정해진 게임 안의 결론이라, 배경이나 가림 방식을 바꾸면 값이 달라지고, 모델의 예측 성능이나 인과관계를 보증하지도 않는다.
 
 ## 4. SHAP 계산 방법
 
@@ -285,15 +291,15 @@ Consistency는 §2.1의 예로 보자.
 특성 3개면 8개지만 20개면 1,048,576개이고, 조합마다 가린 입력의 모델 출력을 배경 데이터에 걸쳐 평균해야 한다.
 그래서 조합을 모두 계산하기 어려우면 일부를 표본으로 뽑아 근사한다.
 
-**Kernel SHAP**은 §1의 LIME과 같은 가중 선형회귀 형식으로 Shapley value를 구한다.[^shap]
+**Kernel SHAP**은 LIME과 같은 가중 선형회귀 형식으로 Shapley value를 구한다.[^shap]
 특성을 포함하거나 가린 여러 조합의 값 $v(S)$에 가산적 설명 모델 $g$를 맞추되, 두 가지를 바꾼다.
 LIME 커널은 원본에서 멀수록(가린 특성이 많을수록) 가중치를 줄이지만, **Shapley kernel**은 포함한 특성이 아주 적은 조합과 아주 많은 조합에 가장 큰 가중치를 주고 중간 크기의 조합을 덜 중시한다.
 또 빈 조합과 전체 조합은 기준값과 예측에 정확히 맞도록 제약을 둔다.
 모델의 예측 함수만 호출하면 되지만, 특성과 배경 데이터가 많으면 계산 비용이 커질 수 있다.[^kernel]
 
-§1에서 미룬 비교를 §2.1의 네 조합으로 해 보자.
+LIME에서 미룬 비교를 A, B 예의 네 조합으로 해 보자.
 $v(S)$ 열은 각 조합의 모델 출력이고, LIME과 Kernel SHAP 열은 두 방법이 맞춘 설명 모델의 출력이다.
-LIME 열은 §1과 같은 커널 $\exp(-k^2/2)$로 네 조합에 가중치 1, 0.61, 0.61, 0.14를 주고 제약 없이 맞춘 결과다.
+LIME 열은 앞과 같은 커널 $\exp(-k^2/2)$로 네 조합에 가중치 1, 0.61, 0.61, 0.14를 주고 제약 없이 맞춘 결과다.
 
 | 포함 여부 $(z'_A,z'_B)$ | $v(S)$ | LIME의 $g(z')$ | Kernel SHAP의 $g(z')$ |
 | --- | --- | --- | --- |
@@ -309,7 +315,7 @@ Kernel SHAP은 양 끝 행을 정확히 맞추고 두 중간 행의 오차를 �
 이 표는 네 조합의 정확한 값으로 계산했으므로, LIME과 Shapley value의 차이는 표본 잡음이 아니라 상호작용에서 온다.
 
 도입의 펭귄 모델에 Kernel SHAP을 적용하면(`shap.KernelExplainer`, 배경은 훈련 239마리) 특성 4개(종의 표시 변수 둘을 따로 센다)의 16개 조합을 모두 계산해 도입의 표와 같은 값을 돌려준다.
-§1의 LIME은 조합과 배경 펭귄을 200번 무작위로 뽑아 흔들렸지만, 여기서는 16개 조합마다 배경 239마리 전체를 평균했다.
+앞의 LIME은 조합과 배경 펭귄을 200번 무작위로 뽑아 흔들렸지만, 여기서는 16개 조합마다 배경 239마리 전체를 평균했다.
 
 <Details summary="Shapley kernel과 가중 회귀 목적함수">
 
@@ -359,11 +365,11 @@ $E[X_i]$는 배경 집단에서 $i$번째 특성의 평균이며, 도입의 표�
 트리 모델에는 트리 구조를 이용하는 Tree SHAP이 있다.[^tree]
 $2^M$개 조합을 하나씩 계산하지 않고 트리의 분기 경로를 따라가며, 표본 근사 없이 트리 출력의 Shapley value를 다항 시간에 정확히 구한다.
 정확한 값은 트리가 직접 내는 출력에 대한 것이다.
-10주차의 XGBoost 분류기처럼 트리가 로그 오즈를 내고 마지막에 확률로 바꾸는 모델에서는, 로그 오즈의 설명은 정확하지만 확률 척도의 설명에는 근사를 쓴다.
+10b의 XGBoost 분류기처럼 트리가 로그 오즈를 내고 마지막에 확률로 바꾸는 모델에서는, 로그 오즈의 설명은 정확하지만 확률 척도의 설명에는 근사를 쓴다.
 
 ## 5. 펭귄 예측의 설명
 
-### 5.1 shap 패키지로 계산
+### 5.1 선형 모델의 설명
 
 [SHAP 공식 패키지](https://github.com/shap/shap)로 도입의 계산을 재현해 보자.[^package]
 `python -m pip install shap scikit-learn pandas matplotlib`으로 필요한 패키지를 설치한다.
@@ -404,35 +410,144 @@ shap.plots.waterfall(explanation[0])
 
 출력은 차례로 기준값 4211.0, 기여 `[-422.9 -256.6 139.2 -53.1]`, 예측 3617.7이다.
 `base_values`는 배경 데이터로 계산한 기준값, `values`는 특성별 기여다.
-`maskers.Independent`는 §2.2의 독립형 대체로 가린 특성을 채운다.
-`shap.Explainer`는 모델과 배경 데이터를 보고 설명기를 고르며, 여기서는 선형 모델용 `LinearExplainer`를 골라 §4.2의 식으로 계산한다.[^explainer][^linear]
+`maskers.Independent`는 독립형 대체로 가린 특성을 채운다.
+`shap.Explainer`는 모델과 배경 데이터를 보고 설명기를 고르며, 여기서는 선형 모델용 `LinearExplainer`를 골라 앞의 선형 모델 식으로 계산한다.[^explainer][^linear]
 트리 모델에는 `TreeExplainer`가 선택된다.
-예측 함수만 주면 특성이 10개 이하일 때 모든 조합을 직접 계산하는 exact 방식이, 그보다 많으면 §2.1의 순서를 무작위로 뽑아 추가 기여를 평균하는 permutation 방식이 선택된다.[^explainer-src]
-§4.1의 Kernel SHAP은 `KernelExplainer`로 직접 지정한다.
+예측 함수만 주면 특성이 10개 이하일 때 모든 조합을 직접 계산하는 exact 방식이, 그보다 많으면 특성이 들어오는 순서를 무작위로 뽑아 추가 기여를 평균하는 permutation 방식이 선택된다.[^explainer-src]
+Kernel SHAP은 `KernelExplainer`로 직접 지정한다.
 
 마지막 줄은 같은 덧셈을 shap 형식의 waterfall 그림으로 그린다.[^waterfall]
 도입의 그림과 달리 기준값 $E[f(X)]$가 아래, 예측 $f(x)$가 위에 오고, 빨강이 예측을 올린 기여, 파랑이 내린 기여다.
 SHAP은 표시 변수 하나하나를 특성으로 보므로 종의 몫이 두 막대로 나뉘고, 종 전체의 몫을 읽을 때는 두 기여를 더한다.
 
-### 5.2 설명의 한계
+### 5.2 분류 모델의 출력 척도
+
+앞의 선형 모델은 출력이 몸무게(g) 하나였지만, 분류 모델은 출력 척도가 둘이다.
+10b의 XGBoost 분류기는 안에서 로그 오즈 점수를 계산하고 마지막에 확률로 바꾸며, shap의 `TreeExplainer`는 기본으로 이 로그 오즈 점수를 설명한다.
+계산에는 앞에서 본 Tree SHAP을 쓴다.
+훈련 펭귄 50마리를 배경 데이터로 주고, 가린 특성을 배경 펭귄의 값으로 바꿔 넣는 interventional 방식(독립형 대체)을 택했다.
+
+10b의 테스트 펭귄(부리 길이 50.8 mm, 부리 깊이 18.5 mm, 날개 길이 201 mm)을 로그 오즈 척도로 설명해 보자.
+기준값은 −2.48로, 10b에서 본 시작 점수 −1.40이 아니라 배경 펭귄들의 최종 점수를 평균한 값이다.
+여기에 부리 길이 +1.98, 부리 깊이 +1.30, 날개 길이 +1.36을 더하면 2.16이 되고, 이를 로지스틱 함수에 넣은 0.897이 모델의 확률이다(그림 a).
+여기서 각 기여를 따로 확률로 바꿔 더하면 안 된다.
+같은 +1.98이라도 기준 −2.48에 더하면 확률이 0.08에서 0.38로 0.30 오르지만, 나머지 두 기여를 먼저 더한 0.18(=−2.48+1.30+1.36)에 더하면 0.54에서 0.90으로 0.35 오른다(10a의 로지스틱 곡선).
+세 기여를 기준에서 각각 확률로 바꿔 더하면 약 0.70으로 실제 확률 0.897과 맞지 않는다.
+
+확률로 읽고 싶으면 처음부터 확률 출력을 설명하도록 다시 계산한다(`model_output="probability"`).[^shapdocs]
+그러면 기준 확률 0.203에 부리 길이 +0.304, 부리 깊이 +0.189, 날개 길이 +0.199를 더해 0.897이 된다(그림 b).
+이 기준 0.203은 배경 펭귄들의 확률을 평균한 값이라, 로그 오즈 평균 −2.48을 확률로 바꾼 0.08과 다르다.
+다만 shap(v0.54.1)은 확률 척도에서 배경 펭귄마다 로그 오즈 기여를 구한 뒤, 그 합이 설명할 펭귄과 그 배경 펭귄의 확률 차이와 같아지도록 같은 비율로 줄이거나 늘려 평균하는 근사를 쓴다.
+세 특성의 모든 조합을 직접 계산하면 이 펭귄에서는 +0.304, +0.187, +0.202로 거의 같다.
+하지만 확률이 0에 가까운 Adelie와 Gentoo에서는 한 특성의 기여가 0.1 안팎(가장 크면 0.13) 달라지므로, 확률 척도의 값은 대략적인 배분으로 읽는다.
+
+<Figure src={shapScale.src} alt="같은 펭귄의 SHAP 설명 두 개. 왼쪽 로그 오즈 척도는 기준값 −2.48에 부리 길이 +1.98, 부리 깊이 +1.30, 날개 길이 +1.36을 더해 2.16이 되고, 오른쪽 확률 척도는 기준 0.203에 +0.304, +0.189, +0.199를 더해 0.897이 된다" caption="테스트 펭귄 한 마리(부리 길이 50.8 mm, 부리 깊이 18.5 mm, 날개 길이 201 mm)의 SHAP 설명. (a)는 로그 오즈를, (b)는 확률을 설명하도록 따로 계산했다. 표시값은 반올림해 (b)의 막대 합이 0.895로 보인다." wide />
+
+<Video src="https://www.youtube.com/watch?v=MQ6fFDwjuco" caption="A Data Odyssey, SHAP values for beginners (2023). waterfall 그림의 기준값·막대 읽는 법과, 분류 모델의 SHAP 값이 로그 오즈 단위라는 점을 짧게 정리한다." start="1:42" end="4:32" />
+
+<Details summary="배경 데이터 없이 계산하면">
+배경을 주지 않으면 `shap.TreeExplainer`는 학습 때 각 분기로 내려간 훈련 자료의 비중으로 가린 특성을 처리하는 `tree_path_dependent` 방식을 쓴다.[^shapdocs][^treeshap]
+XGBoost에서는 이 비중이 펭귄 수가 아니라 10b에서 잎 값을 구할 때 쓴 2차 미분을 더한 값(cover)이라, 둘째 트리부터는 펭귄 수의 비율과 달라진다.
+같은 펭귄이라도 기준값과 기여의 배분이 달라지므로, SHAP 값을 보고할 때는 어느 방식으로 계산했는지 함께 적는다.
+</Details>
+
+### 5.3 개별 예측과 전체 분포
+
+waterfall 그림은 펭귄 한 마리의 설명이다.
+테스트 펭귄 69마리를 모두 설명해 한 그림에 모은 것이 **beeswarm 그림**이다.
+한 행이 한 특성이고 점 하나가 한 펭귄의 그 특성 기여다.
+가로 위치는 그 기여가 Chinstrap 확률을 얼마나 올리거나 내렸는지, 색은 그 펭귄의 특성값이 높은지 낮은지를 나타낸다.
+
+<Figure src={beeswarm.src} alt="테스트 펭귄 69마리의 SHAP beeswarm 그림. 부리 길이 행에서는 짧은 부리가 −0.2 근처에, 긴 부리가 0 근처와 +0.3 근처에 있고, 날개 길이 행에서는 긴 날개가 왼쪽에, 207 mm보다 짧은 날개가 0 근처(주로 파랑)와 +0.2 근처(주로 회색) 두 무리로 나뉘어 있다" caption="앞의 waterfall 그림과 같은 XGBoost 모델과 배경으로 계산한 테스트 펭귄 69마리의 확률 척도 SHAP 값. 행은 기여 크기의 평균이 큰 순서이며, 겹치는 점은 세로로 펼쳤다." wide />
+
+부리 길이 행에서는 부리가 짧은 펭귄(파랑)이 −0.2 근처에 몰려 있다.
+부리가 긴 펭귄(분홍 쪽) 가운데 Chinstrap은 +0.3 근처에 있지만, 날개도 긴 Gentoo는 0 근처에 있다.
+날개 길이 행에서는 날개가 긴 펭귄(대개 Gentoo)이 왼쪽, 곧 Chinstrap 확률을 내리는 쪽에 놓인다.
+날개가 207 mm보다 짧은 펭귄은 두 무리로 갈린다.
++0.2 근처는 대부분 부리가 긴 Chinstrap이고, 0 근처는 대부분 부리가 짧은 Adelie다.
+두 무리의 날개 길이는 181–202 mm에서 겹치므로, 갈림을 만드는 것은 날개보다 부리 길이다.
+
+다만 이 갈림을 모두 상호작용으로 읽으면 지나치다.
+로그 오즈 척도로 계산하면 날개가 짧은 Adelie 30마리의 날개 기여는 평균 +0.73, Chinstrap 11마리는 +1.28로, 확률 척도의 0.03과 0.18처럼 여섯 배가 아니라 두 배가 채 안 된다.
+확률이 0에 가까우면 같은 점수 이동이 확률로 거의 드러나지 않는 척도 효과와 확률 척도의 근사가 갈림에 섞여 있고, 상호작용으로 볼 몫은 이 두 배 가까운 차이다.
+
+### 5.4 XGBoost 예측 설명 예제
+
+앞의 확률 척도 waterfall 그림과 beeswarm 그림의 SHAP 값은 다음 코드로 재현한다.
+자료 분할과 모델은 [10b의 재현 코드](/lecture/2026f-applied-data-science/10b-trees-and-xgboost#6-재현-코드)와 같고, 선형 모델 예제의 패키지에 `python -m pip install "xgboost>=3.0"`으로 xgboost를 더 설치한다.
+노트의 수치는 xgboost 3.4.1, shap 0.54.1, scikit-learn 1.9.1로 계산했다.
+
+```python
+import numpy as np
+import pandas as pd
+import shap
+from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier
+
+url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv"
+columns = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm"]
+data = pd.read_csv(url).dropna(subset=["species", *columns])
+X = data[columns]
+y = (data["species"] == "Chinstrap").astype(int)  # Chinstrap은 1, 나머지는 0
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+model = XGBClassifier(
+    n_estimators=30, max_depth=2, learning_rate=0.1, random_state=42
+)
+model.fit(X_train, y_train)
+p_test = model.predict_proba(X_test)[:, 1]
+
+# 배경은 훈련 데이터에서만 고르고, 설명 대상은 테스트 데이터다.
+background = X_train.sample(n=50, random_state=42)
+explainer = shap.TreeExplainer(
+    model, data=background,
+    feature_perturbation="interventional", model_output="probability"
+)
+explanation = explainer(X_test)  # 테스트 69마리 전체
+i = int(np.flatnonzero(y_test.to_numpy() == 1)[0])  # 테스트의 첫 Chinstrap
+base = explanation.base_values[i]
+contributions = explanation.values[i]
+
+print("기준 확률:", base)
+print("특성별 기여:", contributions)
+print("기준과 기여의 합:", base + contributions.sum())
+print("모델의 Chinstrap 확률:", p_test[i])
+np.testing.assert_allclose(base + contributions.sum(), p_test[i], atol=1e-6)
+shap.plots.waterfall(explanation[i])
+shap.plots.beeswarm(explanation)
+```
+
+설명 대상은 앞에서 설명한 테스트 펭귄이고, assert 줄은 반올림 전의 기준 확률과 기여의 합이 모델 확률 0.897과 같은지 확인한다.
+
+## 6. 설명의 한계
 
 SHAP 값은 모델이 그 관측을 어떻게 예측했는지 설명한다.
-이 펭귄의 실제 몸무게 4,450 g은 계산에 쓰이지 않았고, 모델은 실제보다 832 g 낮게 예측했다.
+앞의 선형 모델에서 테스트 첫 펭귄의 실제 몸무게 4,450 g은 계산에 쓰이지 않았고, 모델은 실제보다 832 g 낮게 예측했다.
 날개 길이의 기여가 −423 g이라고 해서 날개가 15 mm 길었다면 실제로 423 g 더 무거웠으리라는 뜻은 아니다.[^causal]
 모델이 쓰지 않은 정보(예: 성별)에는 기여가 배분되지 않으므로, 틀린 예측에도 그럴듯한 설명이 붙는다.
 
 기여는 배경 선택에 따라 달라진다.
-같은 모델과 같은 펭귄이라도 배경을 훈련 데이터의 Adelie 101마리로 바꾸면 기준값은 3,665 g이 되고, 기여는 날개 길이 −94 g, 부리 길이 +46 g, 종 0 g이 된다.
+같은 선형 모델과 같은 펭귄이라도 배경을 훈련 데이터의 Adelie 101마리로 바꾸면 기준값은 3,665 g이 되고, 기여는 날개 길이 −94 g, 부리 길이 +46 g, 종 0 g이 된다.
 "평균 펭귄과 비교해 왜 가벼운가"가 "다른 Adelie와 비교해 왜 가벼운가"로 질문이 바뀌었기 때문이다.
 부리 길이는 펭귄 전체 평균(44.1 mm)보다는 짧지만 Adelie 평균(38.8 mm)보다는 길어 부호가 뒤집혔다.
 그래서 설명을 보고할 때는 모델, 출력 척도(분류 모델이면 확률을 설명했는지, 확률을 변환한 점수를 설명했는지), 배경 데이터와 가림 방식, 설명할 관측 집단을 함께 적는다.
 
 여러 관측의 SHAP 값을 모아 특성별 **평균 절댓값**(평균 |SHAP|)을 구하면 기여의 전반적인 크기를 요약할 수 있다.
-테스트 펭귄 103마리에서는 날개 길이 331 g, 부리 길이 271 g, 종 221 g(펭귄마다 두 표시 변수의 기여를 먼저 더한 뒤 절댓값을 평균한 값)이다.
+선형 모델로 테스트 펭귄 103마리를 설명하면 날개 길이 331 g, 부리 길이 271 g, 종 221 g(펭귄마다 두 표시 변수의 기여를 먼저 더한 뒤 절댓값을 평균한 값)이다.
 그러나 이 한 숫자는 방향을 잃는다.
 날개 길이의 기여는 −648 g에서 +816 g까지 퍼져 있어 예측을 내린 펭귄과 올린 펭귄이 섞여 있는데, 평균 |SHAP|은 둘을 구별하지 않는다.
 
-예측할 것이 몸무게 같은 값이 아니라 "Chinstrap인가"처럼 둘 중 하나일 때는 확률과 판정을 따로 따져야 하므로, 10주차에는 분류 모델과 그 평가로 넘어간다.
+XGBoost 모델에서 구한 평균 |SHAP|을 10b의 두 중요도와 나란히 놓으면, 각자 다른 질문에 답한다는 것이 보인다.[^molnar]
+
+| 방법 | 묻는 것 | 이 모델에서 가장 큰 변수 |
+| --- | --- | --- |
+| 분할 기반 중요도 | 학습 중 그 변수의 분할이 손실을 얼마나 줄였나 | 날개 길이(분할 한 번당 평균 `gain` 기준) |
+| 순열 중요도 | 그 변수를 섞으면 새 자료에서 성능이 얼마나 떨어지나 | 부리 길이(AUC 하락 0.33) |
+| 평균 \|SHAP\| | 개별 예측을 평균적으로 얼마나 움직였나 | 부리 길이(확률 척도 0.159) |
+
+트리 앙상블은 연속값 예측에도 그대로 쓰이므로, 11주차에는 9주차의 몸무게 예측으로 돌아가 지금까지의 후보를 모아 최종 예측을 고른다.
 
 [^shapley]: Shapley, L. S. (1952). *A Value for N-Person Games*. RAND Corporation, P-295. [무료 원문](https://www.rand.org/pubs/papers/P295.html).
 [^young]: Young, H. P. (1985). Monotonic solutions of cooperative games. *International Journal of Game Theory*, 14(2), 65–72. [DOI:10.1007/BF01769885](https://doi.org/10.1007/BF01769885).
@@ -444,6 +559,9 @@ SHAP 값은 모델이 그 관측을 어떻게 예측했는지 설명한다.
 [^kernel]: SHAP. (v0.54.1). shap.KernelExplainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.KernelExplainer.html).
 [^linear]: SHAP. (v0.54.1). shap.LinearExplainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.LinearExplainer.html).
 [^tree]: Lundberg, S. M., Erion, G., Chen, H., DeGrave, A., Prutkin, J. M., Nair, B., Katz, R., Himmelfarb, J., Bansal, N., & Lee, S.-I. (2020). From local explanations to global understanding with explainable AI for trees. *Nature Machine Intelligence*, 2(1), 56–67. [DOI:10.1038/s42256-019-0138-9](https://doi.org/10.1038/s42256-019-0138-9). [arXiv:1905.04610](https://arxiv.org/abs/1905.04610).
+[^treeshap]: Lundberg, S. M., Erion, G. G., & Lee, S.-I. (2018). Consistent Individualized Feature Attribution for Tree Ensembles. *arXiv*. [arXiv:1802.03888](https://arxiv.org/abs/1802.03888).
+[^shapdocs]: SHAP. (v0.54.1). shap.TreeExplainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.TreeExplainer.html).
+[^molnar]: Molnar, C. (2025). SHAP. *Interpretable Machine Learning* (3rd ed.). [SHAP 장](https://christophm.github.io/interpretable-ml-book/shap.html).
 [^penguins]: Horst, A. M., Hill, A. P., & Gorman, K. B. (2020). *palmerpenguins: Palmer Archipelago (Antarctica) penguin data*. [원자료 CSV](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv). CC0.
 [^package]: SHAP. (v0.54.1). *shap*. [GitHub 저장소](https://github.com/shap/shap/tree/v0.54.1).
 [^explainer]: SHAP. (v0.54.1). shap.Explainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.Explainer.html).
