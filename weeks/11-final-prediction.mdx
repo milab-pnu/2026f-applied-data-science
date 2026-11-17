@@ -110,7 +110,6 @@ Stability(타당한 변화에도 결론이 유지되는가)를 보면 선형회�
 
 ### 3.1 구간을 만드는 과정
 
-PPI는 [09a §3.3](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#33-predictability와-stability)에서 직선 하나로 한 부트스트랩 계산을 두 적합으로 넓힌 것이다.
 적합이 둘뿐이어도 훈련 펭귄을 복원 추출한 [부트스트랩 표본](/lecture/2026f-applied-data-science/10b-trees-xgboost-shap#2-랜덤-포레스트)마다 다시 학습하면 구간을 만들 만큼 예측이 많아진다.
 
 1. §2.1에서 선별된 두 적합을 정한다.
@@ -135,7 +134,7 @@ PPI는 [09a §3.3](/lecture/2026f-applied-data-science/09a-prediction-and-linear
 각 행이 그 펭귄의 구간 하나를 만든다.
 펭귄 1과 5는 실제 몸무게가 5백분위수보다 작아 구간 밖에 있다.
 
-이 구간은 모델 예측의 90%를 담을 뿐이고, [09a §3.3](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#33-predictability와-stability)에서 본 대로 학습한 관계의 흔들림만 반영해 개체 사이의 차이는 거의 담지 못한다.
+이 구간은 모델 예측의 90%를 담을 뿐이고, 학습한 관계의 흔들림만 반영해 개체 사이의 차이는 거의 담지 못한다.
 펭귄별 교차검증 오차(실제 − 예측)의 표준편차는 선형회귀가 약 300 g인데, 구간은 중앙값에서 양쪽으로 평균 163 g(폭 325 g)에 그쳐 이 표준편차보다도 좁다.
 
 ### 3.2 포함률과 구간 보정

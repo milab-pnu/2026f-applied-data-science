@@ -95,7 +95,7 @@ $$
 **랜덤 포레스트**(random forest)는 같은 종류의 모델, 즉 결정트리 수백 개를 합치는 앙상블이다.[^breiman]
 트리마다 두 가지 무작위성을 주어 서로 다르게 자라게 한다.
 
-- 훈련 자료에서 같은 크기로 복원 추출한 [부트스트랩](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#33-predictability와-stability) 표본으로 학습한다.
+- 훈련 자료에서 같은 크기로 복원 추출한 [부트스트랩](/lecture/2026f-applied-data-science/09b-features-and-regularization#21-ridge와-lasso) 표본으로 학습한다.
   트리마다 어떤 펭귄은 여러 번, 어떤 펭귄은 한 번도 뽑히지 않는다.
 - 각 분할에서 전체 변수가 아니라 무작위로 고른 일부 변수만 후보로 본다.
 
@@ -325,7 +325,7 @@ shap.plots.beeswarm(explanation)
 
 앞의 세 출력은 §4의 테스트 결과이고, 넷째 출력은 §5.1의 순열 중요도다.
 설명 대상은 §1.1의 펭귄이고, assert 줄은 반올림 전의 기준 확률과 기여의 합이 모델 확률 0.897과 같은지 확인한다.
-이 예는 결측 행을 빼고 무작위로 나눈 자료이므로, 새 섬이나 다른 해의 펭귄에 쓸 모델이라면 [09a §1.2](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#12-훈련-검증-테스트)처럼 섬이나 연도 단위로 나눠 다시 확인한다.
+이 예는 결측 행을 빼고 무작위로 나눈 자료이므로, 새 섬이나 다른 해의 펭귄에 쓸 모델이라면 섬이나 연도 단위로 나눠 다시 확인한다.
 
 트리 앙상블은 연속값 예측에도 그대로 쓰이므로, 11주차에는 9주차의 몸무게 예측으로 돌아가 지금까지의 후보를 모아 최종 예측을 고른다.
 
