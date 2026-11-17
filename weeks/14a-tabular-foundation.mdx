@@ -6,16 +6,15 @@ order: 1
 
 import tabpfnOverview from "./assets/14a-tabpfn-fig1a.png";
 
-9주차에는 선형회귀로 펭귄 몸무게를, 10주차에는 로지스틱 회귀와 트리 앙상블로 Chinstrap 여부를 예측했다.
-XGBoost는 [10b §3.1](/lecture/2026f-applied-data-science/10b-trees-and-xgboost#31-잔차를-예측하는-트리)에서 본 것처럼 잔차를 맞추는 트리를 쌓으므로 몸무게 같은 연속값에도 그대로 쓸 수 있다.
-그래서 이번 주는 몸무게 예측으로 돌아와 선형회귀와 XGBoost를 한자리에 모은다.
-이 후보들은 모두 지금 가진 훈련 데이터만 보고 매개변수를 맞추고, XGBoost라면 트리의 깊이와 개수 같은 초매개변수(학습 전에 사람이 정하는 값)도 검증으로 골라야 한다.
+[11주차](/lecture/2026f-applied-data-science/11-final-prediction)에는 펭귄 몸무게를 예측할 후보로 선형회귀와 XGBoost를 모아 최종 예측을 골랐다.
+이번 주는 같은 몸무게 예측에 성질이 다른 후보 하나를 더한다.
+앞의 후보들은 모두 지금 가진 훈련 데이터만 보고 파라미터를 맞추고, XGBoost라면 트리의 깊이와 개수 같은 하이퍼파라미터(학습 전에 사람이 정하는 값)도 검증으로 골라야 한다.
 
 **TabPFN**(Tabular Prior-data Fitted Network)은 방식이 다르다.[^tabpfn]
 수많은 가상의 표 문제로 미리 학습해 두고, 새 표를 만나면 그 표의 훈련 행을 입력으로 받아 곧바로 예측한다.
 이처럼 대규모 사전학습으로 여러 문제에 두루 쓸 능력을 얻은 모델을 **파운데이션 모델**(foundation model)이라 부른다.
 
-TabPFN v2 논문은 1만 행 이하의 표에서 초매개변수 탐색 없이 기본 설정만으로 기존 방법을 앞섰고, 분류에서는 평균 2.8초 만에 4시간 튜닝한 부스팅 등 기존 방법들의 앙상블보다 좋았다고 보고했다.[^tabpfn]
+TabPFN v2 논문은 1만 행 이하의 표에서 하이퍼파라미터 탐색 없이 기본 설정만으로 기존 방법을 앞섰고, 분류에서는 평균 2.8초 만에 4시간 튜닝한 부스팅 등 기존 방법들의 앙상블보다 좋았다고 보고했다.[^tabpfn]
 
 **읽기 자료**: Hollmann 등의 [Accurate predictions on small data with a tabular foundation model](https://doi.org/10.1038/s41586-024-08328-6).[^tabpfn]
 교재에는 이 모델을 다루는 장이 없으니, 원논문의 Fig. 1·2와 Methods의 사전분포 설명을 먼저 읽고 나머지는 필요한 만큼 참고한다.
@@ -30,7 +29,7 @@ TabPFN은 가중치를 사전학습에서 한 번 맞춘 뒤 새 표에서는 �
 |---|---|---|
 | 가중치를 맞추는 자료 | 이 표의 훈련 행 | 사전학습에 쓴 1억 개가 넘는 합성 표 |
 | 이 표의 훈련 행이 쓰이는 때 | `fit`에서 트리를 만들 때 | `predict` 때 예측할 행과 함께 |
-| 초매개변수 | 검증으로 고른다 | 기본값을 그대로 쓰는 경우가 많다 |
+| 하이퍼파라미터 | 검증으로 고른다 | 기본값을 그대로 쓰는 경우가 많다 |
 | 계산이 몰리는 때 | 학습 | 예측 |
 
 ## 2. TabPFN의 사전학습과 예측
@@ -46,7 +45,7 @@ Prior-data Fitted Network라는 이름은 "사전분포에서 뽑은 표들로 �
 
 학습 과제는 각 합성 표에서 일부 행의 정답을 가리고, 나머지 행의 특성과 정답을 보고 가린 정답을 맞히는 것이다.
 가린 정답에 대한 예측이 틀린 만큼 손실을 매기고, 그 손실이 줄도록 가중치를 갱신한다.
-손실은 [10a §1.3](/lecture/2026f-applied-data-science/10a-binary-classification#13-로그-손실과-학습)의 로그 손실과 같은 형태다.
+손실은 [10a §1.3](/lecture/2026f-applied-data-science/10a-binary-classification#13-교차-엔트로피)의 교차 엔트로피와 같은 형태다.
 분류라면 정답 범주에 준 확률에 −log를 매기고, 회귀라면 결과값의 범위를 5,000개 구간으로 나눠 구간마다 확률을 낸 뒤 정답이 든 구간의 확률에 −log를 매긴다.
 이 과정을 1억 개가 넘는 표에서 반복하면, 모델은 표 하나의 관계보다 "정답 붙은 행 몇 개를 보고 새 행의 결과를 추론하는 방법"을 익힌다.[^tabpfn]
 
@@ -152,7 +151,7 @@ XGBoost는 깊이(2, 3, 4), 트리 수(50, 100, 200, 400), 학습률(0.03, 0.1)�
 | XGBoost | 274 | 34 | 0.0003초 |
 | TabPFN v2 | 248 | 28 | 0.28초 |
 
-초매개변수를 하나도 고르지 않은 TabPFN의 오차가 가장 낮았다.
+하이퍼파라미터를 하나도 고르지 않은 TabPFN의 오차가 가장 낮았다.
 선형회귀보다 평균 9 g 낮고 다섯 폴드 모두에서 3–15 g씩 낮았으며, 튜닝한 XGBoost는 오히려 선형회귀보다 약 17 g 나빴다.
 XGBoost가 뒤진 까닭을 따로 확인하지는 않았지만, 이 자료에서는 종을 나누고 나면 몸무게가 치수에 대체로 직선으로 늘어난다([09b §1.3](/lecture/2026f-applied-data-science/09b-features-and-regularization#13-비선형-특성과-상호작용)).
 트리는 이런 관계를 계단 모양으로 근사하므로, 191마리 남짓한 훈련 부분에서는 직선보다 불리했을 수 있다.
@@ -194,7 +193,8 @@ v2 뒤에 나온 2.5부터 3.5까지의 가중치는 모두 비상업 라이선�
 
 </Details>
 
-TabPFN의 9 g 우위가 느린 예측을 감수할 만한지는 [11주차](/lecture/2026f-applied-data-science/11-final-prediction)에서 성별까지 넣은 후보들과 함께 PCS로 따져 정한다.
+TabPFN의 9 g 우위가 느린 예측을 감수할 만한지는 [11주차](/lecture/2026f-applied-data-science/11-final-prediction#12-pcs-관점의-선택)처럼 PCS로 따져 정한다.
+이 비교는 성별을 쓰지 않은 조건이므로, 성별을 넣은 11주차의 후보들과 견주려면 TabPFN에도 같은 특성과 결측 처리를 주고 다시 비교한다.
 
 [^tabpfn]: Hollmann, N., et al. (2025). Accurate predictions on small data with a tabular foundation model. *Nature*, 637, 319–326. [doi:10.1038/s41586-024-08328-6](https://doi.org/10.1038/s41586-024-08328-6).
 [^tabpfn-analysis]: McCarter, C. (2024). What exactly has TabPFN learned to do? *ICLR Blogposts 2024*. [글](https://iclr-blogposts.github.io/2024/blog/what-exactly-has-tabpfn-learned-to-do/).
