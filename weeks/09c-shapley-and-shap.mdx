@@ -58,8 +58,8 @@ LIME이 정말 필요한 곳은 트리나 신경망처럼 계수가 없는 모�
 여기서는 일부러 답(도입의 표)을 아는 선형 모델을 블랙박스처럼 다뤄, LIME이 그 답을 얼마나 맞히는지 채점해 보자.
 모델 $f$의 계수는 볼 수 없고, 입력 $x$를 넣으면 예측만 돌려받는다고 하자(앞의 펭귄은 $f(x)=3618$).
 그러면 "이 펭귄의 날개 길이를 모른다면 예측이 어떻게 될까"처럼 특성을 가려 가며 예측의 변화를 볼 수밖에 없다.
-특성마다 이 펭귄의 값을 그대로 두면 1(포함), 훈련 펭귄 한 마리의 값으로 바꾸면 0(가림)으로 적은 벡터를 **해석 가능한 입력**(interpretable input) $z'$라고 한다.[^lime]
-날개 길이, 부리 길이, 종을 세 특성으로 보면(종의 표시 변수 두 개는 함께 가린다) 설명할 펭귄은 $(1,1,1)$이고, $z'=(0,1,1)$은 날개 길이만 다른 펭귄의 값으로 바꾼 가상 펭귄 $z$를 뜻한다.<Sidenote>실제 `lime` 패키지는 표 데이터의 연속 특성을 구간으로 나눠 다루는 등 여기 설명과 세부가 다르다.</Sidenote>
+특성마다 이 펭귄의 값을 그대로 두면 1(포함), 훈련 펭귄 한 마리의 값으로 바꾸면 0(가림)으로 적은 벡터를 **해석 가능한 표현**(interpretable representation) $z'$라고 한다.[^lime]
+날개 길이, 부리 길이, 종을 세 특성으로 보면(종의 표시 변수 두 개는 함께 가린다) 설명할 펭귄은 $(1,1,1)$이고, $z'=(0,1,1)$은 날개 길이만 다른 펭귄의 값으로 바꾼 가상 펭귄 $z$를 뜻한다.<Sidenote>가린 특성을 훈련 펭귄의 값으로 채우고 특성마다 반반으로 가리는 방식은 설명을 위해 단순화한 것이다. 원논문은 가릴 특성의 수부터 무작위로 정하고 Lasso로 특성을 골라 맞추며, 실제 `lime` 패키지는 표 데이터의 연속 특성을 구간으로 나눠 다룬다.</Sidenote>
 
 **LIME**은 설명할 입력 주변에서 원래 모델과 비슷하게 작동하는 단순한 **설명 모델** $g$를 만든다.[^lime]
 모델 전체가 아니라 입력 하나의 예측 근처만 설명하므로 이런 설명을 **국소 설명**(local explanation)이라 한다.
@@ -256,7 +256,7 @@ Chen 등은 이 차이를 데이터에 충실한 설명(true to the data)과 모
 논문은 가산적 특성 기여 설명이 갖추면 좋은 세 성질을 제시한다.[^shap]
 
 1. **Local accuracy**: 기준값에 모든 특성의 기여를 더하면 설명 대상에 대한 원래 모델의 출력과 같아야 한다.
-2. **Missingness**: 설명 대상의 해석 가능한 입력에서 0인(설명 대상에 없는) 특성에는 기여 0을 준다.
+2. **Missingness**: 설명 대상의 해석 가능한 표현에서 0인(설명 대상에 없는) 특성에는 기여 0을 준다.
    설명할 관측의 특성이 모두 있는 표 데이터에서는 저절로 만족한다.
 3. **Consistency**: 모델을 바꿨을 때 어떤 특성을 더해서 생기는 출력 변화가 어느 조합에서도 줄지 않았다면, 그 특성의 SHAP 값도 줄지 않는다.
 
@@ -273,7 +273,7 @@ Consistency는 §2.1의 예로 보자.
 </Details>
 
 논문은 설명할 입력과 가림 방식, 곧 값 함수 $v$를 정하면 세 성질을 모두 만족하는 가산적 기여가 Shapley value 하나뿐임을 정리(Theorem 1)로 제시했다.
-근거로 Young (1985)[^young]의 유일성 정리를 들면서, 거기 쓰인 세 번째 성질인 대칭성(symmetry)은 이 설정에서 중복이라(redundant) 필요 없다고 썼다.[^shap]
+근거로 Young (1985)[^young]의 유일성 정리를 들면서, 거기 쓰인 나머지 한 성질(Young의 정리에서는 대칭성, symmetry)은 이 설정에서 중복이라(redundant) 필요 없다고 썼다.[^shap]
 그런데 §2.1에서 A → B 한 순서만 쓰는 배분(100, 100)도 세 성질을 모두 만족하므로, 배분이 하나로 정해지려면 어느 조합에 더해도 출력을 똑같이 바꾸는 두 특성은 같은 몫을 받는다는 대칭성도 필요하다.
 이 유일성은 정해진 게임 안의 결론이라, 배경이나 가림 방식을 바꾸면 값이 달라지고(§5.2) 모델의 예측 성능이나 인과관계를 보증하지도 않는다.
 
@@ -448,5 +448,5 @@ SHAP 값은 모델이 그 관측을 어떻게 예측했는지 설명한다.
 [^package]: SHAP. (v0.54.1). *shap*. [GitHub 저장소](https://github.com/shap/shap/tree/v0.54.1).
 [^explainer]: SHAP. (v0.54.1). shap.Explainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.Explainer.html).
 [^explainer-src]: SHAP. (v0.54.1). shap/explainers/_explainer.py. *shap*. [GitHub 저장소](https://github.com/shap/shap/blob/v0.54.1/shap/explainers/_explainer.py).
-[^waterfall]: SHAP. (v0.54.1). shap.plots.waterfall. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.plots.waterfall.html).
+[^waterfall]: SHAP. (v0.54.1). waterfall plot. *SHAP documentation*. [공식 예제](https://shap.readthedocs.io/en/stable/example_notebooks/api_examples/plots/waterfall.html).
 [^causal]: Dillon, E., LaRiviere, J., Lundberg, S., Roth, J., & Syrgkanis, V. (v0.54.1). Be careful when interpreting predictive models in search of causal insights. *SHAP documentation*. [공식 예제](https://shap.readthedocs.io/en/stable/example_notebooks/overviews/Be%20careful%20when%20interpreting%20predictive%20models%20in%20search%20of%20causal%20insights.html).

@@ -1,11 +1,11 @@
 ---
 title: "시계열 예측과 파운데이션 모델"
-week: 12
-order: 1
+week: 14
+order: 2
 ---
 
-import co2Plot from "./assets/12a-co2-mauna-loa.svg";
-import intervalPlot from "./assets/12a-co2-interval.svg";
+import co2Plot from "./assets/14b-co2-mauna-loa.svg";
+import intervalPlot from "./assets/14b-co2-interval.svg";
 
 9–11주차에는 펭귄 행을 무작위로 섞어 훈련·검증·테스트로 나눴다([09a §1.2](/lecture/2026f-applied-data-science/09a-prediction-and-linear-regression#12-훈련-검증-테스트)).
 펭귄 한 마리의 측정값이 다른 펭귄의 측정값을 미리 알려 주지 않으므로 순서를 섞어도 문제가 없었다.
@@ -138,12 +138,12 @@ naive 예측은 7과 9를 내 오차가 4, 1이고 MAE는 2.5다.
 
 ### 3.1 사전학습과 zero-shot 예측
 
-[11a §2.2](/lecture/2026f-applied-data-science/11a-tabular-foundation#22-새로운-표에서의-문맥-학습)의 TabPFN은 학습 행을 문맥으로 받아, 가중치를 바꾸지 않고 새 행을 예측했다.
+[14a §2.2](/lecture/2026f-applied-data-science/14a-tabular-foundation#22-새로운-표에서의-문맥-학습)의 TabPFN은 학습 행을 문맥으로 받아, 가중치를 바꾸지 않고 새 행을 예측했다.
 **시계열 파운데이션 모델**(time-series foundation model)은 예측할 시계열의 과거를 문맥으로 받아 같은 방식으로 미래 값을 낸다.
 사전학습에서는 수많은 시계열을 잘라 앞부분을 보여 주고 뒷부분을 맞히는 문제를 반복해 풀며 가중치를 학습한다.
 TabPFN이 합성 표로만 사전학습한 것과 달리, Chronos 원논문은 에너지·교통·기상 등 여러 분야의 공개 데이터셋에 합성 시계열을 더해 사전학습했다.[^chronos]
 새 건물에 쓸 때는 가중치를 고정한 채 그 건물의 최근 사용량만 입력하며, 이를 **zero-shot 예측**이라 한다.
-이름과 달리 대상 데이터를 전혀 보지 않는 것이 아니라 대상의 과거를 문맥으로 읽으므로, 11a의 문맥 학습과 같은 구조다.
+이름과 달리 대상 데이터를 전혀 보지 않는 것이 아니라 대상의 과거를 문맥으로 읽으므로, 14a의 문맥 학습과 같은 구조다.
 대상 데이터로 가중치를 더 학습하는 미세조정(fine-tuning)과는 다르다.
 
 §3.3의 비교에 쓰는 Amazon의 Chronos-Bolt는 연속된 값 몇 개를 묶은 **패치**(patch)를 한 단위로 읽고, 앞으로 여러 시점의 분위수(§3.2)를 한꺼번에 낸다.[^chronosbolt]
@@ -159,10 +159,10 @@ Chronos-Bolt는 날마다 값 하나 대신 여러 **분위수 예측**(quantile
 그러면 10–15는 실제 값이 들어갈 가능성을 모델이 80%로 보는 **명목 80% 구간**이다.
 Chronos-Bolt는 10백분위부터 90백분위까지 9개를 내고, 점 예측이 필요하면 그 가운데 50백분위(중앙값)를 쓴다.
 중앙값은 절대오차의 기댓값을 가장 작게 하는 값이라 MAE로 평가할 때 짝이 맞는다.
-[11b §3](/lecture/2026f-applied-data-science/11b-final-prediction#3-예측-섭동-구간과-보정)의 예측 섭동 구간은 여러 모델의 예측을 모아 그 백분위로 구간을 만들었다.
+[11 §3](/lecture/2026f-applied-data-science/11-final-prediction#3-예측-섭동-구간과-보정)의 예측 섭동 구간은 여러 모델의 예측을 모아 그 백분위로 구간을 만들었다.
 여기서는 모델 하나가 미래 값의 분포를 직접 낸다.
 
-명목 80% 구간이 실제로 얼마나 자주 맞는지는 [11b §3.2](/lecture/2026f-applied-data-science/11b-final-prediction#32-포함률과-구간-보정)처럼 포함률과 평균 폭으로 잰다.
+명목 80% 구간이 실제로 얼마나 자주 맞는지는 [11 §3.2](/lecture/2026f-applied-data-science/11-final-prediction#32-포함률과-구간-보정)처럼 포함률과 평균 폭으로 잰다.
 예측 기간마다 포함률이 다를 수 있으므로 기간별로 따로 센다.<Sidenote>분위수는 날마다 따로 읽는다. 7일의 90백분위를 모두 더한 값은 일주일 총사용량의 90백분위가 아니며, 총량의 분위수를 구하려면 날 사이에 함께 변하는 정도까지 알아야 한다.</Sidenote>
 
 ### 3.3 모델의 공정한 비교
@@ -171,7 +171,7 @@ Chronos-Bolt는 10백분위부터 90백분위까지 9개를 내고, 점 예측�
 평가 시계열이 사전학습 자료에 들어 있으면 성능이 부풀려진다(공개 벤치마크에서도 지적되었다).[^benchmark]
 마우나로아 자료도 널리 쓰이는 공개 시계열이라, 예측 시점 뒤의 값을 모델이 사전학습에서 이미 봤을 수 있다.
 그래서 12개월 앞 예측의 시점까지 Chronos-Bolt 공개(2024년 11월) 뒤에 오도록, 예측 대상을 2025년 12월부터 2026년 9월까지 10개 달로 잡았다.
-이 **사전학습 오염**(pretraining contamination)과 대처는 [12b §4.1](/lecture/2026f-applied-data-science/12b-event-forecasting#41-검색-누출과-사전학습-오염)에서 다룬다.
+이 **사전학습 오염**(pretraining contamination)과 대처는 [14c §4.1](/lecture/2026f-applied-data-science/14c-event-forecasting#41-검색-누출과-사전학습-오염)에서 다룬다.
 
 각 대상의 1개월 전과 12개월 전을 예측 시점으로 삼아 rolling-origin으로 평가하고(§2.2), 지표는 MAE를 쓴다.
 
@@ -271,7 +271,7 @@ print("80% 구간 포함률, 평균 폭:", np.mean(interval, axis=0).round(2))
 
 </Details>
 
-시계열 모델이 낸 미래 곡선은 "기준금리가 인하될까" 같은 사건의 확률을 바로 주지 않으므로, [12b](/lecture/2026f-applied-data-science/12b-event-forecasting)에서는 사건을 정의하고 그 확률을 내고 채점하는 방법을 따로 세운다.
+시계열 모델이 낸 미래 곡선은 "기준금리가 인하될까" 같은 사건의 확률을 바로 주지 않으므로, [14c](/lecture/2026f-applied-data-science/14c-event-forecasting)에서는 사건을 정의하고 그 확률을 내고 채점하는 방법을 따로 세운다.
 
 [^vds]: Yu, B., & Barter, R. L. (2024). *Veridical Data Science*. MIT Press. [8장](https://vdsbook.com/08-prediction_intro).
 [^fpp]: Hyndman, R. J., & Athanasopoulos, G. (2021). *Forecasting: Principles and Practice* (3rd ed.). OTexts. [온라인 교재](https://otexts.com/fpp3/).

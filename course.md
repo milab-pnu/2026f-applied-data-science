@@ -32,9 +32,9 @@ weeks:
   - { n: 9, topic: "Methodology 1" }
   - { n: 10, topic: "Methodology 2" }
   - { n: 11, topic: "Methodology 3" }
-  - { n: 12, topic: "Methodology 4" }
-  - { n: 13, topic: "Result Interpretation" }
-  - { n: 14, topic: "Demo" }
+  - { n: 12, topic: "Feedback" }
+  - { n: 13, topic: "Feedback" }
+  - { n: 14, topic: "Feedback" }
   - { n: 15, topic: "Milestone 3 — Final Presentation and Report (Quiz 3)" }
 ---
 
