@@ -118,7 +118,7 @@ $$
 잔차를 제곱하면 큰 잔차가 손실에서 훨씬 큰 몫을 차지하므로 LS는 이상치에 민감하고, LAD는 큰 잔차에 덜 끌려가서 이상치에 더 견고하다.
 
 입력이 여럿이어도 $\hat y_i$에 $b_0 + b_1 x_1 + b_2 x_2 + \cdots + b_p x_p$을 넣을 뿐 MSE의 꼴은 같으므로, LS는 MSE를 가장 작게 만드는 $b_0, b_1, \dots, b_p$를 고른다.
-선형 모델을 LS로 맞추는 일을 흔히 **선형회귀**(linear regression)라 하고, 입력이 하나뿐이면 단순 선형회귀, 여럿이면 다중 선형회귀(multiple linear regression)라 한다.
+선형 모델의 계수를 LS로 구하는 일을 흔히 **선형회귀**(linear regression)라 하고, 입력이 하나뿐이면 단순 선형회귀, 여럿이면 다중 선형회귀(multiple linear regression)라 한다.
 
 <Video src="https://www.youtube.com/watch?v=PaFPbb66DxQ" caption="StatQuest, The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.) (2017)." />
 
@@ -200,7 +200,7 @@ $$
 
 훈련 MSE는 $(1111.11+4444.44+1111.11)/3\approx2222.22$ g²다.
 직선은 세 점 가운데 어느 것도 정확히 지나지 않지만, 절편과 기울기를 어떻게 바꿔도 이보다 작은 MSE는 나오지 않는다.
-예를 들어 기울기를 49나 51로 바꾸고 절편을 다시 맞추면 MSE는 2,222.22 g²에서 2,288.89 g²로 커진다.
+예를 들어 기울기를 49나 51로 바꾸고 절편을 그 기울기에서 가장 좋은 값으로 다시 구하면 MSE는 2,222.22 g²에서 2,288.89 g²로 커진다.
 날개 길이 195 mm인 새 펭귄에는 약 4,316.67 g을 예측하며, 이 값이 맞는지는 그 펭귄의 실제 몸무게를 재 봐야 안다.
 
 입력이 $p$개일 때도 같은 방법을 쓴다.
