@@ -91,7 +91,7 @@ $$
 분할을 계속하면 훈련 펭귄을 거의 다 맞히는 트리가 되지만, 몇 마리만 든 잎의 확률은 우연에 크게 흔들린다.
 그래서 최대 깊이나 잎의 최소 펭귄 수처럼 학습 전에 사람이 정하는 값으로 복잡도를 제한한다.
 학습이 정하는 파라미터(10a의 계수, 트리의 분할 기준)와 구분해 이런 값을 **하이퍼파라미터**(hyperparameter)라 한다.
-그 값은 교차검증으로 고르고, 새 자료에서의 성능은 AUC와 정확도로 따로 잰다.
+그 값은 교차검증으로 고르고, 새 자료에서의 성능은 AUROC와 정확도로 따로 잰다.
 기본값은 구현마다 다르다.
 교재는 R 구현의 CART 기본값이 대개 잘 작동한다고 하지만, scikit-learn의 결정트리는 기본으로 깊이를 제한하지 않으므로, 깊이를 제한할지와 얼마나 제한할지를 검증으로 정한다.
 
@@ -168,20 +168,20 @@ XGBoost는 여기에 손실의 2차 미분과 규제까지 함께 써서 잎의 
 뒤에서 해석할 모델은 널리 쓰이는 구현인 XGBoost로 미리 정해 두었다.
 아래 표는 모델을 고르려는 것이 아니라 참고용 비교이며, 같은 훈련 273마리에서 10a와 같은 5폴드 교차검증 확률로 구했다.
 
-| 모델 | 검증 AUC | 검증 정확도(임계값 0.5) |
+| 모델 | 검증 AUROC | 검증 정확도(임계값 0.5) |
 | --- | --- | --- |
 | 로지스틱 회귀(세 변수, 10a) | 0.987 | 0.949 |
 | 결정트리(깊이 2) | 0.945 | 0.956 |
 | 랜덤 포레스트(트리 300개) | 0.999 | 0.982 |
 | XGBoost(트리 30개, 깊이 2) | 0.981 | 0.967 |
 
-깊이 2 트리는 정확도가 로지스틱 회귀보다 높지만 AUC는 가장 낮다.
+깊이 2 트리는 정확도가 로지스틱 회귀보다 높지만 AUROC는 가장 낮다.
 폴드마다 학습한 트리가 잎 네 개의 확률만 내므로, 같은 잎에 든 펭귄끼리는 순서를 매기지 못하는 것이 한 이유다.
 로지스틱 회귀가 상호작용 항 없이도 강한 것은, Chinstrap이 부리가 길고 날개가 짧은 한쪽 모서리에 모여 있어 세 변수 공간을 기울어진 평면 하나로도 꽤 잘 자를 수 있기 때문이다.
 랜덤 포레스트가 가장 높지만 차이는 작고, 하이퍼파라미터를 고르지 않은 XGBoost는 로지스틱 회귀와 비슷하다.
 
 떼어 둔 테스트 69마리에는 미리 정한 XGBoost만 적용한다.
-테스트 정확도는 0.957, AUC는 0.993이다.
+테스트 정확도는 0.957, AUROC는 0.993이다.
 혼동행렬 `[[54 1] [2 12]]`로 보면 Chinstrap 14마리 중 12마리를 찾고, 다른 종 55마리 중 1마리를 잘못 경보했다.
 여기서 임계값 0.5는 모델끼리 같은 기준으로 비교하려고 둔 값이다.
 실제로 쓸 임계값은 [10a](/lecture/2026f-applied-data-science/10a-binary-classification#2-분류의-평가)처럼 검증 확률과 오류 비용으로 다시 고르고, 그 전에 확률 보정을 점검한다.
@@ -201,7 +201,7 @@ XGBoost는 여기에 손실의 2차 미분과 규제까지 함께 써서 잎의 
 `XGBClassifier`의 `feature_importances_`가 기본으로 쓰는 분할 한 번당 평균 손실 감소(`gain`)로는 날개 길이(0.41)가 가장 크다.[^xgbapi]
 이 값과 아래 `total_gain` 값은 세 변수의 합이 1이 되게 나눈 비중이다.
 그런데 부리 길이는 분할에 가장 자주 쓰여, 감소량을 모두 합하면(`total_gain`) 부리 길이(0.43)가 가장 크다.
-테스트 69마리에서 잰 순열 중요도(AUC 하락, 30번 섞은 평균)도 부리 길이가 0.33으로, 날개 길이(0.08)와 부리 깊이(0.06)보다 훨씬 크다.
+테스트 69마리에서 잰 순열 중요도(AUROC 하락, 30번 섞은 평균)도 부리 길이가 0.33으로, 날개 길이(0.08)와 부리 깊이(0.06)보다 훨씬 크다.
 **그래서 중요도를 보고할 때는 어느 기준으로 구했는지 함께 적는다.**
 
 <Details summary="이 노트의 수치를 재현하는 코드">
@@ -249,19 +249,19 @@ for name, candidate in candidates.items():
 model.fit(X_train, y_train)
 p_test = model.predict_proba(X_test)[:, 1]
 print("테스트 정확도:", round(accuracy_score(y_test, p_test >= 0.5), 3))
-print("테스트 AUC:", round(roc_auc_score(y_test, p_test), 3))
+print("테스트 AUROC:", round(roc_auc_score(y_test, p_test), 3))
 print(confusion_matrix(y_test, p_test >= 0.5))  # [[TN FP] [FN TP]]
 perm = permutation_importance(
     model, X_test, y_test, scoring="roc_auc", n_repeats=30, random_state=0
 )
-print("순열 중요도(AUC 하락):", dict(zip(columns, perm.importances_mean.round(3).tolist())))
+print("순열 중요도(AUROC 하락):", dict(zip(columns, perm.importances_mean.round(3).tolist())))
 print("gain 중요도:", {c: round(float(v), 2) for c, v in zip(columns, model.feature_importances_)})
 total = model.get_booster().get_score(importance_type="total_gain")
 print("total_gain 비중:", {c: round(v / sum(total.values()), 2) for c, v in total.items()})
 print("분할 횟수:", model.get_booster().get_score(importance_type="weight"))
 ```
 
-출력은 차례로 세 모델의 검증 AUC와 정확도, 테스트 정확도와 AUC, 혼동행렬, 순열 중요도, `gain`·`total_gain` 기준 중요도, 변수별 분할 횟수다.
+출력은 차례로 세 모델의 검증 AUROC와 정확도, 테스트 정확도와 AUROC, 혼동행렬, 순열 중요도, `gain`·`total_gain` 기준 중요도, 변수별 분할 횟수다.
 
 </Details>
 

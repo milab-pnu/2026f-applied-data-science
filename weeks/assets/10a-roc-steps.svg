@@ -1,92 +1,119 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 440" width="840" height="440" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="임계값별 TPR과 FPR 표와 ROC 계단">
-<title>임계값별 TPR과 FPR 표와 ROC 계단</title>
-<rect width="840" height="440" fill="#ffffff"/>
-<text x="20" y="34" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">점수</text>
-<text x="66" y="34" font-size="15.6" fill="#eb6834" text-anchor="start" font-weight="600">양성</text>
-<text x="106" y="34" font-size="15.6" fill="#eb6834" text-anchor="start">0.8, 0.6</text>
-<text x="186" y="34" font-size="15.6" fill="#2a78d6" text-anchor="start" font-weight="600">음성</text>
-<text x="226" y="34" font-size="15.6" fill="#2a78d6" text-anchor="start">0.7, 0.2</text>
-<text x="20" y="58" font-size="14.4" fill="#64748b" text-anchor="start">점수가 임계값 t 이상이면 양성으로 예측한다</text>
-<text x="20" y="96" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">t</text>
-<text x="70" y="96" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">양성으로 예측</text>
-<text x="202" y="96" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">TP</text>
-<text x="240" y="96" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">FP</text>
-<text x="280" y="96" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">FPR</text>
-<text x="326" y="96" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">TPR</text>
-<text x="372" y="96" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">그래프의 점</text>
-<line x1="20" y1="106" x2="470" y2="106" stroke="#e2e8f0" stroke-width="1.2"/>
-<text x="20" y="132" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">0.9</text>
-<text x="70" y="132" font-size="15.6" fill="#64748b" text-anchor="start">없음</text>
-<text x="202" y="132" font-size="15.6" fill="#0f172a" text-anchor="start">0</text>
-<text x="240" y="132" font-size="15.6" fill="#0f172a" text-anchor="start">0</text>
-<text x="280" y="132" font-size="15.6" fill="#0f172a" text-anchor="start">0</text>
-<text x="326" y="132" font-size="15.6" fill="#0f172a" text-anchor="start">0</text>
-<text x="372" y="132" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">(0, 0)</text>
-<text x="20" y="166" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">0.8</text>
-<text x="70" y="166" font-size="15.6" fill="#eb6834" text-anchor="start">0.8</text>
-<text x="202" y="166" font-size="15.6" fill="#0f172a" text-anchor="start">1</text>
-<text x="240" y="166" font-size="15.6" fill="#0f172a" text-anchor="start">0</text>
-<text x="280" y="166" font-size="15.6" fill="#0f172a" text-anchor="start">0</text>
-<text x="326" y="166" font-size="15.6" fill="#0f172a" text-anchor="start">0.5</text>
-<text x="372" y="166" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">(0, 0.5)</text>
-<text x="20" y="200" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">0.7</text>
-<text x="70" y="200" font-size="15.6" fill="#eb6834" text-anchor="start">0.8</text>
-<text x="101" y="200" font-size="15.6" fill="#2a78d6" text-anchor="start">0.7</text>
-<text x="202" y="200" font-size="15.6" fill="#0f172a" text-anchor="start">1</text>
-<text x="240" y="200" font-size="15.6" fill="#0f172a" text-anchor="start">1</text>
-<text x="280" y="200" font-size="15.6" fill="#0f172a" text-anchor="start">0.5</text>
-<text x="326" y="200" font-size="15.6" fill="#0f172a" text-anchor="start">0.5</text>
-<text x="372" y="200" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">(0.5, 0.5)</text>
-<text x="20" y="234" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">0.6</text>
-<text x="70" y="234" font-size="15.6" fill="#eb6834" text-anchor="start">0.8</text>
-<text x="101" y="234" font-size="15.6" fill="#2a78d6" text-anchor="start">0.7</text>
-<text x="132" y="234" font-size="15.6" fill="#eb6834" text-anchor="start">0.6</text>
-<text x="202" y="234" font-size="15.6" fill="#0f172a" text-anchor="start">2</text>
-<text x="240" y="234" font-size="15.6" fill="#0f172a" text-anchor="start">1</text>
-<text x="280" y="234" font-size="15.6" fill="#0f172a" text-anchor="start">0.5</text>
-<text x="326" y="234" font-size="15.6" fill="#0f172a" text-anchor="start">1</text>
-<text x="372" y="234" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">(0.5, 1)</text>
-<text x="20" y="268" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">0.2</text>
-<text x="70" y="268" font-size="15.6" fill="#eb6834" text-anchor="start">0.8</text>
-<text x="101" y="268" font-size="15.6" fill="#2a78d6" text-anchor="start">0.7</text>
-<text x="132" y="268" font-size="15.6" fill="#eb6834" text-anchor="start">0.6</text>
-<text x="163" y="268" font-size="15.6" fill="#2a78d6" text-anchor="start">0.2</text>
-<text x="202" y="268" font-size="15.6" fill="#0f172a" text-anchor="start">2</text>
-<text x="240" y="268" font-size="15.6" fill="#0f172a" text-anchor="start">2</text>
-<text x="280" y="268" font-size="15.6" fill="#0f172a" text-anchor="start">1</text>
-<text x="326" y="268" font-size="15.6" fill="#0f172a" text-anchor="start">1</text>
-<text x="372" y="268" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">(1, 1)</text>
-<line x1="20" y1="282" x2="470" y2="282" stroke="#e2e8f0" stroke-width="1.2"/>
-<text x="20" y="318" font-size="14.4" fill="#64748b" text-anchor="start">TPR = TP / (실제 양성 2개)</text>
-<text x="20" y="342" font-size="14.4" fill="#64748b" text-anchor="start">FPR = FP / (실제 음성 2개)</text>
-<text x="20" y="366" font-size="14.4" fill="#64748b" text-anchor="start">t를 내릴수록 양성 예측이 늘어 두 값이 함께 커진다</text>
-<line x1="680.0" y1="330" x2="680.0" y2="90" stroke="#e2e8f0" stroke-width="1"/>
-<line x1="560" y1="210.0" x2="800" y2="210.0" stroke="#e2e8f0" stroke-width="1"/>
-<line x1="800" y1="330" x2="800" y2="90" stroke="#e2e8f0" stroke-width="1"/>
-<line x1="560" y1="90" x2="800" y2="90" stroke="#e2e8f0" stroke-width="1"/>
-<polygon points="560.0,330.0 560.0,210.0 680.0,210.0 680.0,90.0 800.0,90.0 800.0,330.0" fill="#e2e8f0" fill-opacity="0.9"/>
-<line x1="560" y1="330" x2="800" y2="90" stroke="#64748b" stroke-width="1" stroke-dasharray="5 4"/>
-<line x1="560" y1="330" x2="800" y2="330" stroke="#64748b" stroke-width="1"/>
-<line x1="560" y1="330" x2="560" y2="90" stroke="#64748b" stroke-width="1"/>
-<text x="560" y="352" font-size="14.4" fill="#64748b" text-anchor="middle">0.0</text>
-<text x="552" y="335" font-size="14.4" fill="#64748b" text-anchor="end">0.0</text>
-<text x="680.0" y="352" font-size="14.4" fill="#64748b" text-anchor="middle">0.5</text>
-<text x="552" y="215.0" font-size="14.4" fill="#64748b" text-anchor="end">0.5</text>
-<text x="800" y="352" font-size="14.4" fill="#64748b" text-anchor="middle">1.0</text>
-<text x="552" y="95" font-size="14.4" fill="#64748b" text-anchor="end">1.0</text>
-<polyline points="560.0,330.0 560.0,210.0 680.0,210.0 680.0,90.0 800.0,90.0" fill="none" stroke="#0f172a" stroke-width="2.6"/>
-<circle cx="560.0" cy="330.0" r="5.5" fill="#0f172a"/>
-<text x="570" y="322" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">t=0.9</text>
-<circle cx="560.0" cy="210.0" r="5.5" fill="#0f172a"/>
-<text x="568" y="202.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">t=0.8</text>
-<circle cx="680.0" cy="210.0" r="5.5" fill="#0f172a"/>
-<text x="688.0" y="230.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">t=0.7</text>
-<circle cx="680.0" cy="90.0" r="5.5" fill="#0f172a"/>
-<text x="672.0" y="80" font-size="14.4" fill="#0f172a" text-anchor="end" font-weight="600">t=0.6</text>
-<circle cx="800.0" cy="90.0" r="5.5" fill="#0f172a"/>
-<text x="794" y="80" font-size="14.4" fill="#0f172a" text-anchor="end" font-weight="600">t=0.2</text>
-<text x="680.0" y="277.2" font-size="14.4" fill="#0f172a" text-anchor="middle" font-weight="600">넓이 = AUC 0.75</text>
-<text x="752.0" y="162.0" font-size="13.2" fill="#64748b" text-anchor="start">무작위 순위</text>
-<text x="680.0" y="378" font-size="14.4" fill="#64748b" text-anchor="middle">X축: FPR = FP / (FP+TN)</text>
-<text x="514" y="210.0" font-size="14.4" fill="#64748b" text-anchor="middle" transform="rotate(-90 514 210.0)">Y축: TPR = TP / (TP+FN)</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 600" width="840" height="600" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="점수 축 위의 임계값과 그에 따른 표, ROC 계단">
+<title>점수 축 위의 임계값과 그에 따른 표, ROC 계단</title>
+<rect width="840" height="600" fill="#ffffff"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker></defs>
+<text x="20.0" y="30.0" font-size="15.6" fill="#0f172a" text-anchor="start" font-weight="600">점수가 임계값 t 이상이면 양성으로 예측한다</text>
+<line x1="60.0" y1="120.0" x2="800.0" y2="120.0" stroke="#64748b" stroke-width="1.4"/>
+<line x1="60.0" y1="120.0" x2="60.0" y2="125.0" stroke="#64748b" stroke-width="1.0"/>
+<text x="60.0" y="144.0" font-size="13.2" fill="#64748b" text-anchor="middle">0</text>
+<line x1="430.0" y1="120.0" x2="430.0" y2="125.0" stroke="#64748b" stroke-width="1.0"/>
+<text x="430.0" y="144.0" font-size="13.2" fill="#64748b" text-anchor="middle">0.5</text>
+<line x1="800.0" y1="120.0" x2="800.0" y2="125.0" stroke="#64748b" stroke-width="1.0"/>
+<text x="800.0" y="144.0" font-size="13.2" fill="#64748b" text-anchor="middle">1</text>
+<text x="808.0" y="125.0" font-size="13.2" fill="#64748b" text-anchor="start">점수</text>
+<line x1="689.0" y1="68.0" x2="689.0" y2="128.0" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="689.0" y="62.0" font-size="13.2" fill="#475569" text-anchor="middle" font-weight="600">① 0.85</text>
+<line x1="615.0" y1="68.0" x2="615.0" y2="128.0" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="615.0" y="62.0" font-size="13.2" fill="#475569" text-anchor="middle" font-weight="600">② 0.75</text>
+<line x1="541.0" y1="68.0" x2="541.0" y2="128.0" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="541.0" y="62.0" font-size="13.2" fill="#475569" text-anchor="middle" font-weight="600">③ 0.65</text>
+<line x1="356.0" y1="68.0" x2="356.0" y2="128.0" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="356.0" y="62.0" font-size="13.2" fill="#475569" text-anchor="middle" font-weight="600">④ 0.4</text>
+<line x1="134.0" y1="68.0" x2="134.0" y2="128.0" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="134.0" y="62.0" font-size="13.2" fill="#475569" text-anchor="middle" font-weight="600">⑤ 0.1</text>
+<circle cx="652.0" cy="120" r="8" fill="#eb6834"/>
+<text x="652.0" y="144.0" font-size="13.2" fill="#eb6834" text-anchor="middle" font-weight="600">양성 0.8</text>
+<circle cx="578.0" cy="120" r="8" fill="#2a78d6"/>
+<text x="578.0" y="144.0" font-size="13.2" fill="#2a78d6" text-anchor="middle" font-weight="600">음성 0.7</text>
+<circle cx="504.0" cy="120" r="8" fill="#eb6834"/>
+<text x="504.0" y="144.0" font-size="13.2" fill="#eb6834" text-anchor="middle" font-weight="600">양성 0.6</text>
+<circle cx="208.0" cy="120" r="8" fill="#2a78d6"/>
+<text x="208.0" y="144.0" font-size="13.2" fill="#2a78d6" text-anchor="middle" font-weight="600">음성 0.2</text>
+<line x1="777.8" y1="164.0" x2="467.0" y2="164.0" stroke="#64748b" stroke-width="1.2" marker-end="url(#ah)"/>
+<text x="452.2" y="169.0" font-size="13.2" fill="#64748b" text-anchor="end">t를 내리면 높은 점수부터 차례로 양성이 된다</text>
+<text x="20.0" y="236.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">t</text>
+<text x="90.0" y="236.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">양성으로 예측</text>
+<text x="222.0" y="236.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">TP</text>
+<text x="258.0" y="236.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">FP</text>
+<text x="296.0" y="236.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">FPR</text>
+<text x="342.0" y="236.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">TPR</text>
+<text x="388.0" y="236.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">그래프의 점</text>
+<line x1="20.0" y1="246.0" x2="480.0" y2="246.0" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="20.0" y="272.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">① 0.85</text>
+<text x="90.0" y="272.0" font-size="14.4" fill="#64748b" text-anchor="start">없음</text>
+<text x="222.0" y="272.0" font-size="14.4" fill="#0f172a" text-anchor="start">0</text>
+<text x="258.0" y="272.0" font-size="14.4" fill="#0f172a" text-anchor="start">0</text>
+<text x="296.0" y="272.0" font-size="14.4" fill="#0f172a" text-anchor="start">0</text>
+<text x="342.0" y="272.0" font-size="14.4" fill="#0f172a" text-anchor="start">0</text>
+<text x="388.0" y="272.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">(0, 0)</text>
+<text x="20.0" y="306.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">② 0.75</text>
+<text x="90.0" y="306.0" font-size="14.4" fill="#eb6834" text-anchor="start" font-weight="600">0.8</text>
+<text x="222.0" y="306.0" font-size="14.4" fill="#0f172a" text-anchor="start">1</text>
+<text x="258.0" y="306.0" font-size="14.4" fill="#0f172a" text-anchor="start">0</text>
+<text x="296.0" y="306.0" font-size="14.4" fill="#0f172a" text-anchor="start">0</text>
+<text x="342.0" y="306.0" font-size="14.4" fill="#0f172a" text-anchor="start">0.5</text>
+<text x="388.0" y="306.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">(0, 0.5)</text>
+<text x="20.0" y="340.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">③ 0.65</text>
+<text x="90.0" y="340.0" font-size="14.4" fill="#eb6834" text-anchor="start" font-weight="600">0.8</text>
+<text x="121.0" y="340.0" font-size="14.4" fill="#2a78d6" text-anchor="start" font-weight="600">0.7</text>
+<text x="222.0" y="340.0" font-size="14.4" fill="#0f172a" text-anchor="start">1</text>
+<text x="258.0" y="340.0" font-size="14.4" fill="#0f172a" text-anchor="start">1</text>
+<text x="296.0" y="340.0" font-size="14.4" fill="#0f172a" text-anchor="start">0.5</text>
+<text x="342.0" y="340.0" font-size="14.4" fill="#0f172a" text-anchor="start">0.5</text>
+<text x="388.0" y="340.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">(0.5, 0.5)</text>
+<text x="20.0" y="374.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">④ 0.4</text>
+<text x="90.0" y="374.0" font-size="14.4" fill="#eb6834" text-anchor="start" font-weight="600">0.8</text>
+<text x="121.0" y="374.0" font-size="14.4" fill="#2a78d6" text-anchor="start" font-weight="600">0.7</text>
+<text x="152.0" y="374.0" font-size="14.4" fill="#eb6834" text-anchor="start" font-weight="600">0.6</text>
+<text x="222.0" y="374.0" font-size="14.4" fill="#0f172a" text-anchor="start">2</text>
+<text x="258.0" y="374.0" font-size="14.4" fill="#0f172a" text-anchor="start">1</text>
+<text x="296.0" y="374.0" font-size="14.4" fill="#0f172a" text-anchor="start">0.5</text>
+<text x="342.0" y="374.0" font-size="14.4" fill="#0f172a" text-anchor="start">1</text>
+<text x="388.0" y="374.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">(0.5, 1)</text>
+<text x="20.0" y="408.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">⑤ 0.1</text>
+<text x="90.0" y="408.0" font-size="14.4" fill="#eb6834" text-anchor="start" font-weight="600">0.8</text>
+<text x="121.0" y="408.0" font-size="14.4" fill="#2a78d6" text-anchor="start" font-weight="600">0.7</text>
+<text x="152.0" y="408.0" font-size="14.4" fill="#eb6834" text-anchor="start" font-weight="600">0.6</text>
+<text x="183.0" y="408.0" font-size="14.4" fill="#2a78d6" text-anchor="start" font-weight="600">0.2</text>
+<text x="222.0" y="408.0" font-size="14.4" fill="#0f172a" text-anchor="start">2</text>
+<text x="258.0" y="408.0" font-size="14.4" fill="#0f172a" text-anchor="start">2</text>
+<text x="296.0" y="408.0" font-size="14.4" fill="#0f172a" text-anchor="start">1</text>
+<text x="342.0" y="408.0" font-size="14.4" fill="#0f172a" text-anchor="start">1</text>
+<text x="388.0" y="408.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">(1, 1)</text>
+<line x1="20.0" y1="422.0" x2="480.0" y2="422.0" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="20.0" y="474.0" font-size="13.2" fill="#64748b" text-anchor="start">FPR = FP / (실제 음성 2개)</text>
+<text x="20.0" y="496.0" font-size="13.2" fill="#64748b" text-anchor="start">TPR = TP / (실제 양성 2개)</text>
+<line x1="690.0" y1="500.0" x2="690.0" y2="260.0" stroke="#e2e8f0" stroke-width="1.0"/>
+<line x1="570.0" y1="380.0" x2="810.0" y2="380.0" stroke="#e2e8f0" stroke-width="1.0"/>
+<line x1="810.0" y1="500.0" x2="810.0" y2="260.0" stroke="#e2e8f0" stroke-width="1.0"/>
+<line x1="570.0" y1="260.0" x2="810.0" y2="260.0" stroke="#e2e8f0" stroke-width="1.0"/>
+<polygon points="570.0,500.0 570.0,380.0 690.0,380.0 690.0,260.0 810.0,260.0 810.0,500.0" fill="#e2e8f0" fill-opacity="0.9"/>
+<line x1="570.0" y1="500.0" x2="810.0" y2="260.0" stroke="#64748b" stroke-width="1.0" stroke-dasharray="5 4"/>
+<line x1="570.0" y1="500.0" x2="810.0" y2="500.0" stroke="#64748b" stroke-width="1.0"/>
+<line x1="570.0" y1="500.0" x2="570.0" y2="260.0" stroke="#64748b" stroke-width="1.0"/>
+<text x="570.0" y="520.0" font-size="13.2" fill="#64748b" text-anchor="middle">0</text>
+<text x="562.0" y="505.0" font-size="13.2" fill="#64748b" text-anchor="end">0</text>
+<text x="690.0" y="520.0" font-size="13.2" fill="#64748b" text-anchor="middle">0.5</text>
+<text x="562.0" y="385.0" font-size="13.2" fill="#64748b" text-anchor="end">0.5</text>
+<text x="810.0" y="520.0" font-size="13.2" fill="#64748b" text-anchor="middle">1</text>
+<text x="562.0" y="265.0" font-size="13.2" fill="#64748b" text-anchor="end">1</text>
+<polyline points="570.0,500.0 570.0,380.0 690.0,380.0 690.0,260.0 810.0,260.0" fill="none" stroke="#0f172a" stroke-width="2.6"/>
+<text x="578.0" y="418.6" font-size="13.2" fill="#eb6834" text-anchor="start" font-weight="600">↑ 양성 0.8</text>
+<text x="630.0" y="372.0" font-size="13.2" fill="#2a78d6" text-anchor="middle" font-weight="600">→ 음성 0.7</text>
+<text x="682.0" y="325.0" font-size="13.2" fill="#eb6834" text-anchor="end" font-weight="600">↑ 양성 0.6</text>
+<text x="750.0" y="252.0" font-size="13.2" fill="#2a78d6" text-anchor="middle" font-weight="600">→ 음성 0.2</text>
+<circle cx="570.0" cy="500.0" r="5.5" fill="#0f172a"/>
+<text x="580.0" y="492.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">①</text>
+<circle cx="570.0" cy="380.0" r="5.5" fill="#0f172a"/>
+<text x="560.0" y="364.0" font-size="14.4" fill="#0f172a" text-anchor="end" font-weight="600">②</text>
+<circle cx="690.0" cy="380.0" r="5.5" fill="#0f172a"/>
+<text x="700.0" y="398.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">③</text>
+<circle cx="690.0" cy="260.0" r="5.5" fill="#0f172a"/>
+<text x="680.0" y="252.0" font-size="14.4" fill="#0f172a" text-anchor="end" font-weight="600">④</text>
+<circle cx="810.0" cy="260.0" r="5.5" fill="#0f172a"/>
+<text x="818.0" y="278.0" font-size="14.4" fill="#0f172a" text-anchor="start" font-weight="600">⑤</text>
+<text x="747.6" y="452.0" font-size="13.2" fill="#0f172a" text-anchor="middle" font-weight="600">넓이 = AUROC 0.75</text>
+<text x="776.4" y="322.4" font-size="12" fill="#64748b" text-anchor="middle">무작위</text>
+<text x="690.0" y="542.0" font-size="13.2" fill="#64748b" text-anchor="middle">FPR = FP / (FP+TN)</text>
+<text x="530" y="380.0" font-size="13.2" fill="#64748b" text-anchor="middle" transform="rotate(-90 530 380.0)">TPR = TP / (TP+FN)</text>
 </svg>
