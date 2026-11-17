@@ -24,7 +24,7 @@ SHAP(SHapley Additive exPlanations)은 예측 하나를 특성별 기여로 나�
 SHAP 논문은 LIME(local interpretable model-agnostic explanations)[^lime]처럼 기준값에 특성별 기여를 더해 예측을 설명하는 방법들을 하나로 묶고, 그 가운데 Shapley value를 쓰는 방법을 SHAP이라 불렀다.
 아래 영상은 두 논문을 차례로 설명한다.
 
-<Video src="https://www.youtube.com/watch?v=BQSkV95Dy4s" caption="오혜령(고려대 DMQA 연구실), [Open DMQA Seminar] eXplainable AI (LIME and SHAP) (2021). 설명할 관측 주변에서 단순한 모델을 맞추는 LIME(8:27–17:39)과, 세 참여자가 상금을 나누는 그림으로 푼 Shapley value와 SHAP(17:39–25:00)을 다룬다." />
+<Video src="https://www.youtube.com/watch?v=BQSkV95Dy4s" caption="오혜령(고려대 DMQA 연구실), [Open DMQA Seminar] eXplainable AI (LIME and SHAP) (2021). 설명할 관측 주변에서 단순한 모델을 학습하는 LIME(8:27–17:39)과, 세 참여자가 상금을 나누는 그림으로 푼 Shapley value와 SHAP(17:39–25:00)을 다룬다." />
 
 </Details>
 
@@ -36,7 +36,7 @@ Shapley value는 여럿이 함께 만든 결과를 참여자에게 나누는 협
 한 특성의 **기여**는 그 특성을 쓸 때와 쓰지 않을 때의 예측 차이를, 나머지 특성으로 만들 수 있는 모든 조합에 걸쳐 가중 평균한 값이다.
 영상에서 $x_1$의 차이 4, 1, 3, 3에 가중치 1/3, 1/6, 1/6, 1/3을 곱해 더한 3이 그 값이다.
 세 특성의 기여 3, 2, 2를 더한 7은 모든 특성을 쓴 예측 35와 기준값 28의 차이와 같다.
-기준값에 기여를 모두 더하면 그 관측의 예측이 되므로, 기여를 예측과 같은 단위로 읽을 수 있다.
+**기준값에 기여를 모두 더하면 그 관측의 예측이 되므로, 기여를 예측과 같은 단위로 읽을 수 있다.**
 
 ## 2. 가린 특성과 배경 데이터
 
@@ -48,7 +48,7 @@ SHAP은 쓰지 않는(가린) 특성을 **배경 데이터**(background data)의
 모든 특성을 가리면 배경 펭귄들의 예측 평균이 되고, 이것이 기준값이다.
 
 배경으로는 보통 훈련 데이터나 그 일부를 쓴다.
-그래서 SHAP 값은 "배경 펭귄들과 비교해 이 펭귄의 예측이 왜 다른가"에 대한 답이고, 배경을 바꾸면 값도 달라진다.
+**그래서 SHAP 값은 "배경 펭귄들과 비교해 이 펭귄의 예측이 왜 다른가"에 대한 답이고, 배경을 바꾸면 값도 달라진다.**
 
 특성이 하나 늘 때마다 조합의 수는 두 배가 되어, 특성 3개면 8개지만 20개면 1,048,576개다.
 트리 모델에는 트리의 분기 구조를 이용해 조합을 하나씩 계산하지 않고도 같은 값을 빠르게 구하는 Tree SHAP이 있다.[^tree]
@@ -89,10 +89,10 @@ waterfall 그림은 펭귄 한 마리의 설명이다.
 특성별로 기여의 절댓값을 평균한 <strong>평균 |SHAP|</strong>은 그 특성이 예측을 전반적으로 얼마나 움직였는지를 한 숫자로 요약한다.<Sidenote>영상 슬라이드는 양수 Shapley value만 더해 전체 중요도를 구한다고 적었지만, 영상 속 막대 그림의 축과 shap 패키지는 절댓값의 평균을 쓴다.</Sidenote>
 이 모델에서는 부리 길이 0.159, 부리 깊이 0.084, 날개 길이 0.075이고, beeswarm 그림의 행 순서가 이 값이다.
 
-### 3.3 재현 코드
+<Details summary="두 그림의 수치를 재현하는 코드">
 
 두 그림의 확률 척도 SHAP 값은 다음 코드로 재현한다.[^penguins]
-자료 분할과 모델은 [10b의 재현 코드](/lecture/2026f-applied-data-science/10b-trees-and-xgboost#6-재현-코드)와 같다.
+자료 분할과 모델은 [10b](/lecture/2026f-applied-data-science/10b-trees-and-xgboost)의 재현 코드와 같다.
 먼저 `python -m pip install "xgboost>=3.0" shap scikit-learn pandas matplotlib`으로 필요한 패키지를 설치한다.
 노트의 수치는 xgboost 3.4.1, shap 0.54.1, scikit-learn 1.9.1로 계산했다.
 
@@ -142,9 +142,11 @@ shap.plots.beeswarm(explanation)
 assert 줄은 반올림 전의 기준 확률과 기여의 합이 모델 확률 0.897과 같은지 확인한다.
 `feature_perturbation="interventional"`은 가린 특성을 배경 값으로 바꿔 넣는 방식을 뜻하고, `model_output="probability"`를 빼면 로그 오즈 단위의 값이 나온다.
 
+</Details>
+
 ## 4. 설명의 한계
 
-SHAP 값은 모델이 그 관측을 어떻게 예측했는지를 설명하고, 정답은 계산에 쓰이지 않는다.
+**SHAP 값은 모델이 그 관측을 어떻게 예측했는지를 설명하고, 정답은 계산에 쓰이지 않는다.**
 부리 길이의 기여 +0.304는 모델이 이 펭귄의 부리 길이를 보고 확률을 그만큼 올렸다는 뜻이며, 부리가 길어서 Chinstrap이 되었다는 인과 주장은 아니다.[^causal]
 모델이 쓰지 않은 정보에는 기여가 배분되지 않고, 틀린 예측에도 똑같이 그럴듯한 설명이 붙는다.
 
