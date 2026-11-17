@@ -22,7 +22,7 @@ import ppiTest from "./assets/11-ppi-test.svg";
 판단이 여럿이면 선택의 조합마다 훈련 데이터가 하나씩 생기므로, 적합의 수는 그 조합 수에 알고리즘 수를 곱한 만큼이다.
 
 알고리즘은 둘을 쓴다.
-하나는 [09b §2.2](/lecture/2026f-applied-data-science/09b-features-and-regularization#22-교차검증과-선택)에서 넘겨받은 규제 없는 선형회귀이고, 다른 하나는 XGBoost다.
+하나는 [09b](/lecture/2026f-applied-data-science/09b-features-and-regularization#32-규제-강도와-모델-선택)에서 넘겨받은 규제 없는 선형회귀이고, 다른 하나는 XGBoost다.
 XGBoost는 [10b §3.1](/lecture/2026f-applied-data-science/10b-trees-and-xgboost#31-잔차를-맞추는-트리)에서 본 것처럼 잔차를 맞추는 트리를 쌓으므로 몸무게 같은 연속값에도 그대로 쓸 수 있다.
 초매개변수는 깊이(2, 3, 4), 트리 수(50, 100, 200, 400), 학습률(0.03, 0.1)의 조합 24개 가운데 MAE가 가장 작은 것을 고른다.
 이 선택도 데이터를 보고 하는 일이라, 교차검증의 폴드마다 그 훈련 부분 안에서 다시 교차검증을 해 고른다(중첩 교차검증).
@@ -245,7 +245,7 @@ print(calibrate(1), best, calibrate(best))  # 약 (0.41, 325), 3.76, (0.90, 1222
 
 ## 4. 최종 재학습과 테스트
 
-고른 설정(전처리 판단, 알고리즘, 초매개변수)을 고정해 훈련 데이터 전체로 다시 학습하고 테스트에서 한 번 평가한다([09b §2.2](/lecture/2026f-applied-data-science/09b-features-and-regularization#22-교차검증과-선택)).
+고른 설정(전처리 판단, 알고리즘, 초매개변수)을 고정해 훈련 데이터 전체로 다시 학습하고 테스트에서 한 번 평가한다([09b](/lecture/2026f-applied-data-science/09b-features-and-regularization#32-규제-강도와-모델-선택)).
 최종 선형회귀 적합과 구간의 모델 200개는 239마리 전체와 그 부트스트랩 표본으로 학습하고(폴드 모델은 약 191마리), $\gamma$는 교차검증에서 고른 3.76으로 고정한다.
 
 펭귄 예에서 점 예측의 테스트 MAE는 234 g이었다.
