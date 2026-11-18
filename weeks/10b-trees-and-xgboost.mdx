@@ -145,6 +145,7 @@ $$
 - **트리마다 다른 부트스트랩 표본으로 학습한다.**
   훈련 펭귄 273마리에서 중복을 허용해 273마리를 다시 뽑으므로, 트리마다 보는 펭귄이 달라진다.
 - **분할마다 무작위로 고른 일부 특성만 후보로 본다.**
+  특성이 셋인 이 자료에서는 분할마다 한 특성만 본다.
 
 분할마다 세 특성을 모두 보게 하면 트리 300개 가운데 289개가 뿌리에서 부리 길이를 묻는다.
 한 특성만 보게 하면 뿌리 질문이 부리 길이 99개, 부리 깊이 108개, 날개 길이 93개로 고르게 갈린다.
@@ -158,13 +159,21 @@ $$
 
 ## 3. 그래디언트 부스팅과 XGBoost
 
-랜덤 포레스트는 트리들을 서로 상관없이 따로 키운 뒤 평균한다.
+랜덤 포레스트는 트리들을 독립적으로 학습한 뒤 평균한다.
 **부스팅**(boosting)은 트리를 하나씩 순서대로 더하며, 지금까지의 예측이 틀린 만큼을 다음 트리가 고친다.
+앞 트리의 깊이를 늘리는 것이 아니라, 앞 트리는 그대로 두고 얕은 새 트리를 뿌리부터 하나 더 만들어 그 출력을 더한다.
 랜덤 포레스트와 함께 표 형태의 자료에서 가장 널리 쓰이는 방법이다.
 
-### 3.1 잔차를 예측하는 트리
+### 3.1 회귀에서의 부스팅
 
-회귀의 작은 가상 예로 보자.
+왜 정답이 아니라 틀린 만큼을 예측하게 할까?
+시험 공부로 치면 오답 노트다.
+문제집을 처음부터 다시 풀면 이미 아는 문제에 시간을 쓰지만, 틀린 문제만 모아 풀면 모르는 것만 공부한다.
+트리도 같아서, 다음 트리가 정답을 다시 예측하면 앞 트리와 같은 질문을 골라 같은 트리가 될 뿐이다.
+**틀린 만큼을 예측하게 하면 이미 잘 맞힌 관측은 고칠 것이 거의 없으므로, 다음 트리는 크게 틀린 관측을 맞히는 질문을 고른다.**
+그래서 작은 트리 하나로는 잡지 못한 부분을 뒤의 트리들이 차례로 메운다.
+
+회귀 예시로 살펴 보자.
 세 관측 A, B, C의 목표값이 2, 4, 9이고, 처음에는 모두 평균인 5로 예측한다.
 정답에서 예측을 뺀 잔차(residual)는 −3, −1, 4다.
 **다음 트리는 목표값이 아니라 이 잔차를 예측하도록 학습한다.**
@@ -207,7 +216,7 @@ $$
 | 1 | −0.98 | 0.27 |
 | 3 | −0.44 | 0.39 |
 | 10 | 0.63 | 0.65 |
-| 30 | 2.16 | 0.90 |
+| 30 | 2.16 | 0.897 |
 
 **트리 하나가 옮기는 양은 작지만, 30개가 쌓여 이 펭귄의 확률은 0.20에서 0.897까지 오른다.**
 트리를 너무 많이 더하면 과적합되므로, 트리 수는 검증 손실이 더 줄지 않을 때 멈추는 조기 종료(early stopping)로 정하기도 한다.
@@ -247,7 +256,7 @@ XGBoost 3.0부터는 시작 점수를 훈련 목표값의 평균에서 정하며
 | 랜덤 포레스트(트리 300개) | 0.999 | 0.982 |
 | XGBoost(트리 30개, 깊이 2) | 0.981 | 0.967 |
 
-- 랜덤 포레스트가 가장 높지만 차이는 작다.
+- 랜덤 포레스트가 두 지표 모두 가장 높다.
 - 깊이 2 트리는 AUROC가 가장 낮다.
   낼 수 있는 확률이 네 가지뿐이라 같은 잎에 든 펭귄끼리는 순서를 매기지 못하기 때문이다.
 - XGBoost는 하이퍼파라미터를 고르지 않은 상태로 로지스틱 회귀와 비슷하다.
@@ -295,11 +304,15 @@ XGBoost 3.0부터는 시작 점수를 훈련 목표값의 평균에서 정하며
 ```python
 from collections import Counter
 
+import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.inspection import permutation_importance
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.model_selection import StratifiedKFold, cross_val_predict, train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 
@@ -319,6 +332,7 @@ model = XGBClassifier(
     n_estimators=30, max_depth=2, learning_rate=0.1, random_state=42
 )
 candidates = {
+    "로지스틱 회귀": make_pipeline(StandardScaler(), LogisticRegression()),
     "결정트리": DecisionTreeClassifier(max_depth=2, random_state=0),
     "랜덤 포레스트": RandomForestClassifier(n_estimators=300, random_state=0),
     "XGBoost": model,
@@ -340,10 +354,22 @@ for depth in [1, 2, 3, 4, None]:
 # 2절: 트리 300개의 뿌리 특성
 forest = RandomForestClassifier(n_estimators=300, random_state=0).fit(X_train, y_train)
 print("뿌리 특성:", Counter(columns[t.tree_.feature[0]] for t in forest.estimators_))
+# 분할마다 세 특성을 모두 보게 하면 뿌리가 한 특성으로 쏠린다.
+bagging = RandomForestClassifier(n_estimators=300, max_features=None, random_state=0).fit(X_train, y_train)
+print("세 특성을 모두 볼 때:", Counter(columns[t.tree_.feature[0]] for t in bagging.estimators_))
 
 # 테스트에는 미리 정한 XGBoost만 적용한다.
 model.fit(X_train, y_train)
 p_test = model.predict_proba(X_test)[:, 1]
+
+# 3.2절: 테스트의 첫 Chinstrap을 따라가며 트리를 더할 때의 점수와 확률
+penguin = X_test.iloc[[int(np.flatnonzero(y_test.to_numpy() == 1)[0])]]
+start = float(np.log(y_train.mean() / (1 - y_train.mean())))
+print(0, round(start, 2), round(float(y_train.mean()), 3))
+for n in [1, 3, 10, 30]:
+    z = float(model.predict(penguin, output_margin=True, iteration_range=(0, n))[0])
+    print(n, round(z, 3), round(1 / (1 + np.exp(-z)), 3))
+
 print("테스트 정확도:", round(accuracy_score(y_test, p_test >= 0.5), 3))
 print("테스트 AUROC:", round(roc_auc_score(y_test, p_test), 3))
 print(confusion_matrix(y_test, p_test >= 0.5))  # [[TN FP] [FN TP]]
@@ -357,7 +383,7 @@ print("total_gain 비중:", {c: round(v / sum(total.values()), 2) for c, v in to
 print("분할 횟수:", model.get_booster().get_score(importance_type="weight"))
 ```
 
-출력은 차례로 세 모델의 검증 AUROC와 정확도, 깊이별 트리 비교, 랜덤 포레스트의 뿌리 특성, 테스트 정확도와 AUROC, 혼동행렬, 순열 중요도, `gain`·`total_gain` 기준 중요도, 특성별 분할 횟수다.
+출력은 차례로 네 모델의 검증 AUROC와 정확도, 깊이별 트리 비교, 랜덤 포레스트의 뿌리 특성(분할마다 한 특성을 볼 때와 세 특성을 모두 볼 때), 테스트 펭귄의 트리 수별 점수와 확률, 테스트 정확도와 AUROC, 혼동행렬, 순열 중요도, `gain`·`total_gain` 기준 중요도, 특성별 분할 횟수다.
 
 </Details>
 
