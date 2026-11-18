@@ -10,9 +10,9 @@
 <rect x="75" y="135" width="250" height="60" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="1.8"/>
 <text x="200" y="159" font-size="15.6" fill="#64748b" text-anchor="middle">199마리의 잔차 평균</text>
 <text x="200" y="181" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">출력 −230 g</text>
-<text x="200" y="224" font-size="15.6" fill="#0f172a" text-anchor="middle">펭귄 가, 나</text>
+<text x="200" y="224" font-size="15.6" fill="#0f172a" text-anchor="middle">펭귄 A, B</text>
 <rect x="395" y="135" width="250" height="60" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="1.8"/>
 <text x="520" y="159" font-size="15.6" fill="#64748b" text-anchor="middle">74마리의 잔차 평균</text>
 <text x="520" y="181" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">출력 +619 g</text>
-<text x="520" y="224" font-size="15.6" fill="#0f172a" text-anchor="middle">펭귄 다</text>
+<text x="520" y="224" font-size="15.6" fill="#0f172a" text-anchor="middle">펭귄 C</text>
 </svg>
