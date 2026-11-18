@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 350" width="720" height="350" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="XGBoost의 첫째 트리와 네 잎의 확률 변화">
+<title>XGBoost의 첫째 트리와 네 잎의 확률 변화</title><rect width="720" height="350" fill="#ffffff"/>
+<line x1="360" y1="82" x2="185" y2="135" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="262.5" y="108.5" font-size="15.6" fill="#64748b" text-anchor="end">예</text>
+<line x1="360" y1="82" x2="535" y2="135" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="457.5" y="108.5" font-size="15.6" fill="#64748b" text-anchor="start">아니오</text>
+<line x1="185" y1="195" x2="95" y2="268" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="130.0" y="231.5" font-size="15.6" fill="#64748b" text-anchor="end">예</text>
+<line x1="185" y1="195" x2="275" y2="268" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="240.0" y="231.5" font-size="15.6" fill="#64748b" text-anchor="start">아니오</text>
+<line x1="535" y1="195" x2="445" y2="268" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="480.0" y="231.5" font-size="15.6" fill="#64748b" text-anchor="end">예</text>
+<line x1="535" y1="195" x2="625" y2="268" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="590.0" y="231.5" font-size="15.6" fill="#64748b" text-anchor="start">아니오</text>
+<rect x="235" y="22" width="250" height="60" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="360" y="46" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">부리 길이 ≤ 45.15 mm?</text>
+<text x="360" y="68" font-size="15.6" fill="#64748b" text-anchor="middle">273마리 · Chinstrap 54</text>
+<rect x="60" y="135" width="250" height="60" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="185" y="159" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">부리 길이 ≤ 42.30 mm?</text>
+<text x="185" y="181" font-size="15.6" fill="#64748b" text-anchor="middle">141마리 · Chinstrap 4</text>
+<rect x="410" y="135" width="250" height="60" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="535" y="159" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">날개 길이 ≤ 207 mm?</text>
+<text x="535" y="181" font-size="15.6" fill="#64748b" text-anchor="middle">132마리 · Chinstrap 50</text>
+<rect x="15" y="268" width="160" height="64" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="95" y="294" font-size="15.6" fill="#64748b" text-anchor="middle">음성 113 · Chinstrap 1</text>
+<text x="95" y="316" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">0.198 → 0.180</text>
+<rect x="195" y="268" width="160" height="64" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="275" y="294" font-size="15.6" fill="#64748b" text-anchor="middle">음성 24 · Chinstrap 3</text>
+<text x="275" y="316" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">0.198 → 0.191</text>
+<rect x="365" y="268" width="160" height="64" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="1.8"/>
+<text x="445" y="294" font-size="15.6" fill="#64748b" text-anchor="middle">음성 3 · Chinstrap 48</text>
+<text x="445" y="316" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">0.198 → 0.272</text>
+<rect x="545" y="268" width="160" height="64" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="625" y="294" font-size="15.6" fill="#64748b" text-anchor="middle">음성 79 · Chinstrap 2</text>
+<text x="625" y="316" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">0.198 → 0.182</text>
+</svg>
