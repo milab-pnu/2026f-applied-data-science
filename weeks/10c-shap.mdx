@@ -9,7 +9,7 @@ import beeswarm from "./assets/10c-beeswarm.svg";
 
 앞 노트의 XGBoost는 테스트 펭귄 한 마리(부리 길이 50.8 mm, 부리 깊이 18.5 mm, 날개 길이 201 mm)에 양성(Chinstrap) 확률 0.897을 주었다.
 왜 0.897일까?
-로지스틱 회귀라면 계수를 읽으면 되지만 트리 30개의 합에는 읽을 계수가 없고, 특성 중요도는 모델 전체의 요약이라 이 펭귄 한 마리에 대해서는 말해 주지 않는다.
+로지스틱 회귀라면 계수를 읽으면 되지만 트리 30개의 합에는 읽을 계수가 없다.
 **SHAP**(SHapley Additive exPlanations)은 예측 하나를 특성별 기여로 나눈다.[^shap]
 결과부터 보면, 평균적인 펭귄의 확률 0.203에서 출발해 부리 길이가 +0.304, 부리 깊이가 +0.187, 날개 길이가 +0.202를 더해 0.897이 되었다는 설명이 나온다.
 이 숫자들이 어디서 나오는지를 차례로 따라간다.
@@ -226,13 +226,6 @@ Gentoo도 부리가 길어(평균 47.5 mm) 부리 길이로는 이 펭귄이 잘
 
 **평균 |SHAP|은 방향을 잃는다.**
 부리 길이의 0.159는 확률을 0.2쯤 내린 펭귄과 0.3쯤 올린 펭귄을 구별하지 않고 합친 숫자다.
-또 앞 노트의 두 중요도와 나란히 놓으면, 셋이 서로 다른 질문에 답한다는 것이 보인다.[^molnar]
-
-| 방법 | 묻는 것 | 이 모델에서 가장 큰 특성 |
-| --- | --- | --- |
-| 분할 기반 중요도 | 학습 중 그 특성의 분할이 손실을 얼마나 줄였나 | 날개 길이(분할 한 번당 평균 `gain` 기준) |
-| 순열 중요도 | 그 특성을 섞으면 새 자료에서 성능이 얼마나 떨어지나 | 부리 길이(AUROC 하락 0.33) |
-| 평균 \|SHAP\| | 개별 예측을 평균적으로 얼마나 움직였나 | 부리 길이(확률 단위 0.159) |
 
 ## 5. 심화 자료
 
@@ -253,5 +246,4 @@ SHAP이 만족하는 세 성질, Kernel SHAP의 가중 회귀, Tree SHAP 알고�
 [^treeshap]: Lundberg, S. M., Erion, G. G., & Lee, S.-I. (2018). Consistent Individualized Feature Attribution for Tree Ensembles. *arXiv*. [arXiv:1802.03888](https://arxiv.org/abs/1802.03888).
 [^shapdocs]: SHAP. (v0.54.1). shap.TreeExplainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.TreeExplainer.html).
 [^causal]: Dillon, E., LaRiviere, J., Lundberg, S., Roth, J., & Syrgkanis, V. (v0.54.1). Be careful when interpreting predictive models in search of causal insights. *SHAP documentation*. [공식 예제](https://shap.readthedocs.io/en/stable/example_notebooks/overviews/Be%20careful%20when%20interpreting%20predictive%20models%20in%20search%20of%20causal%20insights.html).
-[^molnar]: Molnar, C. (2025). SHAP. *Interpretable Machine Learning* (3rd ed.). [SHAP 장](https://christophm.github.io/interpretable-ml-book/shap.html).
 [^penguins]: Horst, A. M., Hill, A. P., & Gorman, K. B. (2020). *palmerpenguins: Palmer Archipelago (Antarctica) penguin data*. [원자료 CSV](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv). CC0.
