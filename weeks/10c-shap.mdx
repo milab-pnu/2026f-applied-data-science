@@ -6,32 +6,55 @@ order: 3
 
 import waterfall from "./assets/10c-waterfall.svg";
 import beeswarm from "./assets/10c-beeswarm.svg";
+import meanShap from "./assets/10c-mean-shap.svg";
 
-앞 노트의 XGBoost는 테스트 펭귄 한 마리(부리 길이 50.8 mm, 부리 깊이 18.5 mm, 날개 길이 201 mm)에 양성(Chinstrap) 확률 0.897을 주었다.
-왜 0.897일까?
-로지스틱 회귀에서는 특성마다 계수가 하나씩 있어서, 계수를 보면 어느 특성이 확률을 올렸는지 알 수 있었다.
-XGBoost는 트리 30개의 출력을 더한 것이라 그런 계수가 없다.
-**SHAP**(SHapley Additive exPlanations)은 예측 하나를 "어느 특성이 확률을 얼마나 올리거나 내렸는가"로 나눈다.[^shap]
-특성마다 나온 그 양을 **기여**라 부른다.
+**SHAP**(SHapley Additive exPlanations)은 예측 하나를 "어느 <strong>특성(feature)</strong>이 확률을 얼마나 올리거나 내렸는가"로 나눈다.[^shap]
+특성마다 나온 그 양을 **기여**라 부른다.<Sidenote>이 계산을 해 주는 파이썬 패키지 shap의 코드와 예제는 <a href="https://github.com/shap/shap">github.com/shap/shap</a>에 있다.</Sidenote>
 
 먼저 아래 영상으로 전체 흐름을 본다.
 
-<Video src="https://www.youtube.com/watch?v=f2XqxOny3NA" caption="김성범(고려대), [핵심 머신러닝] Shapley Value (Explainable AI) (2021). Shapley value를 특성 3개의 예로 계산하고(5:00–13:00), 사망률 예측의 SHAP 그림을 읽는다(15:15–18:30)." />
+<Video src="https://www.youtube.com/watch?v=f2XqxOny3NA" caption="김성범(고려대), [핵심 머신러닝] Shapley Value (Explainable AI) (2021)." />
 
 이제 같은 계산을 우리 펭귄으로 한다.
-결과부터 보면, SHAP은 이 펭귄의 0.897을 다음과 같이 나눈다.
+앞 노트의 XGBoost는 테스트 펭귄 한 마리(부리 길이 50.8 mm, 부리 깊이 18.5 mm, 날개 길이 201 mm)에 양성(Chinstrap) 확률 0.897을 주었다.
+결과부터 보면, SHAP은 이 0.897을 다음과 같이 나눈다.
 
 | | 확률 |
 | --- | --- |
-| 출발점(다른 펭귄들이 받은 확률의 평균) | 0.203 |
+| 출발점 | 0.203 |
 | 부리 길이 50.8 mm의 기여 | +0.304 |
 | 부리 깊이 18.5 mm의 기여 | +0.187 |
 | 날개 길이 201 mm의 기여 | +0.202 |
 | 이 펭귄의 예측 | 0.897 |
 
 출발점에 세 기여를 더하면 이 펭귄의 예측이 된다.
-표의 숫자는 반올림한 값이라 그대로 더하면 0.896이다.
-이 뒤의 계산에서도 이렇게 끝자리가 0.001–0.002쯤 다른 곳이 있다.
+부리 길이의 기여 +0.304는 "모델이 이 펭귄의 부리 길이를 보고 확률을 0.304 올렸다"는 뜻이다.
+**기여는 모델이 한 계산을 설명할 뿐이고, "부리가 길어서 Chinstrap이 되었다"는 인과관계를 뜻하지 않는다.**[^causal]
+
+출발점 0.203은 이렇게 구한다.
+
+1. 훈련 펭귄 273마리에서 50마리를 무작위로 뽑는다.
+   이 50마리를 **배경 데이터**(background data)라 한다.[^shapdocs]
+2. 학습된 XGBoost로 이 50마리의 양성 확률을 구한다.
+3. 확률 50개를 평균하면 0.203이다.
+
+SHAP은 테스트 데이터 중 한 펭귄의 0.897이 보통의 0.203보다 왜 높은지를 세 특성으로 나눠 설명한다.
+
+기여를 구할 때도 다른 데이터는 필요 없고, 같은 배경 데이터 50마리를 다시 쓴다.
+이번에는 배경 펭귄 50마리의 부리 길이만 모두 이 펭귄의 50.8 mm로 바꾼다.
+부리 깊이와 날개 길이는 각자의 값 그대로 둔다.
+이 50마리를 모델에 넣어 확률을 평균하면 0.481이다.
+
+| 모델에 넣는 50마리 | 부리 길이 | 부리 깊이 | 날개 길이 | 확률의 평균 |
+| --- | --- | --- | --- | --- |
+| 배경 펭귄 그대로 | 각자의 값 | 각자의 값 | 각자의 값 | 0.203 |
+| 부리 길이만 바꿈 | **50.8** | 각자의 값 | 각자의 값 | 0.481 |
+
+부리 길이를 50.8 mm로 바꾼 것만으로 확률이 0.203에서 0.481로 0.278 올랐다.
+**이렇게 한 특성을 이 펭귄의 값으로 바꿨을 때 오르는 확률이 그 특성의 기여다.**
+다만 다른 특성을 먼저 바꿔 둔 상태에서 부리 길이를 바꾸면 오르는 양이 조금 다르다.
+그래서 바꾸는 순서를 모두 따져 평균하고, 그 평균이 표의 +0.304다.
+
 이 숫자들이 어디서 나오는지를 차례로 따라간다.
 
 **읽기 자료**: Lundberg와 Lee의 [A Unified Approach to Interpreting Model Predictions](https://papers.nips.cc/paper_files/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf).[^shap]
@@ -58,7 +81,7 @@ A는 55점, B는 35점이고, 둘을 더하면 정확히 90점이 된다.
 
 같은 규칙을 모델의 예측에 쓴다.
 
-| 조별 과제 | 예측의 설명 |
+| 조별 과제 예시 | 펭귄 종 예측 예시 |
 | --- | --- |
 | 참여자 A, B | 특성 셋(부리 길이, 부리 깊이, 날개 길이) |
 | 점수 | 모델의 예측 확률 |
@@ -69,14 +92,14 @@ A는 55점, B는 35점이고, 둘을 더하면 정확히 90점이 된다.
 특성을 하나도 모를 때의 예측을 **기준 확률**(base value)이라 한다.
 처음 표의 "출발점"이 이것이다.
 앞 노트에서 부스팅이 시작한 확률 0.198과는 다른 숫자다.
-0.198은 훈련 펭귄 가운데 양성의 비율이고, 0.203은 처음 표에서 말한 "다른 펭귄들"(다음 절에서 고르는 50마리)이 이 모델에서 받은 확률의 평균이다.
+0.198은 훈련 펭귄 가운데 양성의 비율이고, 0.203은 배경 펭귄 50마리가 이 모델에서 받은 확률의 평균이다.
 
 조별 과제에서는 "A 혼자 하면 60점"처럼 일부만 참여했을 때의 점수를 알고 있었다.
-여기서도 테스트 펭귄의 세 특성 가운데 일부만 알 때의 예측 확률이 필요하다.
-예를 들어 "부리 길이만 아는 예측"은 부리 길이 칸에만 이 펭귄의 50.8 mm를 넣고, 모르는 두 칸은 다른 펭귄 한 마리의 값으로 채워 예측한다.
-다른 펭귄을 바꿔 가며 이렇게 여러 번 예측해 평균한 값이다.
-이 계산은 다음 절에서 표로 다시 본다.
-지금은 아래 표의 숫자를 주어진 것으로 받아들인다.
+**여기서도 테스트 펭귄의 세 특성 가운데 일부만 알 때의 예측 확률이 필요하다.**
+구하는 방법은 처음에 본 것과 같다.
+배경 펭귄 50마리에서 "아는 특성"만 이 펭귄의 값으로 바꾸고, 모델에 넣어 확률을 평균한다.
+처음에 부리 길이만 바꿔 구한 0.481이 "부리 길이만 아는 예측"이다.
+아는 특성을 고르는 경우는 모두 8가지다.
 
 | 아는 특성 | 예측 확률 |
 | --- | --- |
@@ -139,58 +162,23 @@ $$
 
 </Details>
 
-## 2. 가린 특성과 배경 데이터
+## 2. XGBoost 예측의 설명
 
-학습이 끝난 모델은 세 특성을 모두 넣어야 예측을 낸다.
-그러면 "부리 길이만 아는 예측 0.481"은 어떻게 구했을까?
-**모르는 특성의 자리에 다른 펭귄의 값을 넣는다.**
-이때 값을 빌려 오는 펭귄들을 **배경 데이터**(background data)라 한다.[^shap]
-여기서는 훈련 펭귄 273마리에서 무작위로 50마리를 뽑아 배경으로 썼다.
+### 2.1 한 펭귄의 설명
 
-부리 길이만 아는 경우를 보자.
-부리 길이 칸은 테스트 펭귄의 50.8 mm로 두고, 부리 깊이와 날개 길이 칸은 배경 펭귄 한 마리의 값으로 채워 모델에 넣는다.
-배경 펭귄 50마리마다 이렇게 하면 예측이 50개 나온다.
+지금까지의 계산은 모델에 입력을 넣고 확률을 받기만 했다.
+그래서 SHAP은 모델의 종류를 가리지 않고 어떤 모델에나 쓸 수 있다(model-agnostic).
+문제는 계산량이다.
+특성이 셋일 때 "아는 특성"의 경우는 $2^3=8$가지였고, 특성이 20개면 $2^{20}$(약 100만)가지다.
+그래서 같은 값을 빠르게 구하는 계산법이 모델 종류별로 개발되었고, 트리 모델용이 **Tree SHAP**이다.[^tree]
 
-| 값을 빌려 준 배경 펭귄 | 부리 길이 | 부리 깊이 | 날개 길이 | 모델의 확률 |
-| --- | --- | --- | --- | --- |
-| 첫째(Gentoo) | **50.8** | 17.1 | 228 | 0.278 |
-| 둘째(Gentoo) | **50.8** | 15.6 | 221 | 0.015 |
-| 또 다른 한 마리(Chinstrap) | **50.8** | 19.6 | 212 | 0.613 |
-| … 50마리의 평균 | | | | 0.481 |
-
-**이 50개 예측의 평균 0.481이 "부리 길이만 아는 예측"이다.**
-세 특성을 모두 모르는 경우에는 세 칸이 모두 배경 펭귄의 값이 되므로, 배경 펭귄 50마리 자신의 예측을 평균한 것이다.
-그 값이 기준 확률 0.203이다.
-
-**그래서 SHAP 값은 "배경 펭귄들과 비교해 이 펭귄의 예측이 왜 다른가"에 답하고, 배경을 바꾸면 값도 달라진다.**
-
-Shapley value를 구할 때 쓴 "아는 특성"과 예측 확률의 표에는 경우가 8가지 있었다(없음 1, 하나만 3, 둘 3, 셋 모두 1).
-특성이 하나 늘 때마다 이 수는 두 배가 되어, 특성이 20개면 약 100만 가지를 계산해야 한다.
-그래서 실제로는 손으로 하지 않고, 트리 모델에서 같은 일을 빠르게 해 주는 **Tree SHAP**이라는 계산법을 쓴다.[^tree]
-
-## 3. XGBoost 예측의 설명
-
-### 3.1 한 펭귄의 설명
-
-같은 테스트 펭귄을 같은 배경 50마리로, 이번에는 shap 패키지의 Tree SHAP으로 설명하면 다음과 같다.
-
-| | 손 계산 | 패키지 |
-| --- | --- | --- |
-| 기준 확률 | 0.203 | 0.203 |
-| 부리 길이 | +0.304 | +0.304 |
-| 부리 깊이 | +0.187 | +0.189 |
-| 날개 길이 | +0.202 | +0.199 |
-
-두 열은 차이가 0.003 이하이고, 해석은 달라지지 않는다.
-패키지의 계산 방식이 손 계산과 조금 달라서 생기는 차이다.[^shapdocs]
-이제부터는 패키지 값을 쓴다.
-
+같은 테스트 펭귄을 같은 배경 데이터 50마리로, 이번에는 shap 패키지의 Tree SHAP으로 설명하면 다음과 같다.
 세 특성이 모두 확률을 올렸고, 그중 긴 부리의 몫이 가장 크다.
-기준 확률에서 기여를 막대로 하나씩 이어 붙인 아래 그림을 waterfall 그림이라 한다.
+기준 확률에서 기여를 막대로 하나씩 이어 붙인 아래 그림을 **waterfall 그림**이라 한다.
 
-<Figure src={waterfall.src} alt="테스트 펭귄 한 마리의 SHAP 설명. 기준 확률 0.203에 부리 길이 +0.304, 부리 깊이 +0.189, 날개 길이 +0.199를 차례로 더해 예측 확률 0.897에 이르는 막대 그림" caption="테스트 펭귄 한 마리(부리 길이 50.8 mm, 부리 깊이 18.5 mm, 날개 길이 201 mm)의 SHAP 설명. 그림의 숫자는 반올림한 값이라 그대로 더하면 0.895다." wide />
+<Figure src={waterfall.src} alt="테스트 펭귄 한 마리의 SHAP 설명. 기준 확률 0.203에 부리 길이 +0.304, 부리 깊이 +0.189, 날개 길이 +0.199를 차례로 더해 예측 확률 0.897에 이르는 막대 그림" caption="테스트 펭귄 한 마리(부리 길이 50.8 mm, 부리 깊이 18.5 mm, 날개 길이 201 mm)의 SHAP 설명." wide />
 
-### 3.2 테스트 펭귄 전체의 분포
+### 2.2 테스트 펭귄 전체의 분포
 
 waterfall 그림은 펭귄 한 마리의 설명이다.
 테스트 펭귄 69마리를 모두 설명해 한 그림에 모은 것이 **beeswarm 그림**이다.
@@ -209,122 +197,49 @@ waterfall 그림은 펭귄 한 마리의 설명이다.
 
 앞의 테스트 펭귄은 부리 길이 행의 +0.3 근처 무리, 부리 깊이 행과 날개 길이 행의 +0.2 근처 무리 속에 있다(각각 +0.304, +0.189, +0.199).
 
-그림에는 종이 표시되지 않으므로, 읽기 전에 세 종이 어떻게 다른지부터 보자.
-아래는 훈련 펭귄의 종별 평균이다.
+그림은 색(특성값)과 가로 위치(기여)만으로 읽는다.
 
-| 종 | 부리 길이 | 부리 깊이 | 날개 길이 |
-| --- | --- | --- | --- |
-| Adelie(음성) | 짧다(38.9 mm) | 깊다(18.3 mm) | 짧다(190 mm) |
-| Chinstrap(양성) | 길다(48.6 mm) | 깊다(18.3 mm) | 짧다(195 mm) |
-| Gentoo(음성) | 길다(47.5 mm) | 얕다(14.9 mm) | 길다(217 mm) |
-
-- **부리 길이 행**: 왼쪽 −0.2 근처에 파란 점이 몰려 있다.
+- **부리 길이 행**: 파란 점(짧은 부리)은 왼쪽 −0.2 근처에 몰려 있다.
   부리가 짧으면 모델이 확률을 내린다는 뜻이다.
   분홍 점(긴 부리)은 +0.3 근처와 0 근처 두 곳에 있다.
-  부리가 길면 Chinstrap일 수도 Gentoo일 수도 있기 때문이다.
-  +0.3 근처의 분홍 점은 Chinstrap이고, 0 근처의 분홍 점은 Gentoo다.
-  둘이 갈리는 까닭은 세 행을 다 본 뒤에 정리한다.
-  그 사이에 흩어진 몇 점과 −0.1 근처에서 0 사이의 회색 점(부리 길이가 중간인 펭귄)은 여기서 따지지 않는다.
-- **부리 깊이 행**: 0의 왼쪽에 있는 점은 모두 파랑(얕은 부리)이고, 모두 Gentoo다.
+  부리가 길다고 확률이 늘 오르는 것은 아니다.
+- **부리 깊이 행**: 0의 왼쪽에 있는 점은 모두 파랑(얕은 부리)이다.
   부리가 얕으면 모델이 확률을 내린다는 뜻이다.
-  0의 오른쪽에 있는 점은 주로 0 근처(Adelie)와 +0.2 근처(대부분 Chinstrap)에 있다.
-  부리가 깊어도 부리 길이가 짧으면(Adelie) 확률이 오르지 않기 때문이다.
-  +0.1 근처의 몇 점은 여기서 따지지 않는다.
+  0의 오른쪽에 있는 점은 주로 0 근처와 +0.2 근처 두 곳에 있다.
 - **날개 길이 행**: 0의 왼쪽에 있는 점은 모두 분홍빛(긴 날개)이다.
-  날개가 길면 확률을 내린다는 뜻이다.
-  0의 오른쪽에 있는 점은 주로 두 무리로 갈린다.
-  0 근처의 파란 무리는 Adelie이고, +0.2 근처의 회색 무리는 대부분 Chinstrap이다.
-  날개가 짧아도 부리가 짧으면(Adelie) 확률이 오르지 않는다.
-  Chinstrap의 날개(평균 195 mm)는 Adelie(190 mm)보다 조금 길어 회색으로 보인다.
-  그 사이의 몇 점과 +0.2 근처의 파란 점 하나는 여기서 따지지 않는다.
+  날개가 길면 모델이 확률을 내린다는 뜻이다.
+  0의 오른쪽에 있는 점은 주로 0 근처와 +0.2 근처 두 곳에 있다.
 
-**똑같이 부리가 길어도 날개가 짧으면 확률이 크게 오르고, 날개가 길면 거의 오르지 않는다.**
-모델이 부리 길이를 날개 길이와 함께 보기 때문이다.
+세 행 모두 점이 한 줄로 늘어서지 않고 무리로 갈린다.
+같은 색(비슷한 특성값)인데 가로 위치가 다르다면, 그 특성의 기여가 다른 특성의 값에 따라 달라진다는 뜻이다.
+부리 길이 행의 분홍 점이 두 곳으로 갈린 것이 그 예다.
+
+분홍 점들은 부리 길이가 비슷한데 SHAP 값은 두 무리로 다르다.
+무엇이 달라서 갈리는지는 beeswarm 그림만으로는 알 수 없다.
+그래서 부리가 긴 테스트 펭귄에 대해 부리 길이의 SHAP 값으로 두 무리로 묶고, 무리마다 세 특성의 평균을 구해 견준다.
+
+| 부리 길이의 SHAP 값 | 펭귄 | 부리 길이 평균 | 부리 깊이 평균 | 날개 길이 평균 |
+| --- | --- | --- | --- | --- |
+| 0 근처(+0.06 이하) | 15마리 | 48.5 mm | 15.4 mm | 218 mm |
+| +0.2 이상 | 13마리 | 50.5 mm | 18.9 mm | 200 mm |
+
+두 무리의 부리 길이 평균은 48.5 mm와 50.5 mm로 비슷하다.
+다른 것은 나머지 두 특성이다.
+0 근처의 무리는 부리가 얕고(15.4 mm) 날개가 길며(218 mm), +0.2 이상의 무리는 부리가 깊고(18.9 mm) 날개가 짧다(200 mm).
+
+**부리가 얕고 날개가 긴 펭귄에서는 부리가 길어도 부리 길이가 확률에 거의 기여하지 않는다.**
+**부리가 깊고 날개가 짧은 펭귄에서는 긴 부리가 확률을 0.2 넘게 올린다.**
+같은 부리 길이의 기여가 다른 특성의 값에 따라 달라지는 것이다.
 앞 노트의 트리가 부리가 긴 펭귄에게만 날개 길이를 물었던 상호작용이 여기서 다시 보인다.
 
 특성 하나가 전체적으로 예측을 얼마나 움직였는지는 <strong>평균 |SHAP|</strong>으로 요약한다.
 그 특성의 기여에서 부호를 떼고(−0.2는 0.2로) 69마리를 평균한 값이다.
-이 모델에서는 부리 길이 0.159, 부리 깊이 0.084, 날개 길이 0.075다.
-beeswarm 그림은 이 값이 큰 특성부터 위에서 아래로 놓았다.
+이 값을 특성마다 막대로 그린 그림을 beeswarm 그림과 함께 보는 일이 많다.
 
-<Details summary="두 그림의 수치를 재현하는 코드">
+<Figure src={meanShap.src} alt="테스트 펭귄 69마리의 특성별 평균 |SHAP| 막대 그림. 부리 길이 0.159, 부리 깊이 0.084, 날개 길이 0.075 순서로 막대가 길다" caption="테스트 펭귄 69마리의 특성별 평균 |SHAP|. beeswarm 그림과 같은 SHAP 값에서 부호를 떼고 평균했다." wide />
 
-두 그림의 확률 단위 SHAP 값은 다음 코드로 재현한다.[^penguins]
-자료 분할(테스트 20%, 종 비율 유지)과 모델(트리 30개, 깊이 2, 학습률 0.1)은 앞 노트와 같다.
-먼저 `python -m pip install "xgboost>=3.0" shap scikit-learn pandas matplotlib`으로 필요한 패키지를 설치한다.
-노트의 수치는 xgboost 3.4.1, shap 0.54.1, scikit-learn 1.9.1로 계산했고, 같은 수치를 얻으려면 이 버전을 지정해 설치한다.
 
-```python
-from itertools import combinations, permutations
-
-import numpy as np
-import pandas as pd
-import shap
-from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier
-
-url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv"
-columns = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm"]
-data = pd.read_csv(url).dropna(subset=["species", *columns])
-X = data[columns]
-y = (data["species"] == "Chinstrap").astype(int)  # Chinstrap은 1, 나머지는 0
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
-)
-model = XGBClassifier(
-    n_estimators=30, max_depth=2, learning_rate=0.1, random_state=42
-)
-model.fit(X_train, y_train)
-p_test = model.predict_proba(X_test)[:, 1]
-
-# 배경은 훈련 데이터에서만 고르고, 설명 대상은 테스트 데이터다.
-background = X_train.sample(n=50, random_state=42)
-explainer = shap.TreeExplainer(
-    model, data=background,
-    feature_perturbation="interventional", model_output="probability"
-)
-explanation = explainer(X_test)  # 테스트 69마리 전체
-i = int(np.flatnonzero(y_test.to_numpy() == 1)[0])  # 테스트의 첫 Chinstrap
-base = explanation.base_values[i]
-contributions = explanation.values[i]
-
-print("기준 확률:", base)
-print("특성별 기여:", contributions)
-print("기준과 기여의 합:", base + contributions.sum())
-print("모델의 Chinstrap 확률:", p_test[i])
-np.testing.assert_allclose(base + contributions.sum(), p_test[i], atol=1e-6)
-print("평균 |SHAP|:", np.abs(explanation.values).mean(axis=0))
-
-# 손 계산 표: 아는 특성만 이 펭귄의 값으로 두고 나머지는 배경 값으로 채운 예측의 평균
-x = X_test.iloc[i].to_numpy()
-value = {}
-for size in range(4):
-    for known in combinations(range(3), size):
-        filled = background.to_numpy().copy()
-        filled[:, list(known)] = x[list(known)]
-        value[known] = model.predict_proba(pd.DataFrame(filled, columns=columns))[:, 1].mean()
-        print([columns[j] for j in known], round(float(value[known]), 3))
-exact = np.zeros(3)  # 여섯 순서의 평균
-for order in permutations(range(3)):
-    known = ()
-    for j in order:
-        after = tuple(sorted(known + (j,)))
-        exact[j] += (value[after] - value[known]) / 6
-        known = after
-print("손으로 구한 기여:", exact.round(3))
-
-shap.plots.waterfall(explanation[i])
-shap.plots.beeswarm(explanation)
-```
-
-`base_values`는 배경 데이터로 계산한 기준 확률, `values`는 특성별 기여다.
-assert 줄은 반올림 전의 기준 확률과 기여의 합이 모델 확률 0.897과 같은지 확인한다.
-`feature_perturbation="interventional"`은 가린 특성을 배경 값으로 바꿔 넣는 방식을 뜻하고, `model_output="probability"`를 빼면 로그 오즈 단위의 값이 나온다.
-
-</Details>
-
-## 4. 설명의 한계
+## 3. 설명의 한계
 
 **SHAP 값은 모델이 왜 그 확률을 냈는지를 설명할 뿐이고, 그 확률이 맞는지는 말해 주지 않는다.**
 계산에 쓰인 것은 모델과 펭귄의 측정값뿐이고, 그 펭귄이 실제로 Chinstrap인지는 한 번도 쓰이지 않았다.
@@ -337,53 +252,28 @@ assert 줄은 반올림 전의 기준 확률과 기여의 합이 모델 확률 0
 
 틀린 확률에도 맞은 확률과 똑같은 방식으로 설명이 붙는다.
 설명이 그럴듯하다고 예측이 맞는 것은 아니다.
-또 처음의 테스트 펭귄에서 부리 길이의 기여 +0.304는 "모델이 이 부리 길이를 보고 확률을 0.304 올렸다"는 뜻이지, "부리가 길어서 Chinstrap이 되었다"는 뜻이 아니다.[^causal]
 
-**기여는 배경 선택에 따라 달라진다.**
-같은 모델에서 처음의 테스트 펭귄(예측 0.897)을, 배경만 훈련 자료의 Gentoo 98마리로 바꿔 설명하면 다음과 같다.
-
-| 배경 | 기준 확률 | 부리 길이 | 부리 깊이 | 날개 길이 |
-| --- | --- | --- | --- | --- |
-| 훈련 펭귄 50마리 | 0.203 | +0.304 | +0.189 | +0.199 |
-| Gentoo 98마리 | 0.038 | +0.060 | +0.398 | +0.401 |
-
-질문이 바뀌었기 때문이다.
-배경이 훈련 펭귄 50마리일 때는 "여러 펭귄과 견주어 이 펭귄이 왜 양성으로 보이는가"를 물었다.
-배경이 Gentoo일 때는 "Gentoo와 견주어 왜 양성으로 보이는가"를 묻는다.
-Gentoo는 부리 길이가 평균 47.5 mm로 이 펭귄(50.8 mm)과 비슷하다.
-그래서 부리 길이의 기여는 +0.304에서 +0.060으로 줄었다.
-반대로 이 펭귄은 Gentoo보다 부리가 깊고(18.5 mm, Gentoo 평균 14.9 mm) 날개가 짧다(201 mm, Gentoo 평균 217 mm).
-그래서 이 두 특성의 기여가 +0.4 가까이로 커졌다.
-설명을 보고할 때는 어떤 모델과 어떤 배경 데이터로 계산했는지를 함께 적는다.
+**기여는 배경 데이터에 따라 달라진다.**
+기준 확률과 기여는 모두 배경 데이터로 계산하므로, 배경 데이터를 바꾸면 같은 펭귄의 기여도 달라진다.
+그래서 설명을 보고할 때는 어떤 배경 데이터를 썼는지를 함께 적는다.
+이 노트는 훈련 펭귄에서 무작위로 뽑은 50마리를 썼다.
+배경 데이터는 목적에 따라 고를 수도 있다.
+예를 들어 특정 종과 견주어 설명하고 싶으면 그 종의 펭귄만 배경 데이터로 쓴다.
 
 **값을 바꿔 넣다 보면 실제로는 거의 없는 펭귄이 만들어진다.**
-예를 들어 "부리 길이와 부리 깊이를 아는 예측"에서는 두 칸을 이 펭귄의 50.8 mm, 18.5 mm로 두고 날개 길이만 배경 펭귄의 값으로 채웠다.
+예를 들어 "부리 길이와 부리 깊이를 아는 예측"에서는 배경 펭귄의 부리 길이와 부리 깊이를 이 펭귄의 50.8 mm, 18.5 mm로 바꾸고, 날개 길이는 배경 펭귄의 값 그대로 둔다.
 배경 펭귄이 Gentoo이면 "부리 깊이는 18.5 mm인데 날개는 228 mm"인 펭귄이 된다.
 자료 전체에 부리가 이렇게 깊으면서 날개가 이렇게 긴 펭귄은 한 마리도 없다.
 모델은 본 적 없는 이런 입력에도 확률을 내고, 그 확률도 평균에 들어간다.
 
-**평균 |SHAP|은 방향을 잃는다.**
-부리 길이의 0.159는 확률을 0.2쯤 내린 펭귄과 0.3쯤 올린 펭귄을 구별하지 않고 합친 숫자다.
+## 4. 심화 자료
 
-## 5. 심화 자료
+<Video src="https://www.youtube.com/watch?v=BQSkV95Dy4s" caption="오혜령(고려대 DMQA 연구실), [Open DMQA Seminar] eXplainable AI (LIME and SHAP) (2021)." />
 
-여기부터는 더 알고 싶은 사람을 위한 자료다.
-예측 하나를 특성별 기여로 나누는 방법은 SHAP 말고도 있고, LIME[^lime]이 대표적이다.
-SHAP 논문은 이런 방법들을 한 틀로 정리했다.
-이 노트는 SHAP이 왜 좋은 나누기 규칙인지(세 성질)와, 패키지가 빠르게 계산하는 방법(Kernel SHAP, Tree SHAP)은 다루지 않았다.
-원논문[^shap]과 트리 모델을 다룬 후속 논문[^treeshap]을 읽기 전에 아래 영상으로 흐름을 먼저 잡을 수 있다.
-
-<Video src="https://www.youtube.com/watch?v=BQSkV95Dy4s" caption="오혜령(고려대 DMQA 연구실), [Open DMQA Seminar] eXplainable AI (LIME and SHAP) (2021). 설명할 관측 주변에서 단순한 모델을 학습하는 LIME(8:27–17:39)과, 세 참여자가 상금을 나누는 그림으로 푼 Shapley value와 SHAP(17:39–25:00)을 다룬다." />
-
-<Video src="https://www.youtube.com/watch?v=jF8xrUzD9HQ" caption="Korea University SPS Lab, Basic Theoram for SHAP & Kernel SHAP & Tree SHAP (2024). Lundberg의 논문 두 편을 따라 Shapley value의 일반식, 가산적 특성 기여 방법의 세 성질, Kernel SHAP, Tree SHAP을 차례로 설명한다." start="5:30" end="37:57" />
-
-11주차에는 9주차의 몸무게 예측으로 돌아가, 지금까지의 후보를 모아 최종 예측을 고른다.
+<Video src="https://www.youtube.com/watch?v=jF8xrUzD9HQ" caption="Korea University SPS Lab, Basic Theoram for SHAP & Kernel SHAP & Tree SHAP (2024)." />
 
 [^shap]: Lundberg, S. M., & Lee, S.-I. (2017). A Unified Approach to Interpreting Model Predictions. *Advances in Neural Information Processing Systems*, 30. [논문 PDF](https://papers.nips.cc/paper_files/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf).
 [^shapley]: Shapley, L. S. (1952). *A Value for N-Person Games*. RAND Corporation, P-295. [무료 원문](https://www.rand.org/pubs/papers/P295.html).
-[^lime]: Ribeiro, M. T., Singh, S., & Guestrin, C. (2016). “Why Should I Trust You?”: Explaining the Predictions of Any Classifier. *Proceedings of KDD*, 1135–1144. [arXiv:1602.04938](https://arxiv.org/abs/1602.04938).
 [^tree]: Lundberg, S. M., Erion, G., Chen, H., DeGrave, A., Prutkin, J. M., Nair, B., Katz, R., Himmelfarb, J., Bansal, N., & Lee, S.-I. (2020). From local explanations to global understanding with explainable AI for trees. *Nature Machine Intelligence*, 2(1), 56–67. [DOI:10.1038/s42256-019-0138-9](https://doi.org/10.1038/s42256-019-0138-9). [arXiv:1905.04610](https://arxiv.org/abs/1905.04610).
-[^treeshap]: Lundberg, S. M., Erion, G. G., & Lee, S.-I. (2018). Consistent Individualized Feature Attribution for Tree Ensembles. *arXiv*. [arXiv:1802.03888](https://arxiv.org/abs/1802.03888).
 [^shapdocs]: SHAP. (v0.54.1). shap.TreeExplainer. *SHAP documentation*. [공식 문서](https://shap.readthedocs.io/en/stable/generated/shap.TreeExplainer.html).
 [^causal]: Dillon, E., LaRiviere, J., Lundberg, S., Roth, J., & Syrgkanis, V. (v0.54.1). Be careful when interpreting predictive models in search of causal insights. *SHAP documentation*. [공식 예제](https://shap.readthedocs.io/en/stable/example_notebooks/overviews/Be%20careful%20when%20interpreting%20predictive%20models%20in%20search%20of%20causal%20insights.html).
-[^penguins]: Horst, A. M., Hill, A. P., & Gorman, K. B. (2020). *palmerpenguins: Palmer Archipelago (Antarctica) penguin data*. [원자료 CSV](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv). CC0.

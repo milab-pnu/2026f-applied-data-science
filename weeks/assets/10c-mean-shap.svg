@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 212" width="720" height="212" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="테스트 펭귄 69마리의 특성별 평균 |SHAP|">
+<title>테스트 펭귄 69마리의 특성별 평균 |SHAP|</title>
+<rect width="720" height="212" fill="#ffffff"/>
+<text x="146.0" y="54.0" font-size="16.8" fill="#0f172a" text-anchor="end">부리 길이</text>
+<text x="146.0" y="98.0" font-size="16.8" fill="#0f172a" text-anchor="end">부리 깊이</text>
+<text x="146.0" y="142.0" font-size="16.8" fill="#0f172a" text-anchor="end">날개 길이</text>
+<line x1="160.0" x2="160.0" y1="20" y2="164" stroke="#94a3b8"/>
+<text x="160.0" y="186.0" font-size="15.6" fill="#64748b" text-anchor="middle">0</text>
+<line x1="292.5" x2="292.5" y1="20" y2="164" stroke="#e2e8f0"/>
+<text x="292.5" y="186.0" font-size="15.6" fill="#64748b" text-anchor="middle">0.05</text>
+<line x1="425.0" x2="425.0" y1="20" y2="164" stroke="#e2e8f0"/>
+<text x="425.0" y="186.0" font-size="15.6" fill="#64748b" text-anchor="middle">0.1</text>
+<line x1="557.5" x2="557.5" y1="20" y2="164" stroke="#e2e8f0"/>
+<text x="557.5" y="186.0" font-size="15.6" fill="#64748b" text-anchor="middle">0.15</text>
+<line x1="690.0" x2="690.0" y1="20" y2="164" stroke="#e2e8f0"/>
+<text x="690.0" y="186.0" font-size="15.6" fill="#64748b" text-anchor="middle">0.2</text>
+<rect x="160.0" y="36" width="421.4" height="24" rx="3" fill="#eb6834"/>
+<text x="587.4" y="54.0" font-size="15.6" fill="#0f172a" text-anchor="start">0.159</text>
+<rect x="160.0" y="80" width="222.6" height="24" rx="3" fill="#eb6834"/>
+<text x="388.6" y="98.0" font-size="15.6" fill="#0f172a" text-anchor="start">0.084</text>
+<rect x="160.0" y="124" width="198.8" height="24" rx="3" fill="#eb6834"/>
+<text x="364.8" y="142.0" font-size="15.6" fill="#0f172a" text-anchor="start">0.075</text>
+<text x="425.0" y="208.0" font-size="15.6" fill="#64748b" text-anchor="middle">평균 |SHAP| (확률 단위)</text>
+</svg>
