@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="고친 예측의 잔차를 예측하는 둘째 트리">
+<title>고친 예측의 잔차를 예측하는 둘째 트리</title><rect width="720" height="250" fill="#ffffff"/>
+<line x1="360" y1="82" x2="200" y2="135" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="268.0" y="108.5" font-size="15.6" fill="#64748b" text-anchor="end">예</text>
+<line x1="360" y1="82" x2="520" y2="135" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="452.0" y="108.5" font-size="15.6" fill="#64748b" text-anchor="start">아니오</text>
+<rect x="225" y="22" width="270" height="60" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="360" y="46" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">날개 길이 ≤ 212.5 mm?</text>
+<text x="360" y="68" font-size="15.6" fill="#64748b" text-anchor="middle">훈련 펭귄 273마리</text>
+<rect x="75" y="135" width="250" height="60" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="1.8"/>
+<text x="200" y="159" font-size="15.6" fill="#64748b" text-anchor="middle">199마리의 잔차 평균</text>
+<text x="200" y="181" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">출력 −230 g</text>
+<text x="200" y="224" font-size="15.6" fill="#0f172a" text-anchor="middle">펭귄 가, 나</text>
+<rect x="395" y="135" width="250" height="60" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="1.8"/>
+<text x="520" y="159" font-size="15.6" fill="#64748b" text-anchor="middle">74마리의 잔차 평균</text>
+<text x="520" y="181" font-size="16.8" fill="#0f172a" text-anchor="middle" font-weight="600">출력 +619 g</text>
+<text x="520" y="224" font-size="15.6" fill="#0f172a" text-anchor="middle">펭귄 다</text>
+</svg>

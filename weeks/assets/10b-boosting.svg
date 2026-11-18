@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 330" width="780" height="330" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="시작 예측에 잔차를 예측하는 트리 셋을 차례로 더하는 부스팅">
+<title>시작 예측에 잔차를 예측하는 트리 셋을 차례로 더하는 부스팅</title><rect width="780" height="330" fill="#ffffff"/>
+<text x="60" y="52" font-size="14" fill="#64748b" text-anchor="middle">시작</text>
+<rect x="12.0" y="64" width="96" height="48" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="60" y="94" font-size="16" fill="#0f172a" text-anchor="middle" font-weight="600">4,191 g</text>
+<text x="60" y="222" font-size="14" fill="#64748b" text-anchor="middle">새 펭귄의 예측</text>
+<text x="60" y="246" font-size="16" fill="#0f172a" text-anchor="middle" font-weight="600">4,191 g</text>
+<text x="155" y="94" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">+ 0.5 ×</text>
+<text x="260" y="52" font-size="14" fill="#64748b" text-anchor="middle">첫째 트리</text>
+<line x1="260" y1="112" x2="218" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="260" y1="112" x2="302" y2="150" stroke="#0f172a" stroke-width="2.5"/>
+<text x="230" y="134" font-size="13" fill="#64748b" text-anchor="end">예</text>
+<text x="290" y="134" font-size="13" fill="#0f172a" text-anchor="start" font-weight="600">아니오</text>
+<rect x="187.0" y="64" width="146" height="48" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="260" y="94" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">날개 ≤ 202.5 mm?</text>
+<rect x="180.0" y="150" width="76" height="40" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="218" y="176" font-size="15" fill="#64748b" text-anchor="middle">−530 g</text>
+<rect x="264.0" y="150" width="76" height="40" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="302" y="176" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">+797 g</text>
+<text x="155" y="246" font-size="16" fill="#64748b" text-anchor="middle">→</text>
+<text x="260" y="246" font-size="16" fill="#0f172a" text-anchor="middle" font-weight="600">4,590 g</text>
+<text x="365" y="94" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">+ 0.5 ×</text>
+<text x="470" y="52" font-size="14" fill="#64748b" text-anchor="middle">둘째 트리</text>
+<line x1="470" y1="112" x2="428" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="470" y1="112" x2="512" y2="150" stroke="#0f172a" stroke-width="2.5"/>
+<text x="440" y="134" font-size="13" fill="#64748b" text-anchor="end">예</text>
+<text x="500" y="134" font-size="13" fill="#0f172a" text-anchor="start" font-weight="600">아니오</text>
+<rect x="397.0" y="64" width="146" height="48" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="470" y="94" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">날개 ≤ 212.5 mm?</text>
+<rect x="390.0" y="150" width="76" height="40" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="428" y="176" font-size="15" fill="#64748b" text-anchor="middle">−230 g</text>
+<rect x="474.0" y="150" width="76" height="40" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="512" y="176" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">+619 g</text>
+<text x="365" y="246" font-size="16" fill="#64748b" text-anchor="middle">→</text>
+<text x="470" y="246" font-size="16" fill="#0f172a" text-anchor="middle" font-weight="600">4,899 g</text>
+<text x="575" y="94" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">+ 0.5 ×</text>
+<text x="680" y="52" font-size="14" fill="#64748b" text-anchor="middle">셋째 트리</text>
+<line x1="680" y1="112" x2="638" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="680" y1="112" x2="722" y2="150" stroke="#0f172a" stroke-width="2.5"/>
+<text x="650" y="134" font-size="13" fill="#64748b" text-anchor="end">예</text>
+<text x="710" y="134" font-size="13" fill="#0f172a" text-anchor="start" font-weight="600">아니오</text>
+<rect x="607.0" y="64" width="146" height="48" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="680" y="94" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">날개 ≤ 194.5 mm?</text>
+<rect x="600.0" y="150" width="76" height="40" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+<text x="638" y="176" font-size="15" fill="#64748b" text-anchor="middle">−270 g</text>
+<rect x="684.0" y="150" width="76" height="40" rx="8" fill="#fff7ed" stroke="#0f172a" stroke-width="2.5"/>
+<text x="722" y="176" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="600">+190 g</text>
+<text x="575" y="246" font-size="16" fill="#64748b" text-anchor="middle">→</text>
+<text x="680" y="246" font-size="16" fill="#0f172a" text-anchor="middle" font-weight="600">4,994 g</text>
+<line x1="20" y1="206" x2="760" y2="206" stroke="#e2e8f0" stroke-width="1"/>
+<text x="390.0" y="296" font-size="16" fill="#0f172a" text-anchor="middle">굵은 경로: 날개 길이 219 mm인 새 펭귄</text>
+</svg>
