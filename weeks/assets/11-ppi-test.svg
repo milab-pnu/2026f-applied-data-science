@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" width="720" height="430" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="테스트 펭귄 103마리의 보정된 예측 섭동 구간">
-<title>테스트 펭귄 103마리의 보정된 예측 섭동 구간</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" width="720" height="430" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" role="img" aria-label="테스트 펭귄 103마리의 보정된 구간">
+<title>테스트 펭귄 103마리의 보정된 구간</title>
 <rect width="720" height="430" fill="#ffffff"/>
 <line x1="100" x2="690" y1="370.0" y2="370.0" stroke="#e2e8f0" stroke-width="1"/>
 <text x="94" y="375.0" font-size="16.8" fill="#64748b" text-anchor="end">2,000</text>
