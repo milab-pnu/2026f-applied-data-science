@@ -25,7 +25,7 @@
 <text x="690.0" y="391" font-size="16.8" fill="#64748b" text-anchor="middle">6,500</text>
 <line x1="100" x2="690" y1="370" y2="370" stroke="#64748b" stroke-width="1"/>
 <text x="395.0" y="418" font-size="16.8" fill="#334155" text-anchor="middle">실제 몸무게 (g)</text>
-<text x="24" y="200.0" font-size="16.8" fill="#334155" text-anchor="middle" transform="rotate(-90 24 200.0)">보정된 예측 구간 (g)</text>
+<text x="24" y="200.0" font-size="16.8" fill="#334155" text-anchor="middle" transform="rotate(-90 24 200.0)">보정된 구간 (g)</text>
 <line x1="100.0" y1="339.1" x2="690.0" y2="91.9" stroke="#0f172a" stroke-width="1.2" stroke-dasharray="5 4"/>
 <line x1="159.0" x2="159.0" y1="327.6" y2="240.9" stroke="#94a3b8" stroke-width="1.6"/>
 <circle cx="159.0" cy="290.6" r="2.2" fill="#475569"/>
@@ -234,9 +234,9 @@
 <line x1="616.2" x2="616.2" y1="175.3" y2="128.4" stroke="#eb6834" stroke-width="2.4"/>
 <circle cx="616.2" cy="154.6" r="2.2" fill="#eb6834"/>
 <line x1="114" x2="114" y1="36" y2="54" stroke="#94a3b8" stroke-width="2"/>
-<text x="126" y="51" font-size="16.8" fill="#334155">실제 몸무게를 포함한 구간 (92개)</text>
+<text x="126" y="51" font-size="16.8" fill="#334155">실제 몸무게를 담은 구간 (92개)</text>
 <line x1="114" x2="114" y1="64" y2="82" stroke="#eb6834" stroke-width="2.6"/>
-<text x="126" y="79" font-size="16.8" fill="#334155">벗어난 구간 (11개)</text>
+<text x="126" y="79" font-size="16.8" fill="#334155">담지 못한 구간 (11개)</text>
 <line x1="106" x2="122" y1="101" y2="101" stroke="#0f172a" stroke-width="1.2" stroke-dasharray="5 4"/>
 <text x="126" y="106" font-size="16.8" fill="#334155">예측 = 실제</text>
 </svg>
